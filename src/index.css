@@ -1,0 +1,19 @@
+/* src/index.css */
+ajs-message {
+  min-height: 50px;
+  min-width: 250px;
+  display: flex;
+  align-items: center;
+}
+
+.ajs-message.my-success {
+  background-color: #b7e768 !important;
+  color: #000000 !important; /* 폰트 */
+  border-radius: 4px !important;
+}
+
+.ajs-message.my-error {
+  background-color: #df2d2d !important;
+  color: #000000 !important; /* 폰트 */
+  border-radius: 4px !important;
+}
