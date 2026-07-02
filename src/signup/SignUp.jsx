@@ -3,29 +3,31 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import * as S from "../components/auth/Auth.styles"; // 스타일 파일 경로에 맞게 수정하세요
 import logo from "../assets/logo.png";
+import { useAlertify } from "../hooks/useAlertify";
 
 const Signup = () => {
   const [memberId, setMemberId] = useState("");
   const [memberPwd, setMemberPwd] = useState("");
   const [memberName, setMemberName] = useState("");
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState("");
+  const { success, error } = useAlertify();
+  // const [status, setStatus] = useState("");
   const [loading, isLoading] = useState(false);
   const navi = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (/\s/.test(memberName) || /욕설1|욕설2/i.test(memberName)) {
-      alert("닉네임 형식을 확인하세요.");
+    if (/\s/.test(memberName) || /시발|싯팔|개자식/i.test(memberName)) {
+      error("비속어는 사용할 수 없습니다 다시 작성해주세요.");
       return;
     }
     if (!/^[a-zA-Z0-9]{5,12}$/.test(memberId)) {
-      alert("아이디는 5~12자의 영문, 숫자만 가능합니다.");
+      error("아이디는 5~12자의 영문, 숫자만 가능합니다.");
       return;
     }
     if (!/^[a-zA-Z0-9]{6,15}$/.test(memberPwd)) {
-      alert("비밀번호는 6~15자의 영문, 숫자만 가능합니다.");
+      error("비밀번호는 6~15자의 영문, 숫자만 가능합니다.");
       return;
     }
 
@@ -37,10 +39,10 @@ const Signup = () => {
         memberName,
         email,
       });
-      setStatus("가입 성공!");
+      success("가입 성공!");
       navi("/login");
     } catch (err) {
-      setStatus("가입 실패");
+      success("가입 실패");
     } finally {
       isLoading(false);
     }
