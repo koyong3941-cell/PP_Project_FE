@@ -41,7 +41,7 @@ export function AuthProvider({ children }) {
     localStorage.setItem("role", role);
 
     try {
-      const response = await api.get("http://localhost/api/members/detail");
+      const response = await api.get("http://localhost/api/members/detail"); //추가적으로 API를 2중 호출 하는 구조인데 추후 수정하면 좋겠음
       console.log("회원 정보:", response.data);
 
       const { memberName } = response.data.data;

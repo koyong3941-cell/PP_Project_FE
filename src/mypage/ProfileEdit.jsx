@@ -1,7 +1,7 @@
 import { styles } from "./ProfileEdit.styles";
 import { useEffect, useState } from "react";
 import homeLogo from "../assets/home.png";
-import profileImg from "../assets/unkown.png";
+import profileImg from "../assets/unknown.png";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
