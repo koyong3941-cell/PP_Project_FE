@@ -4,6 +4,7 @@ import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 import * as S from "../components/auth/Auth.styles"; // 경로 확인 필요
 import logo from "../assets/logo.png";
+import { useAlertify } from "../hooks/useAlertify";
 
 const Login = () => {
   const { login, user } = useAuth();
@@ -12,6 +13,7 @@ const Login = () => {
   const [status, setStatus] = useState("");
   const [loading, isLoading] = useState(false);
   const navi = useNavigate();
+  const { success, error } = useAlertify();
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -30,7 +32,7 @@ const Login = () => {
         memberPwd,
       });
       login(result.data);
-      alert("로그인 성공!");
+      success("로그인 성공!");
       navi("/");
     } catch (err) {
       console.error("로그인 에러:", err.response?.data);

@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { styles } from "./Board.styles";
 import { writeStyles } from "./BoardWrite.styles";
 import { useEffect, useRef, useState } from "react";
+import api from "../api/axios";
 
 const BoardWrite = () => {
   const navigate = useNavigate();
@@ -19,22 +20,20 @@ const BoardWrite = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const res = await fetch("/api/boards/category");
-        const data = await res.json();
-        setCategories(data.result ?? data.data ?? []);
-      } catch (e) {
-        console.error("카테고리 조회 실패", e);
-      }
-    };
-    fetchCategories();
+    api
+      .get("/boards/category")
+      .then((res) => {
+        setCategories(res.data.data);
+      })
+      .catch((err) => {
+        console.error("카테고리 불러오기 실패", err);
+      });
   }, []);
-  const handleChange = (e) => {
+  const handleWrite = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
-  const handleFileChange = (e) => {
+  const handleFileWrite = (e) => {
     const selected = e.target.files[0];
     if (selected) {
       setFile(selected);
@@ -64,21 +63,19 @@ const BoardWrite = () => {
 
     try {
       setSubmitting(true);
-      const res = await fetch("/api/boards", {
-        method: "POST",
-        body: formData,
-        credentials: "include", // 세션/쿠키 기반 인증 시 필요, JWT 헤더 방식이면 Authorization 헤더 추가
-      });
 
-      if (!res.ok) {
-        const err = await res.json().catch(() => null);
-        throw new Error(err?.message || "등록에 실패했습니다.");
-      }
+      await api.post("/boards", formData);
 
       navigate("/board");
     } catch (e) {
       console.error(e);
-      setError(e.message || "등록 중 오류가 발생했습니다.");
+
+      setError(
+        e.response?.data?.message ||
+          e.response?.data?.error ||
+          e.message ||
+          "등록 중 오류가 발생했습니다.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -101,7 +98,7 @@ const BoardWrite = () => {
           name="boardTitle"
           placeholder="제목"
           value={form.boardTitle}
-          onChange={handleChange}
+          onChange={handleWrite}
         />
       </div>
 
@@ -113,7 +110,7 @@ const BoardWrite = () => {
           style={writeStyles.select}
           name="categoryNo"
           value={form.categoryNo}
-          onChange={handleChange}
+          onChange={handleWrite}
         >
           <option value="">카테고리</option>
           {categories.map((c) => (
@@ -133,7 +130,7 @@ const BoardWrite = () => {
           name="boardContent"
           placeholder="내용"
           value={form.boardContent}
-          onChange={handleChange}
+          onChange={handleWrite}
         />
       </div>
 
@@ -143,7 +140,7 @@ const BoardWrite = () => {
           accept="image/*"
           ref={fileInputRef}
           style={{ display: "none" }}
-          onChange={handleFileChange}
+          onChange={handleFileWrite}
         />
         <span style={writeStyles.fileName}>{fileName}</span>
         <button

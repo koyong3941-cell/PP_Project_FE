@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { detailStyles as s } from "./BoardDetail.styles";
-import axios from "axios";
 import Board from "./Board";
+import api from "../api/axios";
+import { writeStyles } from "./BoardWrite.styles";
 
 const BoardDetail = () => {
   const { boardNo } = useParams();
@@ -47,8 +48,8 @@ const BoardDetail = () => {
     );
   };
   useEffect(() => {
-    axios
-      .get(`http://localhost/api/boards/${boardNo}`)
+    api
+      .get(`/boards/${boardNo}`)
       .then((result) => {
         if (result.data && result.data.data) {
           setBoardDetail(result.data.data);
@@ -60,8 +61,8 @@ const BoardDetail = () => {
 
   const handleDeleteBoard = () => {
     if (!window.confirm("삭제하시겠습니까?")) return;
-    axios
-      .delete(`http://localhost/api/boards/${boardNo}`, {
+    api
+      .delete(`/boards/${boardNo}`, {
         withCredentials: true, // JWT 쿠키 or Authorization 헤더 사용 시
       })
       .then(() => navigate("/board"))
@@ -115,11 +116,7 @@ const BoardDetail = () => {
           />
         ))
       ) : (
-        <img
-          src="https://placehold.co/400x250"
-          alt="기본이미지"
-          style={s.postImg}
-        />
+        <img />
       )}
 
       {/* 본문 */}

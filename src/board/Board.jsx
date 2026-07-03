@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Search, Filter, ChevronLeft, ChevronRight } from "lucide-react";
 import { styles } from "./Board.styles";
-import axios from "axios";
+import api from "../api/axios";
 
 const Board = () => {
   const [findBoardAll, setFindBoardAll] = useState([]);
@@ -22,8 +22,8 @@ const Board = () => {
   const handleLast = () => setPage(totalPages);
   // --------------------------------------------------------------------------------
   useEffect(() => {
-    axios
-      .get(`http://localhost/api/boards?page=${page}`)
+    api
+      .get(`/boards?page=${page}`)
       .then((result) => {
         console.log(result);
         if (result.data && result.data.data) {
@@ -74,7 +74,7 @@ const Board = () => {
               <td style={styles.td}>{board.boardNo}</td>
               <td style={styles.title}>
                 <Link to={`/board/${board.boardNo}`} style={styles.link}>
-                  {board.boardTitle}
+                  {board.boardTitle}[{board.commentCount}]
                 </Link>
               </td>
               <td>
@@ -82,11 +82,9 @@ const Board = () => {
               </td>
 
               <td style={styles.td}>{board.count}</td>
-              <td style={styles.td}>{board.memberName}</td>
-              <td style={styles.td}>{board.createDate}</td>
               <td style={styles.writer}>
                 <img
-                  src={board.memberProfile}
+                  src={`http://localhost${board.profileImage || "/uploads/default/profile.png"}`}
                   alt={board.memberName}
                   style={{
                     width: "30px",
@@ -94,10 +92,12 @@ const Board = () => {
                     borderRadius: "50%",
                   }}
                 />
+
                 {board.memberName}
               </td>
 
               <td style={styles.td}>{board.likeCount}</td>
+              <td style={styles.td}>{board.createDate}</td>
             </tr>
           ))}
         </tbody>
@@ -130,23 +130,24 @@ const Board = () => {
           Previous
         </button>
 
-        {pagination.map((page) => (
+        {pagination.map((pageNum) => (
           <button
-            key={page}
+            key={pageNum}
             style={{
               ...styles.pageButton,
-              ...(page === page ? styles.activePage : {}),
-              ...(hoveredButton === `page-${page}`
-                ? page === page
-                  ? styles.activePageHover
-                  : styles.pageButtonHover
+              ...(pageNum === page + 1 ? styles.activePage : {}),
+              ...(hoveredButton === `page-${pageNum}` && pageNum !== page + 1
+                ? styles.pageButtonHover
+                : {}),
+              ...(hoveredButton === `page-${pageNum}` && pageNum === page + 1
+                ? styles.activePageHover
                 : {}),
             }}
-            onClick={() => setPage(page - 1)}
-            onMouseEnter={() => setHoveredButton(`page-${page}`)}
+            onClick={() => setPage(pageNum - 1)}
+            onMouseEnter={() => setHoveredButton(`page-${pageNum}`)}
             onMouseLeave={() => setHoveredButton(null)}
           >
-            {page}
+            {pageNum}
           </button>
         ))}
 

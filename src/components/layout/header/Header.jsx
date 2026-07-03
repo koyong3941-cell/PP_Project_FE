@@ -6,7 +6,8 @@ import dummyprofile from "../../../assets/profile.jpg";
 import search from "../../../assets/search.png";
 import { styles, customSelectStyles } from "./Header.styles";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../../context/AuthContext"; // AuthContext 임포트
+import { useAuth } from "../../../context/AuthContext";
+import { useAlertify } from "../../../hooks/useAlertify";
 
 const options = [
   { value: "all", label: "All" },
@@ -17,7 +18,7 @@ const options = [
 
 const Header = () => {
   const navi = useNavigate();
-  // 1. 여기서 user를 가져와야 합니다.
+  const alertify = useAlertify();
   const { user, logout } = useAuth();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -48,7 +49,12 @@ const Header = () => {
         <div style={styles.menuIcon} onClick={toggleMenu}>
           ☰
         </div>
-        <img src={logo} alt="Plant Plant" style={styles.logo} />
+        <img
+          src={logo}
+          alt="Plant Plant"
+          style={styles.logo}
+          onClick={() => handleNavigation("/")}
+        />
 
         {isMenuOpen && (
           <div style={styles.sideMenu}>
