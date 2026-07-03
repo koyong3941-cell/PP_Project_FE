@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Select from "react-select";
 import { FiChevronDown } from "react-icons/fi";
 import logo from "../../../assets/logo.png";
-import dummyprofile from "../../../assets/profile.jpg";
+import defaultImg from "../../../assets/unknown.png";
 import search from "../../../assets/search.png";
 import { styles, customSelectStyles } from "./Header.styles";
 import { useNavigate } from "react-router-dom";
@@ -134,7 +134,11 @@ const Header = () => {
           />
         </div>
 
-        <img src={dummyprofile} alt="User" style={styles.profileImg} />
+        <img
+          src={user?.delYn === "N" && user?.imgPath ? user.imgPath : defaultImg}
+          alt="User"
+          style={styles.profileImg}
+        />
 
         {isOpen && (
           <div style={styles.dropdownMenu}>

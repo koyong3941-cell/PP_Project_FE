@@ -46,10 +46,16 @@ export function AuthProvider({ children }) {
 
       const { memberName } = response.data.data;
       const { email } = response.data.data;
+      const { imgPath } = response.data.data;
+      const { saveName } = response.data.data;
+      const { delYn } = response.data.data; // 프로필 사진 삭제 여부
 
       // 3. 추가 정보 로컬 스토리지 저장
       localStorage.setItem("memberName", memberName);
       localStorage.setItem("email", email);
+      localStorage.setItem("imgPath", imgPath);
+      localStorage.setItem("saveName", saveName);
+      localStorage.setItem("delYn", delYn);
       // localStorage.setItem("memberImgPath", memberImgPath);
 
       // 4. setUser 상태 업데이트
@@ -59,7 +65,8 @@ export function AuthProvider({ children }) {
         role,
         memberName,
         email,
-        // memberImgPath, // Path 현재 미구현 > MemberMapper join으로 가져와야함.
+        saveName,
+        delYn,
       });
     } catch (error) {
       console.error("추가 정보 조회 실패:", error);
@@ -97,6 +104,8 @@ export function AuthProvider({ children }) {
         "role",
         "memberName",
         "email",
+        "saveName",
+        "delYn",
       ].forEach((k) => localStorage.removeItem(k));
       setUser(null);
     }

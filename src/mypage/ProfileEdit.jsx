@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import { useAlertify } from "../hooks/useAlertify";
+import Popup from "../popup/PopUp";
 
 function ProfileEdit() {
   const navi = useNavigate();
@@ -26,6 +27,10 @@ function ProfileEdit() {
 
   const [pwdError, setPwdError] = useState("");
   const [pwdConfirmError, setPwdConfirmError] = useState("");
+
+  const [isOpen, setOpen] = useState(false);
+
+  const openDeletePopup = () => setOpen(true);
 
   // =========================
   // INIT (user → form state)
@@ -90,25 +95,13 @@ function ProfileEdit() {
       });
 
       success("탈퇴 성공!");
-
+      setOpen(false);
       logout();
       navi("/login");
     } catch (err) {
       console.log(err);
       error("탈퇴 실패");
-      if (err.response) {
-        const status = err.response.status;
-
-        if (status === 401) error("로그인이 필요합니다.");
-        else if (status === 403) error("권한이 없습니다.");
-        else if (status === 400)
-          error(err.response.data?.message || "잘못된 요청입니다.");
-        else error("서버 오류가 발생했습니다.");
-      } else if (err.request) {
-        error("서버 응답이 없습니다. 네트워크를 확인하세요.");
-      } else {
-        error("요청 처리 중 오류가 발생했습니다.");
-      }
+      setOpen(false);
     }
   };
 
@@ -226,10 +219,21 @@ function ProfileEdit() {
             <button style={styles.edit} onClick={handleEditSubmit}>
               수정하기
             </button>
-            <button style={styles.withdraw} onClick={handleDelete}>
+            <button style={styles.withdraw} onClick={openDeletePopup}>
               탈퇴하기
             </button>
           </div>
+          <Popup
+            open={isOpen}
+            type="confirm"
+            title="탈퇴하시겠습니까?"
+            message="탈퇴 후 복구 시 관리자에게 문의가 필요합니다."
+            confirmText="확인"
+            cancelText="취소"
+            onConfirm={handleDelete}
+            onCancel={() => setOpen(false)}
+            onClose={() => setOpen(false)}
+          />
         </div>
       </div>
     </div>
