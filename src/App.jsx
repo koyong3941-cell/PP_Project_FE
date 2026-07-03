@@ -4,6 +4,10 @@ import Footer from "./components/layout/footer/Footer";
 import "./App.css";
 import SignUp from "./signup/SignUp";
 import Login from "./login/login";
+import Board from "./board/Board";
+import BoardDetail from "./board/BoardDetail";
+import BoardWrite from "./board/BoardWrite";
+import BoardChage from "./board/BoardChange";
 
 function App() {
   return (
@@ -13,6 +17,10 @@ function App() {
       <main className="main-content">
         <Routes>
           <Route path="/" element={<h1>메인 콘텐츠 영역입니다.</h1>} />
+          <Route path="/board" element={<Board />} />
+          <Route path="/board/:boardNo" element={<BoardDetail />} />
+          <Route path="/board/:boardNo/edit" element={<BoardChage />} />
+          <Route path="/board/write" element={<BoardWrite />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
         </Routes>
