@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Select from "react-select";
 import { FiChevronDown } from "react-icons/fi";
 import logo from "../../../assets/logo.png";
-import dummyprofile from "../../../assets/profile.jpg";
+import defaultImg from "../../../assets/unknown.png";
 import search from "../../../assets/search.png";
 import { styles, customSelectStyles } from "./Header.styles";
 import { useNavigate } from "react-router-dom";
@@ -36,7 +36,7 @@ const Header = () => {
     setIsMenuOpen(false);
 
     if (path === "/logout") {
-      logout(); // AuthContext 내에서 setUser(null)이 실행되므로 화면이 즉시 업데이트됨
+      logout();
       navi("/");
     } else {
       navi(path);
@@ -58,6 +58,31 @@ const Header = () => {
 
         {isMenuOpen && (
           <div style={styles.sideMenu}>
+            <div>
+              <p style={styles.sideBarBanner}>
+                Plant <br />
+                &nbsp;&nbsp;&nbsp;Plants
+              </p>
+            </div>
+            <div
+              style={styles.loginBanner}
+              onClick={() => {
+                // 로그인 상태가 아닐 때만 /login으로 이동
+                if (!user?.memberId) {
+                  handleNavigation("/login");
+                }
+              }}
+            >
+              {user?.memberId ? (
+                // 로그인 후 화면
+                <span>{user.memberId} 님 반갑습니다!</span>
+              ) : (
+                // 로그인 전 화면
+                <span>로그인 후 이용해 주시기 바랍니다. </span>
+              )}
+            </div>
+
+            {/* 기존 게시판 항목들 */}
             <div
               style={styles.dropdownItem}
               onClick={() => handleNavigation("/board/1")}
@@ -115,7 +140,15 @@ const Header = () => {
           />
         </div>
 
-        <img src={dummyprofile} alt="User" style={styles.profileImg} />
+        <img
+          src={
+            user?.delYn === "N" && user?.imgPath && user?.saveName
+              ? `http://localhost${user.imgPath}/${user.saveName}`
+              : defaultImg
+          }
+          alt="User"
+          style={styles.profileImg}
+        />
 
         {isOpen && (
           <div style={styles.dropdownMenu}>

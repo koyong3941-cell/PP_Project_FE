@@ -27,7 +27,7 @@ const Login = () => {
     setStatus("");
 
     try {
-      const result = await api.post("http://localhost/api/auth/login", {
+      const result = await api.post("/auth/login", {
         memberId,
         memberPwd,
       });

@@ -1,19 +1,48 @@
-/* src/index.css */
-ajs-message {
-  min-height: 50px;
-  min-width: 250px;
-  display: flex;
-  align-items: center;
+/* ===========================
+   Alertify Notifier
+=========================== */
+
+/* 오른쪽 아래 위치 */
+.alertify-notifier.ajs-bottom.ajs-right {
+  position: fixed !important;
+  right: -200px !important;
+  bottom: 20px !important;
+  left: auto !important;
+  top: auto !important;
+  width: 520px !important;
+  z-index: 999999 !important;
 }
 
-.ajs-message.my-success {
-  background-color: #b7e768 !important;
-  color: #000000 !important; /* 폰트 */
+/* 토스트 메시지 */
+.alertify-notifier.ajs-bottom.ajs-right .ajs-message {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  width: 500px !important;
+  min-width: 500px !important;
+  max-width: 500px !important;
+  min-height: 70px !important;
+
+  margin: 10px 0 !important;
+  padding: 18px 24px !important;
+
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+
   border-radius: 4px !important;
+  box-sizing: border-box !important;
 }
 
-.ajs-message.my-error {
-  background-color: #df2d2d !important;
-  color: #000000 !important; /* 폰트 */
-  border-radius: 4px !important;
+/* 성공 */
+.alertify-notifier .ajs-message.my-success {
+  background: #1619e7 !important;
+  color: #ffffff !important;
+}
+
+/* 실패 */
+.alertify-notifier .ajs-message.my-error {
+  background: #f33d06 !important;
+  color: #fcd5d5 !important;
 }
