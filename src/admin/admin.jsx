@@ -26,60 +26,62 @@ const Admin = () => {
   const [keyword, setKeyword] = useState("");
   const [selected, setSelected] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const AdminPage = async (e) => {};
+  const navi = useNavigate();
 
   const [activeMenu, setActiveMenu] = useState("");
 
   const [page, setPage] = useState(1);
   const totalPage = 7;
 
-  axios.get(`/notice?page=${page}`).then((res) => {
-    setNotice(res.data.data.list);
-    setTotalPage(res.data.data.totalPage);
+  axios.get(`http://localhost/api/notices?page=${page}`).then((res) => {
+    console.log(res);
+    // setNotice(res.data.data.list);
+    // setTotalPage(res.data.data.totalPage);
   });
 
   return (
     <Container>
       {/* 사이드바 */}
       <Sidebar>
-        <Logo>Plant Plants</Logo>
+        <Logo>Plant plants</Logo>
 
         <Menu>
           <MenuItem
-            active={activeMenu == "관리자 관리"}
-            onClick={() => setActiveMenu("관리자 관리")}
+            onClick={() => {
+              setActiveMenu("관리자 관리");
+              navi("/admin");
+            }}
           >
             관리자 관리
           </MenuItem>
           <MenuItem
-            active={activeMenu == "회원관리"}
-            onClick={() => setActiveMenu("회원관리")}
+            onClick={() => {
+              setActiveMenu("회원 관리");
+              navi("/member");
+            }}
           >
             회원 관리
           </MenuItem>
           <MenuItem
-            active={activeMenu == "게시글 관리"}
-            onClick={() => setActiveMenu("게시글 관리")}
+            onClick={() => {
+              setActiveMenu("게시글 관리");
+              navi("/board");
+            }}
           >
             게시글 관리
           </MenuItem>
           <MenuItem
-            active={activeMenu == "식물 정보 관리"}
-            onClick={() => setActiveMenu("식물 정보 관리")}
+            onClick={() => {
+              setActiveMenu("식물 정보 관리");
+              navi("/plant");
+            }}
           >
             식물 정보 관리
           </MenuItem>
-          <MenuItem
-            active={activeMenu == "공지사항 관리"}
-            onClick={() => setActiveMenu("공지사항 관리")}
-          >
+          <MenuItem onClick={() => setActiveMenu("공지사항 관리")}>
             공지사항 관리
           </MenuItem>
-          <MenuItem
-            active={activeMenu == "대시보드"}
-            onClick={() => setActiveMenu("대시보드")}
-          >
+          <MenuItem onClick={() => setActiveMenu("대시보드")}>
             대시보드
           </MenuItem>
         </Menu>

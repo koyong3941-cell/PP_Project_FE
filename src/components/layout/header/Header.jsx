@@ -107,6 +107,12 @@ const Header = () => {
             >
               관리자 페이지
             </div>
+            <div
+              style={styles.dropdownItem}
+              onClick={() => handleNavigation("/member")}
+            >
+              관리자 페이지
+            </div>
           </div>
         )}
       </div>

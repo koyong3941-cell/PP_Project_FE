@@ -5,11 +5,15 @@ import "./App.css";
 
 import SignUp from "./signup/SignUp";
 import Login from "./login/login";
-import Admin from "./admin/admin";
+import Admin from "./admin/Admin";
 import ProfileEdit from "./mypage/ProfileEdit";
 import MyPage from "./mypage/MyPage";
 // Layout용 Outlet
 import { Outlet } from "react-router-dom";
+import Members from "./admin/Members";
+import Board from "./admin/Boards";
+import Boards from "./admin/Boards";
+import Plants from "./admin/Plants";
 
 function MainLayout() {
   return (
@@ -53,6 +57,10 @@ function App() {
       <Route element={<EmptyLayout />}>
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/admin" element={<Admin />} />
+        {/* <Route path="/member" element={<Members />} /> */}
+        <Route path="/member" element={<Members />} />
+        <Route path="/board" element={<Boards />} />
+        <Route path="/plant" element={<Plants />} />
       </Route>
     </Routes>
   );
