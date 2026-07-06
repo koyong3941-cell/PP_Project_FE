@@ -1,5 +1,5 @@
 import { styles } from "./ProfileEdit.styles";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import homeLogo from "../assets/home.png";
 import profileImg from "../assets/unknown.png";
 import { useAuth } from "../context/AuthContext";
@@ -16,6 +16,8 @@ function ProfileEdit() {
   // =========================
   // STATE
   // =========================
+  const [selectedFile, setSelectedFile] = useState(null);
+
   const [memberPwd, setMemberPwd] = useState("");
   const [memberPwdConfirm, setMemberPwdConfirm] = useState("");
 
@@ -31,6 +33,7 @@ function ProfileEdit() {
   const [isOpen, setOpen] = useState(false);
 
   const openDeletePopup = () => setOpen(true);
+  const { refreshUser } = useAuth();
 
   // =========================
   // INIT (user → form state)
@@ -106,6 +109,40 @@ function ProfileEdit() {
   };
 
   // =========================
+  // ImageUpload
+  // =========================
+
+  const fileInputRef = useRef(null);
+
+  const handleProfileClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    setSelectedFile(file);
+
+    const formData = new FormData();
+    formData.append("imageFile", file);
+
+    try {
+      const res = await api.post("/members/profile/image", formData);
+
+      success("이미지 업로드 성공");
+
+      await refreshUser();
+
+      console.log(res.data);
+    } catch (err) {
+      console.error(err);
+      error("업로드 실패");
+    }
+  };
+
+  // =========================
   // RENDER
   // =========================
   return (
@@ -133,7 +170,24 @@ function ProfileEdit() {
 
           {/* PROFILE */}
           <div style={styles.profileArea}>
-            <img src={profileImg} alt="profile" style={styles.profileImage} />
+            <img
+              src={
+                user?.delYn === "N" && user?.imgPath && user?.saveName
+                  ? `http://localhost${user.imgPath}/${user.saveName}`
+                  : defaultImg
+              }
+              alt="profile"
+              style={styles.profileImage}
+              onClick={handleProfileClick}
+            />
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              style={{ display: "none" }}
+              onChange={handleFileChange}
+            />
 
             <div>
               <div style={styles.id}>

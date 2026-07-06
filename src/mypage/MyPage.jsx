@@ -44,6 +44,11 @@ const MyPage = () => {
   const [humidity, setHumidity] = useState("");
   const [temperature, setTemperature] = useState("");
 
+  const profileImg =
+    user?.delYn === "N" && user?.imgPath && user?.saveName
+      ? `${user.imgPath}/${user.saveName}`
+      : "/assets/unknown.png";
+
   const normalizedData = chartData.map((d) => ({
     date: d.measureDate,
 
@@ -173,7 +178,7 @@ const MyPage = () => {
         <div className="profile">
           <div
             className="avatar"
-            style={{ backgroundImage: `url(/assets/unknown.png)` }}
+            style={{ backgroundImage: `url(${profileImg})` }}
           />
           <h3>{user.memberId}님</h3>
           <p>{user.memberName}</p>

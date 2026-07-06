@@ -135,7 +135,11 @@ const Header = () => {
         </div>
 
         <img
-          src={user?.delYn === "N" && user?.imgPath ? user.imgPath : defaultImg}
+          src={
+            user?.delYn === "N" && user?.imgPath && user?.saveName
+              ? `http://localhost${user.imgPath}/${user.saveName}`
+              : defaultImg
+          }
           alt="User"
           style={styles.profileImg}
         />

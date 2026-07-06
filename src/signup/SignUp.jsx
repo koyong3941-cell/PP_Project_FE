@@ -19,7 +19,7 @@ const Signup = () => {
     e.preventDefault();
 
     if (/\s/.test(memberName) || /시발|싯팔|개자식/i.test(memberName)) {
-      error("비속어는 사용할 수 없습니다 다시 작성해주세요.");
+      error("비속어 혹은 공백은 사용할 수 없습니다");
       return;
     }
     if (!/^[a-zA-Z0-9]{5,12}$/.test(memberId)) {
@@ -42,7 +42,8 @@ const Signup = () => {
       success("가입 성공!");
       navi("/login");
     } catch (err) {
-      success("가입 실패");
+      const serverMessage = err.response?.data?.message || "가입 실패";
+      success(serverMessage);
     } finally {
       isLoading(false);
     }
