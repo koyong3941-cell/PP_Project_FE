@@ -76,6 +76,12 @@ const Header = () => {
             >
               게시판 3
             </div>
+            <div
+              style={styles.dropdownItem}
+              onClick={() => handleNavigation("/admin")}
+            >
+              관리자 페이지
+            </div>
           </div>
         )}
       </div>
