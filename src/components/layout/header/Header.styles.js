@@ -85,17 +85,28 @@ export const styles = {
   selectWrapper: { width: "120px" },
   // 사이드 메뉴
   sideMenu: {
-    position: "absolute", // 화면 전체를 덮는 fixed 대신 absolute 사용
-    top: "90px", // 헤더 높이(90px) 바로 아래에 위치
-    left: "20px", // 햄버거 메뉴 버튼 위치에 맞춤
-    width: "160px", // 기존 드롭다운 메뉴와 동일한 너비
+    position: "absolute",
+    top: "90px",
+    left: "20px",
+    height: "700px",
+    width: "440px",
     backgroundColor: "#ffffff",
     borderRadius: "8px",
     boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
-    zIndex: 1000, // 다른 요소들보다 위에 보이도록 설정
-    padding: "8px 0",
+    zIndex: 1000,
+    padding: "20px 0", // 상단 여백 추가
     display: "flex",
     flexDirection: "column",
+  },
+
+  // 신규: 상단 로그인 안내 영역
+  loginBanner: {
+    padding: "0 20px 20px 20px",
+    borderBottom: "1px solid #eeeeee", // 구분선
+    marginBottom: "20px",
+    fontSize: "18px",
+    color: "#333",
+    cursor: "pointer",
   },
   // 사이드 메뉴 닫기 버튼용
   closeButton: {
@@ -106,6 +117,14 @@ export const styles = {
     fontSize: "20px",
   },
   // 추가된 드롭다운 스타일
+  dropdownItem: {
+    padding: "20px 20px",
+    textDecoration: "none",
+    color: "#000000", // 검은색 텍스트
+    fontSize: "28px", // 이미지처럼 큰 폰트 크기
+    fontWeight: "400",
+    cursor: "pointer",
+  },
   dropdownMenu: {
     position: "absolute",
     top: "calc(100% + 10px)",
@@ -120,12 +139,21 @@ export const styles = {
     zIndex: 1000,
   },
   dropdownItem: {
-    padding: "10px 20px",
+    padding: "20px 20px",
     textDecoration: "none",
-    color: "#333",
-    fontSize: "14px",
-    fontWeight: "500",
+    color: "#000000", // 검은색 텍스트
+    fontSize: "18px", // 이미지처럼 큰 폰트 크기
+    fontWeight: "400",
     cursor: "pointer",
+  },
+  sideBarBanner: {
+    //사이드 바 배너
+    color: "#000000",
+    margin: 0, // p 태그의 기본 여백 제거
+    fontSize: "45px", // 배너 텍스트 크기
+    fontWeight: "700", // 굵게
+    padding: "20px", // 배너 내부 여백
+    marginBottom: "15px",
   },
 };
 
