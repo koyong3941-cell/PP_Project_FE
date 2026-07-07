@@ -19,7 +19,7 @@ import Main from "./main/Main";
 // Layout용 Outlet
 import { Outlet } from "react-router-dom";
 import Members from "./admin/Members";
-import Board from "./admin/Boards";
+
 import Boards from "./admin/Boards";
 import Plants from "./admin/Plants";
 
@@ -29,11 +29,6 @@ function MainLayout() {
       <Header />
 
       <main className="main-content">
-        <Routes>
-          <Route path="/" element={<h1>메인 콘텐츠 영역입니다.</h1>} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/login" element={<Login />} />
-        </Routes>
         <Outlet />
       </main>
 
@@ -72,7 +67,7 @@ function App() {
         <Route path="/admin" element={<Admin />} />
         {/* <Route path="/member" element={<Members />} /> */}
         <Route path="/member" element={<Members />} />
-        <Route path="/board" element={<Boards />} />
+        <Route path="admin/board" element={<Boards />} />
         <Route path="/plant" element={<Plants />} />
       </Route>
     </Routes>

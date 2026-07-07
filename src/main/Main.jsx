@@ -100,7 +100,7 @@ export default function Main_2() {
 
             <LeadLine>세상에는 여러가지 방법이 있습니다.</LeadLine>
 
-            <Badge>콘텐츠</Badge>
+            <Badge>글쓰기</Badge>
 
             <BodyText>
               나만의 작은 팁이 누군가에게는 거대한 영감이 됩니다.
