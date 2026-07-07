@@ -5,9 +5,17 @@ import "./App.css";
 
 import SignUp from "./signup/SignUp";
 import Login from "./login/login";
+
 import Admin from "./admin/Admin";
+import Board from "./board/Board";
+import BoardDetail from "./board/BoardDetail";
+import BoardWrite from "./board/BoardWrite";
+import BoardChage from "./board/BoardChange";
+import Notice from "./notice/Notice";
 import ProfileEdit from "./mypage/ProfileEdit";
 import MyPage from "./mypage/MyPage";
+import Main from "./main/Main";
+
 // Layout용 Outlet
 import { Outlet } from "react-router-dom";
 import Members from "./admin/Members";
@@ -47,10 +55,15 @@ function App() {
     <Routes>
       {/* Header/Footer 있는 페이지 */}
       <Route element={<MainLayout />}>
-        <Route path="/" element={<h1>메인 콘텐츠 영역입니다.</h1>} />
+        <Route path="/" element={<Main />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
         <Route path="/profile-edit" element={<ProfileEdit />} />
+        <Route path="/board" element={<Board />} />
+        <Route path="/board/:boardNo" element={<BoardDetail />} />
+        <Route path="/board/:boardNo/edit" element={<BoardChage />} />
+        <Route path="/board/write" element={<BoardWrite />} />
+        <Route path="/notice" element={<Notice />} />
       </Route>
 
       {/* Header/Footer 없는 페이지 */}

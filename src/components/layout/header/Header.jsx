@@ -85,21 +85,27 @@ const Header = () => {
             {/* 기존 게시판 항목들 */}
             <div
               style={styles.dropdownItem}
-              onClick={() => handleNavigation("/board/1")}
+              onClick={() => handleNavigation("/board")}
             >
-              게시판 1
+              유저 커뮤니티
             </div>
             <div
               style={styles.dropdownItem}
-              onClick={() => handleNavigation("/board/2")}
+              onClick={() => handleNavigation("/mypage")}
             >
-              게시판 2
+              마이 페이지
+            </div>
+            <div
+              style={styles.dropdownItem}
+              onClick={() => handleNavigation("/notice")}
+            >
+              공지사항
             </div>
             <div
               style={styles.dropdownItem}
               onClick={() => handleNavigation("/board/3")}
             >
-              게시판 3
+              식물 목록
             </div>
             <div
               style={styles.dropdownItem}
