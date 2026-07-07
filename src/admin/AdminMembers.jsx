@@ -19,8 +19,10 @@ import {
   Title,
   Toolbar,
 } from "./admin.style";
+import Sidebars from "./Sidebars";
+import LowBars from "./Lowbars";
 
-const Boards = () => {
+const AdminMembers = () => {
   const [admins, setAdmins] = useState("");
   const [keyword, setKeyword] = useState("");
   const [selected, setSelected] = useState("");
@@ -33,56 +35,19 @@ const Boards = () => {
   const totalPage = 7;
 
   axios.get(`http://localhost/api/boards?page=${page}`).then((res) => {
+    console.log(res);
     //setNotice(res.data.data.list);
     //setTotalPage(res.data.data.totalPage);
   });
 
   return (
     <Container>
-      <Sidebar>
-        <Logo>Plant plants</Logo>
-        <Menu>
-          <MenuItem
-            onClick={() => {
-              setActiveMenu("관리자 관리");
-              navi("/admin");
-            }}
-          >
-            관리자 관리
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
-              setActiveMenu("회원 관리");
-              navi("/member");
-            }}
-          >
-            회원 관리
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
-              setActiveMenu("게시글 관리");
-              navi("/board");
-            }}
-          >
-            게시글 관리
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
-              setActiveMenu("식물 정보 관리");
-              navi("/plant");
-            }}
-          >
-            식물 정보 관리
-          </MenuItem>
-          <MenuItem>공지사항 관리</MenuItem>
-          <MenuItem>대시보드</MenuItem>
-        </Menu>
-      </Sidebar>
-
+      <Sidebars />
       <Main>
         <Header>
-          <Title>게시글 관리</Title>
+          <Title>회원 관리</Title>
         </Header>
+
         <Toolbar>
           <Select>
             <option>All</option>
@@ -95,6 +60,7 @@ const Boards = () => {
             placeholder="관리자 검색"
           />
           <ButtonGroup>
+            <AddButton>회원 마스킹 해제</AddButton>
             <AddButton>복구</AddButton>
             <DeleteButton>삭제</DeleteButton>
           </ButtonGroup>
@@ -106,14 +72,15 @@ const Boards = () => {
               <th>
                 <input type="checkbox" />
               </th>
-              <th>보드키</th>
-              <th>생성 날짜</th>
-              <th>회원 ID</th>
-              <th>회원 명</th>
-              <th>게시글 이름</th>
+              <th>회원키</th>
+              <th>생성날짜</th>
+              <th>관리자 ID</th>
+              <th>관리자명</th>
+              <th>관리자 이메일</th>
               <th>사용여부</th>
             </tr>
           </thead>
+
           <tbody>
             {admins.length === 0 ? (
               <tr>
@@ -124,7 +91,7 @@ const Boards = () => {
                 <th>23/09/2022</th>
                 <th>tidgus</th>
                 <th>김*환</th>
-                <th>t*gu*s@gmail.com</th>
+                <th>t*dg*s@gmail.com</th>
                 <th>Y</th>
               </tr>
             ) : (
@@ -151,7 +118,7 @@ const Boards = () => {
                 </th>
                 <th>#2</th>
                 <th>23/09/2022</th>
-                <th>tidugs</th>
+                <th>tidgus</th>
                 <th>최*개</th>
                 <th>t*dg*s@gmail.com</th>
                 <th>Y</th>
@@ -159,11 +126,10 @@ const Boards = () => {
             ) : (
               admins.map((admin) => (
                 <tr key={admin.memberNo}>
-                  <td>
-                    <input type="checkbox" />
-                  </td>
                   <td>{admin.memberNo}</td>
                   <td>{admin.createDate}</td>
+                  <td>{admin.memberId}</td>
+                  <td>{admin.memberName}</td>
                   <td>{admin.memberEmail}</td>
                   <td>{admin.useYn}</td>
                 </tr>
@@ -197,57 +163,9 @@ const Boards = () => {
             )}
           </tbody>
         </Table>
-        <LowBar>
-          <button disabled={page === 1} onClick={() => setPage(1)}>
-            ⏮
-          </button>
-          <button disabled={page === 1} onCLick={() => setPage(page - 1)}>
-            &lt; Previous
-          </button>
-
-          <div className="pageWrap">
-            {Array.from({ length: totalPage }, (_, i) => {
-              const pageNum = i + 1;
-
-              if (
-                pageNum === 1 ||
-                pageNum === totalPage ||
-                (pageNum >= page - 1 && pageNum <= page + 1)
-              ) {
-                return (
-                  <button
-                    key={pageNum}
-                    className={page === pageNum ? "active" : ""}
-                    onClick={() => setPage(pageNum)}
-                  >
-                    {pageNum}
-                  </button>
-                );
-              }
-              if (pageNum === page - 2 || pageNum === page + 2) {
-                return <span key={pageNum}>...</span>;
-              }
-
-              return null;
-            })}
-          </div>
-
-          <button
-            disabled={page === totalPage}
-            onClick={() => setPage(page + 1)}
-          >
-            Next &gt;
-          </button>
-
-          <button
-            disabled={page === totalPage}
-            onClick={() => setPage(totalPage)}
-          >
-            ⏭
-          </button>
-        </LowBar>
+        <LowBars />
       </Main>
     </Container>
   );
 };
-export default Boards;
+export default AdminMembers;

@@ -18,10 +18,14 @@ import Main from "./main/Main";
 
 // Layout용 Outlet
 import { Outlet } from "react-router-dom";
-import Members from "./admin/Members";
-
-import Boards from "./admin/Boards";
-import Plants from "./admin/Plants";
+import AdminMembers from "./admin/AdminMembers";
+import AdminBoards from "./admin/AdminBoards";
+import AdminPlants from "./admin/AdminPlants";
+import AdminNotices from "./admin/AdminNotices";
+import AdminDash from "./admin/AdminDash";
+import AdminNoticesPlus from "./admin/AdminNoticesPlus";
+import AdminNoticeEdit from "./admin/AdminNoticeEdit";
+import AdminPlantsPlus from "./admin/AdminPlantsPlus";
 
 function MainLayout() {
   return (
@@ -66,9 +70,14 @@ function App() {
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/admin" element={<Admin />} />
         {/* <Route path="/member" element={<Members />} /> */}
-        <Route path="/member" element={<Members />} />
-        <Route path="admin/board" element={<Boards />} />
-        <Route path="/plant" element={<Plants />} />
+        <Route path="/admin/member" element={<AdminMembers />} />
+        <Route path="/admin/board" element={<AdminBoards />} />
+        <Route path="/admin/plant" element={<AdminPlants />} />
+        <Route path="/admin/plant/plus" element={<AdminPlantsPlus />} />
+        <Route path="/admin/notice" element={<AdminNotices />} />
+        <Route path="/admin/notice/plus" element={<AdminNoticesPlus />} />
+        <Route path="/admin/notice/edit" element={<AdminNoticeEdit />} />
+        <Route path="/admin/dash" element={<AdminDash />} />
       </Route>
     </Routes>
   );

@@ -19,7 +19,9 @@ import {
   Title,
   Toolbar,
 } from "./admin.style";
-const Plants = () => {
+import Sidebars from "./Sidebars";
+import LowBars from "./Lowbars";
+const AdminPlants = () => {
   const navi = useNavigate();
   const [admins, setAdmins] = useState("");
   const [keyword, setKeyword] = useState("");
@@ -38,49 +40,7 @@ const Plants = () => {
   });
   return (
     <Container>
-      <Sidebar>
-        <Logo>Plant plants</Logo>
-        <Menu>
-          <MenuItem
-            onClick={() => {
-              setActiveMenu("관리자 관리");
-              navi("/admin");
-            }}
-          >
-            관리자 관리
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
-              setActiveMenu("회원 관리");
-              navi("/member");
-            }}
-          >
-            회원 관리
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
-              setActiveMenu("게시글 관리");
-              navi("/board");
-            }}
-          >
-            게시글 관리
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
-              setActiveMenu("식물 정보 관리");
-              navi("/plant");
-            }}
-          >
-            식물 정보 관리
-          </MenuItem>
-          <MenuItem onClick={() => setActiveMenu("공지사항 관리")}>
-            공지사항 관리
-          </MenuItem>
-          <MenuItem onClick={() => setActiveMenu("대시보드")}>
-            대시보드
-          </MenuItem>
-        </Menu>
-      </Sidebar>
+      <Sidebars />
       <Main>
         <Header>
           <Title>식물 정보 관리</Title>
@@ -97,7 +57,14 @@ const Plants = () => {
             placeholder="관리자 검색"
           />
           <ButtonGroup>
-            <AddButton>추가</AddButton>
+            <AddButton
+              onClick={() => {
+                setActiveMenu("추가");
+                navi("/admin/plant/plus");
+              }}
+            >
+              추가
+            </AddButton>
             <DeleteButton>삭제</DeleteButton>
           </ButtonGroup>
         </Toolbar>
@@ -205,54 +172,9 @@ const Plants = () => {
             )}
           </tbody>
         </Table>
-        <LowBar>
-          <button disabled={page === 1} onClick={() => setPage(1)}>
-            ⏮
-          </button>
-
-          <button disabled={page === 1} onClick={() => setPage(page - 1)}>
-            &lt; Previous
-          </button>
-
-          <div className="pageWrap">
-            {Array.from({ length: totalPage }, (_, i) => {
-              const pageNum = i + 1;
-              if (
-                pageNum === 1 ||
-                pageNum === totalPage ||
-                (pageNum >= page - 1 && pageNum <= page + 1)
-              ) {
-                return (
-                  <button
-                    key={pageNum}
-                    className={page === pageNum ? "active" : ""}
-                    onClick={() => setPage(pageNum)}
-                  >
-                    {pageNum}
-                  </button>
-                );
-              }
-              if (pageNum === page - 2 || pageNum === page + 2) {
-                return <span key={pageNum}>...</span>;
-              }
-              return null;
-            })}
-          </div>
-          <button
-            disabled={page === totalPage}
-            onClick={() => setPage(page + 1)}
-          >
-            Next &gt;
-          </button>
-          <button
-            disabled={page === totalPage}
-            onClick={() => setPage(totalPage)}
-          >
-            ⏭
-          </button>
-        </LowBar>
+        <LowBars />
       </Main>
     </Container>
   );
 };
-export default Plants;
+export default AdminPlants;
