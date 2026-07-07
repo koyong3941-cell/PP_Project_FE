@@ -107,6 +107,18 @@ const Header = () => {
             >
               식물 목록
             </div>
+            <div
+              style={styles.dropdownItem}
+              onClick={() => handleNavigation("/admin")}
+            >
+              관리자 페이지
+            </div>
+            <div
+              style={styles.dropdownItem}
+              onClick={() => handleNavigation("/member")}
+            >
+              관리자 페이지
+            </div>
           </div>
         )}
       </div>
