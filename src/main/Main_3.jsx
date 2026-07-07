@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
+import api from "../api/axios";
 import heroPlant from "../assets/main_hero.png"; // 677 x 1014
 import bannerSoil from "../assets/second_banner.png"; // 1920 x 653
 import boardShelf from "../assets/main_board_1.png"; // 유저 게시판 - 1
@@ -40,27 +41,6 @@ import {
   ContentSection2,
 } from "./main.styles";
 
-// TODO: DB 연동 - 아래 리뷰 목록은 임시 데이터입니다.
-// image가 없으면 카드가 플레이스홀더로 표시되며, DB에서 받아온 URL로 채워주면 됩니다.
-const REVIEW_ITEMS = [
-  {
-    id: 1,
-    name: "Strelitzia nicolai",
-    rating: 5,
-    reviewCount: 2479,
-    image: null,
-  },
-  {
-    id: 2,
-    name: "Ficus microcarpa",
-    rating: 5,
-    reviewCount: 2479,
-    image: null,
-  },
-  { id: 3, name: "Aloe vera", rating: 5, reviewCount: 2479, image: null },
-  { id: 4, name: "Aloe vera", rating: 5, reviewCount: 2479, image: null },
-];
-
 // TODO: DB 연동 - 유저 게시판 카드 목록도 실제로는 DB에서 가져올 예정입니다.
 // 지금은 전달받은 이미지 2장을 기본값으로 사용합니다.
 const BOARD_ITEMS = [
@@ -70,8 +50,51 @@ const BOARD_ITEMS = [
 
 const SECTION_COUNT = 4;
 
-export default function Main() {
+export default function Main_2() {
   const pageRef = useRef(null);
+
+  const [reviewItems, setReviewItems] = useState([]);
+  const [reviewLoading, setReviewLoading] = useState(true);
+  const [reviewError, setReviewError] = useState(null);
+
+  useEffect(() => {
+    let ignore = false;
+
+    const fetchReviews = async () => {
+      try {
+        setReviewLoading(true);
+        const res = await api.get("/reviews", { params: { limit: 4 } });
+
+        // 서버 응답 형태에 맞춰 매핑 (id, 식물이름, 별점, 리뷰 개수, 이미지)
+        const mapped = res.data.map((item) => ({
+          id: item.id,
+          name: item.plantName,
+          rating: item.rating,
+          reviewCount: item.reviewCount,
+          image: item.imageUrl ?? null,
+        }));
+
+        if (!ignore) {
+          setReviewItems(mapped);
+          setReviewError(null);
+        }
+      } catch (err) {
+        if (!ignore) {
+          setReviewError("리뷰를 불러오지 못했습니다.");
+        }
+      } finally {
+        if (!ignore) {
+          setReviewLoading(false);
+        }
+      }
+    };
+
+    fetchReviews();
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   const scrollToSection = (index) => {
     const page = pageRef.current;
@@ -151,22 +174,42 @@ export default function Main() {
         <ActionBadge>모두보기</ActionBadge>
 
         <ReviewList>
-          {REVIEW_ITEMS.map((item) => (
-            <ReviewCard key={item.id}>
-              <ReviewImageFrame $image={item.image}>
-                {!item.image && "이미지 준비중"}
-              </ReviewImageFrame>
-              <ReviewMeta>
-                <ReviewName>{item.name}</ReviewName>
-                <ReviewRating>
-                  <Stars>{"★".repeat(item.rating)}</Stars>
-                  <ReviewCount>
-                    {item.reviewCount.toLocaleString()} reviews
-                  </ReviewCount>
-                </ReviewRating>
-              </ReviewMeta>
-            </ReviewCard>
-          ))}
+          {reviewLoading &&
+            Array.from({ length: 4 }).map((_, idx) => (
+              <ReviewCard key={`skeleton-${idx}`}>
+                <ReviewImageFrame $image={null}>
+                  불러오는 중...
+                </ReviewImageFrame>
+                <ReviewMeta>
+                  <ReviewName>&nbsp;</ReviewName>
+                  <ReviewRating>
+                    <Stars>&nbsp;</Stars>
+                    <ReviewCount>&nbsp;</ReviewCount>
+                  </ReviewRating>
+                </ReviewMeta>
+              </ReviewCard>
+            ))}
+
+          {!reviewLoading && reviewError && <p>{reviewError}</p>}
+
+          {!reviewLoading &&
+            !reviewError &&
+            reviewItems.map((item) => (
+              <ReviewCard key={item.id}>
+                <ReviewImageFrame $image={item.image}>
+                  {!item.image && "이미지 준비중"}
+                </ReviewImageFrame>
+                <ReviewMeta>
+                  <ReviewName>{item.name}</ReviewName>
+                  <ReviewRating>
+                    <Stars>{"★".repeat(item.rating)}</Stars>
+                    <ReviewCount>
+                      {item.reviewCount.toLocaleString()} reviews
+                    </ReviewCount>
+                  </ReviewRating>
+                </ReviewMeta>
+              </ReviewCard>
+            ))}
         </ReviewList>
 
         <EdgeNavButton
