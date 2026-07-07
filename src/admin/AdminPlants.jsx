@@ -57,7 +57,14 @@ const AdminPlants = () => {
             placeholder="관리자 검색"
           />
           <ButtonGroup>
-            <AddButton>추가</AddButton>
+            <AddButton
+              onClick={() => {
+                setActiveMenu("추가");
+                navi("/admin/plant/plus");
+              }}
+            >
+              추가
+            </AddButton>
             <DeleteButton>삭제</DeleteButton>
           </ButtonGroup>
         </Toolbar>

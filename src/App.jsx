@@ -23,6 +23,9 @@ import AdminBoards from "./admin/AdminBoards";
 import AdminPlants from "./admin/AdminPlants";
 import AdminNotices from "./admin/AdminNotices";
 import AdminDash from "./admin/AdminDash";
+import AdminNoticesPlus from "./admin/AdminNoticesPlus";
+import AdminNoticeEdit from "./admin/AdminNoticeEdit";
+import AdminPlantsPlus from "./admin/AdminPlantsPlus";
 
 function MainLayout() {
   return (
@@ -75,7 +78,10 @@ function App() {
         <Route path="/admin/member" element={<AdminMembers />} />
         <Route path="/admin/board" element={<AdminBoards />} />
         <Route path="/admin/plant" element={<AdminPlants />} />
+        <Route path="/admin/plant/plus" element={<AdminPlantsPlus />} />
         <Route path="/admin/notice" element={<AdminNotices />} />
+        <Route path="/admin/notice/plus" element={<AdminNoticesPlus />} />
+        <Route path="/admin/notice/edit" element={<AdminNoticeEdit />} />
         <Route path="/admin/dash" element={<AdminDash />} />
       </Route>
     </Routes>

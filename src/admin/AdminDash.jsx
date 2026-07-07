@@ -38,7 +38,6 @@ const AdminDash = () => {
             </ButtonGroup>
           </Toolbar>
         </Header>
-
         <Table>
           <thead>
             <tr>
@@ -48,9 +47,11 @@ const AdminDash = () => {
             </tr>
           </thead>
           <tbody>
-            <td>100000명</td>
-            <td>5명</td>
-            <td>1명</td>
+            <tr>
+              <td>100000명</td>
+              <td>5명</td>
+              <td>1명</td>
+            </tr>
           </tbody>
         </Table>
         <LowBars />

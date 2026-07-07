@@ -54,7 +54,22 @@ const AdminNotices = () => {
             placeholder="관리자검색"
           />
           <ButtonGroup>
-            <AddButton>추가</AddButton>
+            <AddButton
+              onClick={() => {
+                setActiveMenu("추가");
+                navi("/admin/notice/plus");
+              }}
+            >
+              추가
+            </AddButton>
+            <AddButton
+              onClick={() => {
+                setActiveMenu("수정");
+                navi("/admin/notice/edit");
+              }}
+            >
+              수정
+            </AddButton>
             <DeleteButton>삭제</DeleteButton>
           </ButtonGroup>
         </Toolbar>
