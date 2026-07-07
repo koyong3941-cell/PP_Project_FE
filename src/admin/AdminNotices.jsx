@@ -10,8 +10,6 @@ import {
   Logo,
   LowBar,
   Main,
-  Menu,
-  MenuItem,
   SearchInput,
   Select,
   Sidebar,
@@ -19,12 +17,12 @@ import {
   Title,
   Toolbar,
 } from "./admin.style";
-
-const Members = () => {
+import Sidebars from "./Sidebars";
+import LowBars from "./Lowbars";
+const AdminNotices = () => {
   const [admins, setAdmins] = useState("");
   const [keyword, setKeyword] = useState("");
   const [selected, setSelected] = useState("");
-  const [loading, setLoading] = useState(false);
   const navi = useNavigate();
 
   const [activeMenu, setActiveMenu] = useState("");
@@ -32,59 +30,18 @@ const Members = () => {
   const [page, setPage] = useState(1);
   const totalPage = 7;
 
-  axios.get(`http://localhost/api/boards?page=${page}`).then((res) => {
+  axios.get(`http://localhost/api/notices?page=${page}`).then((res) => {
     console.log(res);
-    //setNotice(res.data.data.list);
-    //setTotalPage(res.data.data.totalPage);
+    // setNotice(res.data.data.list);
+    // setTotalPage(res.data.data.totalPage);
   });
-
   return (
     <Container>
-      <Sidebar>
-        <Logo>Plant plants</Logo>
-        <Menu>
-          <MenuItem
-            onClick={() => {
-              setActiveMenu("관리자 관리");
-              navi("/admin");
-            }}
-          >
-            관리자 관리
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
-              setActiveMenu("회원 관리");
-              navi("/member");
-            }}
-          >
-            회원 관리
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
-              setActiveMenu("게시글 관리");
-              navi("/board");
-            }}
-          >
-            게시글 관리
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
-              setActiveMenu("식물 정보 관리");
-              navi("/plant");
-            }}
-          >
-            식물 정보 관리
-          </MenuItem>
-          <MenuItem>공지사항 관리</MenuItem>
-          <MenuItem>대시보드</MenuItem>
-        </Menu>
-      </Sidebar>
-
+      <Sidebars />
       <Main>
         <Header>
-          <Title>회원 관리</Title>
+          <Title>공지사항 관리</Title>
         </Header>
-
         <Toolbar>
           <Select>
             <option>All</option>
@@ -94,11 +51,25 @@ const Members = () => {
           <SearchInput
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
-            placeholder="관리자 검색"
+            placeholder="관리자검색"
           />
           <ButtonGroup>
-            <AddButton>회원 마스킹 해제</AddButton>
-            <AddButton>복구</AddButton>
+            <AddButton
+              onClick={() => {
+                setActiveMenu("추가");
+                navi("/admin/notice/plus");
+              }}
+            >
+              추가
+            </AddButton>
+            <AddButton
+              onClick={() => {
+                setActiveMenu("수정");
+                navi("/admin/notice/edit");
+              }}
+            >
+              수정
+            </AddButton>
             <DeleteButton>삭제</DeleteButton>
           </ButtonGroup>
         </Toolbar>
@@ -109,12 +80,12 @@ const Members = () => {
               <th>
                 <input type="checkbox" />
               </th>
-              <th>회원키</th>
-              <th>생성날짜</th>
-              <th>관리자 ID</th>
-              <th>관리자명</th>
-              <th>관리자 이메일</th>
-              <th>사용여부</th>
+              <th>공지보드 키</th>
+              <th>게시 날짜</th>
+              <th>회원ID</th>
+              <th>게시자</th>
+              <th>공지사항 명</th>
+              <th>게시 여부</th>
             </tr>
           </thead>
 
@@ -126,9 +97,9 @@ const Members = () => {
                 </th>
                 <th>#1</th>
                 <th>23/09/2022</th>
-                <th>tidgus</th>
-                <th>김*환</th>
-                <th>t*dg*s@gmail.com</th>
+                <th>thdgus</th>
+                <th>김지환</th>
+                <th>thdgus@gmail.com</th>
                 <th>Y</th>
               </tr>
             ) : (
@@ -155,14 +126,17 @@ const Members = () => {
                 </th>
                 <th>#2</th>
                 <th>23/09/2022</th>
-                <th>tidgus</th>
-                <th>최*개</th>
-                <th>t*dg*s@gmail.com</th>
+                <th>thdgus</th>
+                <th>최무개</th>
+                <th>thdgus@gmail.com</th>
                 <th>Y</th>
               </tr>
             ) : (
               admins.map((admin) => (
                 <tr key={admin.memberNo}>
+                  <td>
+                    <input type="checkbox" />
+                  </td>
                   <td>{admin.memberNo}</td>
                   <td>{admin.createDate}</td>
                   <td>{admin.memberId}</td>
@@ -181,14 +155,17 @@ const Members = () => {
                 </th>
                 <th>#3</th>
                 <th>23/09/2022</th>
-                <th>tidgus</th>
-                <th>백*만</th>
-                <th>t*dg*s@gmail.com</th>
+                <th>thdgus</th>
+                <th>백진만</th>
+                <th>thdgus@gmail.com</th>
                 <th>Y</th>
               </tr>
             ) : (
               admins.map((admin) => (
                 <tr key={admin.memberNo}>
+                  <td>
+                    <input type="checkbox" />
+                  </td>
                   <td>{admin.memberNo}</td>
                   <td>{admin.createDate}</td>
                   <td>{admin.memberId}</td>
@@ -200,58 +177,9 @@ const Members = () => {
             )}
           </tbody>
         </Table>
-        <LowBar>
-          <button disabled={page === 1} onClick={() => setPage(1)}>
-            ⏮
-          </button>
-
-          <button disabled={page === 1} onCLick={() => setPage(page - 1)}>
-            &lt; Previous
-          </button>
-
-          <div className="pageWrap">
-            {Array.from({ length: totalPage }, (_, i) => {
-              const pageNum = i + 1;
-
-              if (
-                pageNum === 1 ||
-                pageNum === totalPage ||
-                (pageNum >= page - 1 && pageNum <= page + 1)
-              ) {
-                return (
-                  <button
-                    key={pageNum}
-                    className={page === pageNum ? "active" : ""}
-                    onClick={() => setPage(pageNum)}
-                  >
-                    {pageNum}
-                  </button>
-                );
-              }
-              if (pageNum === page - 2 || pageNum === page + 2) {
-                return <span key={pageNum}>...</span>;
-              }
-
-              return null;
-            })}
-          </div>
-
-          <button
-            disabled={page === totalPage}
-            onClick={() => setPage(page + 1)}
-          >
-            Next &gt;
-          </button>
-
-          <button
-            disabled={page === totalPage}
-            onClick={() => setPage(totalPage)}
-          >
-            ⏭
-          </button>
-        </LowBar>
+        <LowBars />
       </Main>
     </Container>
   );
 };
-export default Members;
+export default AdminNotices;
