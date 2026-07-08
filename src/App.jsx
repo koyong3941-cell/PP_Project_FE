@@ -5,6 +5,8 @@ import "./App.css";
 
 import SignUp from "./signup/SignUp";
 import Login from "./login/login";
+
+import Admin from "./admin/Admin";
 import Board from "./board/Board";
 import BoardDetail from "./board/BoardDetail";
 import BoardWrite from "./board/BoardWrite";
@@ -60,6 +62,16 @@ function App() {
       {/* Header/Footer 없는 페이지 */}
       <Route element={<EmptyLayout />}>
         <Route path="/mypage" element={<MyPage />} />
+        <Route path="/admin" element={<Admin />} />
+        {/* <Route path="/member" element={<Members />} /> */}
+        <Route path="/admin/member" element={<AdminMembers />} />
+        <Route path="/admin/board" element={<AdminBoards />} />
+        <Route path="/admin/plant" element={<AdminPlants />} />
+        <Route path="/admin/plant/plus" element={<AdminPlantsPlus />} />
+        <Route path="/admin/notice" element={<AdminNotices />} />
+        <Route path="/admin/notice/plus" element={<AdminNoticesPlus />} />
+        <Route path="/admin/notice/edit" element={<AdminNoticeEdit />} />
+        <Route path="/admin/dash" element={<AdminDash />} />
       </Route>
     </Routes>
   );
