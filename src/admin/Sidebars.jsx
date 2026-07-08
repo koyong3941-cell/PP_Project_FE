@@ -36,6 +36,14 @@ const Sidebars = () => {
         </MenuItem>
         <MenuItem
           onClick={() => {
+            setActiveMenu("카테고리 관리");
+            navi("/admin/category");
+          }}
+        >
+          카테고리 관리
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
             setActiveMenu("식물 정보 관리");
             navi("/admin/plant");
           }}

@@ -27,6 +27,8 @@ import AdminNoticesPlus from "./admin/AdminNoticesPlus";
 import AdminNoticeEdit from "./admin/AdminNoticeEdit";
 import AdminPlantsPlus from "./admin/AdminPlantsPlus";
 import AdminPlantsEdit from "./admin/AdminPlantsEdit";
+import AdminCategory from "./admin/AdminCategory";
+import AdminPlus from "./admin/AdminPlus";
 
 function MainLayout() {
   return (
@@ -75,9 +77,11 @@ function App() {
       <Route element={<EmptyLayout />}>
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/admin/plus" element={<AdminPlus />} />
         {/* <Route path="/member" element={<Members />} /> */}
         <Route path="/admin/member" element={<AdminMembers />} />
         <Route path="/admin/board" element={<AdminBoards />} />
+        <Route path="/admin/category" element={<AdminCategory />} />
         <Route path="/admin/plant" element={<AdminPlants />} />
         <Route path="/admin/plant/plus" element={<AdminPlantsPlus />} />
         <Route path="/admin/plant/edit" element={<AdminPlantsEdit />} />

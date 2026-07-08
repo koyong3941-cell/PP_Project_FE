@@ -65,7 +65,14 @@ const Admin = () => {
           />
 
           <ButtonGroup>
-            <AddButton>추가</AddButton>
+            <AddButton
+              onClick={() => {
+                setActiveMenu("추가");
+                navi("/admin/plus");
+              }}
+            >
+              추가
+            </AddButton>
             <DeleteButton>삭제</DeleteButton>
           </ButtonGroup>
         </Toolbar>
