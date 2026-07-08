@@ -28,6 +28,8 @@ import AdminPlantsPlus from "./admin/AdminPlantsPlus";
 import AdminPlantsEdit from "./admin/AdminPlantsEdit";
 import AdminCategory from "./admin/AdminCategory";
 import AdminPlus from "./admin/AdminPlus";
+import Main_3 from "./main/Main_3";
+import { Main } from "./admin/admin.style";
 
 function MainLayout() {
   return (
@@ -56,7 +58,7 @@ function App() {
     <Routes>
       {/* Header/Footer 있는 페이지 */}
       <Route element={<MainLayout />}>
-        <Route path="/2" element={<Main_2 />} />
+        <Route path="/2" element={<Main_3 />} />
         <Route path="/" element={<Main />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />

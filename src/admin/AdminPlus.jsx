@@ -28,8 +28,8 @@ const AdminPlus = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    if (!memberId || !memberPwd) {
-      setStatus("아이디랑 비밀번호를 꼭 입력하세요");
+    if (!memberId || !memberPwd || !memberEmail) {
+      setStatus("아이디랑 비밀번호 이메일을 꼭 입력하세요");
       return;
     }
 
