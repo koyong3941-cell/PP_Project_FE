@@ -65,6 +65,14 @@ const AdminPlants = () => {
             >
               추가
             </AddButton>
+            <AddButton
+              onClick={() => {
+                setActiveMenu("수정");
+                navi("/admin/plant/edit");
+              }}
+            >
+              수정
+            </AddButton>
             <DeleteButton>삭제</DeleteButton>
           </ButtonGroup>
         </Toolbar>

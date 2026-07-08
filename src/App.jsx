@@ -17,8 +17,15 @@ import MyPage from "./mypage/MyPage";
 
 // Layout용 Outlet
 import { Outlet } from "react-router-dom";
-import Main_2 from "./main/Main_3";
-import Main from "./main/Main";
+import AdminMembers from "./admin/AdminMembers";
+import AdminBoards from "./admin/AdminBoards";
+import AdminPlants from "./admin/AdminPlants";
+import AdminNotices from "./admin/AdminNotices";
+import AdminDash from "./admin/AdminDash";
+import AdminNoticesPlus from "./admin/AdminNoticesPlus";
+import AdminNoticeEdit from "./admin/AdminNoticeEdit";
+import AdminPlantsPlus from "./admin/AdminPlantsPlus";
+import AdminPlantsEdit from "./admin/AdminPlantsEdit";
 
 function MainLayout() {
   return (
@@ -68,6 +75,7 @@ function App() {
         <Route path="/admin/board" element={<AdminBoards />} />
         <Route path="/admin/plant" element={<AdminPlants />} />
         <Route path="/admin/plant/plus" element={<AdminPlantsPlus />} />
+        <Route path="/admin/plant/edit" element={<AdminPlantsEdit />} />
         <Route path="/admin/notice" element={<AdminNotices />} />
         <Route path="/admin/notice/plus" element={<AdminNoticesPlus />} />
         <Route path="/admin/notice/edit" element={<AdminNoticeEdit />} />

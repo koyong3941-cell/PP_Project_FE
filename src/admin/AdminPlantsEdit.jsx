@@ -16,7 +16,7 @@ import {
   Toolbar,
 } from "./admin.style";
 
-const AdminPlantsPlus = () => {
+const AdminPlantsEdit = () => {
   const [admins, setAdmins] = useState("");
   const [keyword, setKeyword] = useState("");
   const [selected, setSelected] = useState("");
@@ -33,7 +33,7 @@ const AdminPlantsPlus = () => {
       <Sidebars />
       <Main>
         <Header>
-          <Title>식물추가</Title>
+          <Title>식물 수정</Title>
         </Header>
         <Toolbar />
         <h4>제목</h4>
@@ -54,21 +54,20 @@ const AdminPlantsPlus = () => {
           </Select>
         </Toolbar>
         <Toolbar />
-        <h4>식물 정보/재배 환경</h4>
+        <h4>식물정보/재배환경</h4>
         <Toolbar />
         <BoardText placeholder="내용" />
         <Toolbar>
           <SearchInput placeholder="식물사진.jpg" />
-          <AddButton>첨부 사진</AddButton>
+          <AddButton>첨부사진</AddButton>
           <SearchInput placeholder="농촌진흥청 API링크" />
-          <AddButton>링크</AddButton>
           <ButtonGroup>
             <AddButton>목록</AddButton>
-            <AddButton>추가</AddButton>
+            <AddButton>수정</AddButton>
           </ButtonGroup>
         </Toolbar>
       </Main>
     </Container>
   );
 };
-export default AdminPlantsPlus;
+export default AdminPlantsEdit;
