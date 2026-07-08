@@ -30,6 +30,7 @@ import AdminCategory from "./admin/AdminCategory";
 import AdminPlus from "./admin/AdminPlus";
 import Main_3 from "./main/Main_3";
 import { Main } from "./admin/admin.style";
+import AdminMemberDelete from "./admin/AdminMemberDelete";
 
 function MainLayout() {
   return (
@@ -75,6 +76,7 @@ function App() {
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/admin/plus" element={<AdminPlus />} />
+        <Route path="/admin/member/delete" element={<AdminMemberDelete />} />
         {/* <Route path="/member" element={<Members />} /> */}
         <Route path="/admin/member" element={<AdminMembers />} />
         <Route path="/admin/board" element={<AdminBoards />} />
