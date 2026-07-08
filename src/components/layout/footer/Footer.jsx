@@ -32,16 +32,43 @@ function Footer() {
           <h1>Plant Plant</h1>
           <Right>
             <a href="#">
-              <img src={link} style={{ width: "24px" }} />
+              <img
+                src={link}
+                style={{ width: "24px" }}
+                onClick={() =>
+                  window.open("https://kr.linkedin.com/", "_blank")
+                }
+              />
             </a>
             <a href="#">
-              <img src={insta} style={{ width: "24px" }} />
+              <img
+                src={insta}
+                style={{ width: "24px" }}
+                onClick={() =>
+                  window.open("https://www.instagram.com/", "_blank")
+                }
+              />
             </a>
             <a href="#">
-              <img src={youtube} style={{ width: "24px" }} />
+              <img
+                src={youtube}
+                style={{ width: "24px" }}
+                onClick={() =>
+                  window.open(
+                    "https://www.youtube.com/shorts/MKCjzp4XXVA",
+                    "_blank",
+                  )
+                }
+              />
             </a>{" "}
             <a href="#">
-              <img src={twitter} style={{ width: "24px" }} />
+              <img
+                src={twitter}
+                style={{ width: "24px" }}
+                onClick={() =>
+                  window.open("https://kr.linkedin.com/", "_blank")
+                }
+              />
             </a>
           </Right>
         </BrandingArea>

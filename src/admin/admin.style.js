@@ -65,6 +65,23 @@ export const Toolbar = styled.div`
   gap: 15px;
 `;
 
+export const BoardText = styled.textarea`
+  width: 100%;
+  height: 350px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+  font-size: 15px;
+  resize: vertical;
+
+  &:focus {
+    outline: none;
+    border-color: #f472b6;
+    box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.15);
+  }
+`;
+
 export const Select = styled.select`
   font-weight: 10px;
   width: 140px;
