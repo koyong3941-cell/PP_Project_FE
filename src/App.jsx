@@ -14,7 +14,6 @@ import BoardChage from "./board/BoardChange";
 import Notice from "./notice/Notice";
 import ProfileEdit from "./mypage/ProfileEdit";
 import MyPage from "./mypage/MyPage";
-import Main from "./main/Main";
 
 // Layout용 Outlet
 import { Outlet } from "react-router-dom";
@@ -36,11 +35,6 @@ function MainLayout() {
       <Header />
 
       <main className="main-content">
-        <Routes>
-          <Route path="/" element={<h1>메인 콘텐츠 영역입니다.</h1>} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/login" element={<Login />} />
-        </Routes>
         <Outlet />
       </main>
 
@@ -62,6 +56,7 @@ function App() {
     <Routes>
       {/* Header/Footer 있는 페이지 */}
       <Route element={<MainLayout />}>
+        <Route path="/2" element={<Main_2 />} />
         <Route path="/" element={<Main />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
