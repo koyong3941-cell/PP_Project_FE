@@ -1,0 +1,543 @@
+[1mdiff --git a/src/App.jsx b/src/App.jsx[m
+[1mindex 5d46acf..af6b08b 100644[m
+[1m--- a/src/App.jsx[m
+[1m+++ b/src/App.jsx[m
+[36m@@ -19,7 +19,7 @@[m [mimport Main from "./main/Main";[m
+ // Layout용 Outlet[m
+ import { Outlet } from "react-router-dom";[m
+ import Members from "./admin/Members";[m
+[31m-import Board from "./admin/Boards";[m
+[32m+[m
+ import Boards from "./admin/Boards";[m
+ import Plants from "./admin/Plants";[m
+ [m
+[36m@@ -29,11 +29,6 @@[m [mfunction MainLayout() {[m
+       <Header />[m
+ [m
+       <main className="main-content">[m
+[31m-        <Routes>[m
+[31m-          <Route path="/" element={<h1>메인 콘텐츠 영역입니다.</h1>} />[m
+[31m-          <Route path="/signup" element={<SignUp />} />[m
+[31m-          <Route path="/login" element={<Login />} />[m
+[31m-        </Routes>[m
+         <Outlet />[m
+       </main>[m
+ [m
+[36m@@ -72,7 +67,7 @@[m [mfunction App() {[m
+         <Route path="/admin" element={<Admin />} />[m
+         {/* <Route path="/member" element={<Members />} /> */}[m
+         <Route path="/member" element={<Members />} />[m
+[31m-        <Route path="/board" element={<Boards />} />[m
+[32m+[m[32m        <Route path="admin/board" element={<Boards />} />[m
+         <Route path="/plant" element={<Plants />} />[m
+       </Route>[m
+     </Routes>[m
+[1mdiff --git a/src/board/Board.jsx b/src/board/Board.jsx[m
+[1mindex 490acc2..10bf0b3 100644[m
+[1m--- a/src/board/Board.jsx[m
+[1m+++ b/src/board/Board.jsx[m
+[36m@@ -2,11 +2,16 @@[m [mimport { useState, useEffect } from "react";[m
+ import { Link } from "react-router-dom";[m
+ import { Search, Filter, ChevronLeft, ChevronRight } from "lucide-react";[m
+ import { styles } from "./Board.styles";[m
+[32m+[m[32mimport { useAuth } from "../context/AuthContext";[m
+[32m+[m[32mimport { useAlertify } from "../hooks/useAlertify";[m
+[32m+[m[32mimport { useNavigate } from "react-router-dom";[m
+ import api from "../api/axios";[m
+ [m
+ const Board = () => {[m
+   const [findBoardAll, setFindBoardAll] = useState([]);[m
+[31m-[m
+[32m+[m[32m  const { user } = useAuth();[m
+[32m+[m[32m  const navi = useNavigate();[m
+[32m+[m[32m  const { success, error } = useAlertify();[m
+   // 페이징 처리 부분--------------------------------------------------[m
+   const [page, setPage] = useState(0); // Spring 백엔드가 0번 페이지부터 시작함[m
+   const [totalPages, setTotalPages] = useState(page + 2);[m
+[36m@@ -25,9 +30,11 @@[m [mconst Board = () => {[m
+     api[m
+       .get(`/boards?page=${page}`)[m
+       .then((result) => {[m
+[31m-        console.log(result);[m
+[32m+[m[32m        console.log(result.data.data);[m
+[32m+[m
+         if (result.data && result.data.data) {[m
+[31m-          setFindBoardAll(result.data.data);[m
+[32m+[m[32m          setFindBoardAll(result.data.data.content);[m
+[32m+[m[32m          setTotalPages(result.data.data.totalPages);[m
+         }[m
+       })[m
+       .catch((err) => console.error("게시글 로딩 실패:", err));[m
+[36m@@ -50,10 +57,19 @@[m [mconst Board = () => {[m
+             필터[m
+           </button>[m
+         </div>[m
+[31m-[m
+[31m-        <Link to="/board/write">[m
+[31m-          <button style={styles.button}>게시글 작성</button>[m
+[31m-        </Link>[m
+[32m+[m[32m        <button[m
+[32m+[m[32m          style={styles.button}[m
+[32m+[m[32m          onClick={() => {[m
+[32m+[m[32m            if (!user) {[m
+[32m+[m[32m              navi("/login");[m
+[32m+[m[32m              error("로그인이 필요합니다.");[m
+[32m+[m[32m              return;[m
+[32m+[m[32m            }[m
+[32m+[m[32m            navi("/board/write");[m
+[32m+[m[32m          }}[m
+[32m+[m[32m        >[m
+[32m+[m[32m          게시글 작성[m
+[32m+[m[32m        </button>[m
+       </div>[m
+ [m
+       <table style={styles.table}>[m
+[36m@@ -90,6 +106,8 @@[m [mconst Board = () => {[m
+                     width: "30px",[m
+                     height: "30px",[m
+                     borderRadius: "50%",[m
+[32m+[m[32m                    objectFit: "cover",[m
+[32m+[m[32m                    flexShrink: 0,[m
+                   }}[m
+                 />[m
+ [m
+[1mdiff --git a/src/board/Board.styles.js b/src/board/Board.styles.js[m
+[1mindex 5c3275d..35944f2 100644[m
+[1m--- a/src/board/Board.styles.js[m
+[1m+++ b/src/board/Board.styles.js[m
+[36m@@ -4,76 +4,99 @@[m [mexport const styles = {[m
+     margin: "0 auto",[m
+     padding: "30px",[m
+   },[m
+[32m+[m
+   top: {[m
+     display: "flex",[m
+     justifyContent: "space-between",[m
+     alignItems: "center",[m
+     marginBottom: "20px",[m
+   },[m
+[32m+[m
+   search: {[m
+     display: "flex",[m
+     gap: "10px",[m
+     marginBottom: "20px",[m
+   },[m
+[32m+[m
+   input: {[m
+[31m-    width: "250px",[m
+[32m+[m[32m    flex: 1,[m
+[32m+[m[32m    border: "none",[m
+[32m+[m[32m    outline: "none",[m
+     padding: "8px",[m
+[31m-    border: "1px solid #ddd",[m
+[31m-    borderRadius: "5px",[m
+[32m+[m[32m    fontSize: "14px",[m
+   },[m
+[32m+[m
+   table: {[m
+     width: "100%",[m
+     borderCollapse: "collapse",[m
+   },[m
+[32m+[m
+   th: {[m
+     borderBottom: "1px solid #ddd",[m
+     padding: "12px",[m
+[31m-    textAlign: "left",[m
+[32m+[m[32m    textAlign: "center",[m
+     backgroundColor: "#fafafa",[m
+   },[m
+[32m+[m
+   td: {[m
+     borderBottom: "1px solid #eee",[m
+     padding: "12px",[m
+[32m+[m[32m    textAlign: "center",[m
+[32m+[m[32m    verticalAlign: "middle",[m
+   },[m
+[32m+[m
+   searchBox: {[m
+     display: "flex",[m
+     alignItems: "center",[m
+[32m+[m[32m    width: "785px",[m
+     border: "1px solid #ddd",[m
+     borderRadius: "6px",[m
+     padding: "0 10px",[m
+[32m+[m[32m    height: "40px",[m
+   },[m
+[32m+[m
+   writer: {[m
+     display: "flex",[m
+     alignItems: "center",[m
+     gap: "8px",[m
+[32m+[m[32m    height: "40px",[m
+[32m+[m[32m    marginLeft: "55px",[m
+   },[m
+[32m+[m
+   category: {[m
+     border: "1px solid #ccc",[m
+     borderRadius: "12px",[m
+     padding: "2px 8px",[m
+     fontSize: "12px",[m
+[32m+[m[32m    marginLeft: "50px",[m
+   },[m
+[32m+[m
+   title: {[m
+     borderBottom: "1px solid #eee",[m
+     padding: "12px",[m
+     fontWeight: "600",[m
+     cursor: "pointer",[m
+[32m+[m[32m    textAlign: "center",[m
+   },[m
+[32m+[m
+   link: {[m
+     color: "#333",[m
+     textDecoration: "none",[m
+   },[m
+[31m-  //페이징 처리----------------------------------------------------------------[m
+[32m+[m
+[32m+[m[32m  // 페이징 처리[m
+   pagination: {[m
+     display: "flex",[m
+     justifyContent: "center",[m
+     gap: "8px",[m
+     marginTop: "30px",[m
+   },[m
+[32m+[m
+   activePage: {[m
+     backgroundColor: "#333",[m
+     color: "#fff",[m
+   },[m
+[32m+[m
+   pageButton: {[m
+     border: "1px solid #ddd",[m
+     background: "#fff",[m
+[36m@@ -81,6 +104,7 @@[m [mexport const styles = {[m
+     cursor: "pointer",[m
+     borderRadius: "4px",[m
+   },[m
+[32m+[m
+   button: {[m
+     backgroundColor: "#333",[m
+     color: "#fff",[m
+[36m@@ -92,11 +116,12 @@[m [mexport const styles = {[m
+     alignItems: "center",[m
+     gap: "6px",[m
+   },[m
+[32m+[m
+   pageButtonHover: {[m
+     background: "#a8a8a8",[m
+   },[m
+[32m+[m
+   activePageHover: {[m
+     backgroundColor: "#777777",[m
+   },[m
+[31m-  //페이징 처리----------------------------------------------------------------[m
+ };[m
+[1mdiff --git a/src/board/BoardDetail.jsx b/src/board/BoardDetail.jsx[m
+[1mindex baedadb..24d5981 100644[m
+[1m--- a/src/board/BoardDetail.jsx[m
+[1m+++ b/src/board/BoardDetail.jsx[m
+[36m@@ -1,62 +1,172 @@[m
+ import { useEffect, useState } from "react";[m
+ import { useParams, useNavigate } from "react-router-dom";[m
+[32m+[m[32mimport { useAuth } from "../context/AuthContext";[m
+ import { detailStyles as s } from "./BoardDetail.styles";[m
+ import Board from "./Board";[m
+ import api from "../api/axios";[m
+ import { writeStyles } from "./BoardWrite.styles";[m
+[32m+[m[32mimport { useAlertify } from "../hooks/useAlertify";[m
+[32m+[m[32mimport defaultImg from "../assets/unknown.png";[m
+ [m
+ const BoardDetail = () => {[m
+[32m+[m[32m  const { user } = useAuth();[m
+   const { boardNo } = useParams();[m
+[31m-  const navigate = useNavigate();[m
+[32m+[m[32m  const { commentNo } = useParams();[m
+[32m+[m[32m  const navi = useNavigate();[m
+   const [comment, setComment] = useState("");[m
+   const [boardDetail, setBoardDetail] = useState(null);[m
+   const [loading, setLoading] = useState(true);[m
+   const [comments, setComments] = useState([]);[m
+   const [currentUser, setCurrentUser] = useState(null);[m
+[32m+[m[32m  const [status, setStatus] = useState("");[m
+[32m+[m[32m  const [reaction, setReaction] = useState({[m
+[32m+[m[32m    likeCount: 0,[m
+[32m+[m[32m    dislikeCount: 0,[m
+[32m+[m[32m  });[m
+[32m+[m[32m  const { success, error } = useAlertify();[m
+[32m+[m[32m  const [editingCommentNo, setEditingCommentNo] = useState(null);[m
+[32m+[m[32m  const [editComment, setEditComment] = useState("");[m
+ [m
+[31m-  const handleCommentSubmit = () => {[m
+[32m+[m[32m  const boardLike = async (e) => {[m
+[32m+[m[32m    e.preventDefault();[m
+[32m+[m[32m    setStatus("");[m
+[32m+[m
+[32m+[m[32m    try {[m
+[32m+[m[32m      await api.post(`/boards/${boardNo}/like`);[m
+[32m+[m[32m      await findBoardReaction();[m
+[32m+[m[32m      success("좋아요 설정에 성공하였습니다.");[m
+[32m+[m[32m    } catch (err) {[m
+[32m+[m[32m      error("좋아요 설정에 실패하였습니다.");[m
+[32m+[m[32m    }[m
+[32m+[m[32m  };[m
+[32m+[m
+[32m+[m[32m  const boardDislike = async (e) => {[m
+[32m+[m[32m    e.preventDefault();[m
+[32m+[m[32m    setStatus("");[m
+[32m+[m
+[32m+[m[32m    try {[m
+[32m+[m[32m      await api.post(`/boards/${boardNo}/dislike`);[m
+[32m+[m[32m      await findBoardReaction();[m
+[32m+[m[32m      success("싫어요 설정에 성공하였습니다.");[m
+[32m+[m[32m    } catch (err) {[m
+[32m+[m[32m      error("싫어요 설정에 실패하였습니다.");[m
+[32m+[m[32m    }[m
+[32m+[m[32m  };[m
+[32m+[m
+[32m+[m[32m  const findBoardDetail = async () => {[m
+[32m+[m[32m    try {[m
+[32m+[m[32m      const result = await api.get(`/boards/${boardNo}`);[m
+[32m+[m
+[32m+[m[32m      if (result.data?.data) {[m
+[32m+[m[32m        setBoardDetail(result.data.data);[m
+[32m+[m[32m        console.log(result);[m
+[32m+[m[32m      }[m
+[32m+[m[32m    } catch (err) {[m
+[32m+[m[32m      console.error("게시글 로딩 실패:", err);[m
+[32m+[m[32m    }[m
+[32m+[m[32m  };[m
+[32m+[m
+[32m+[m[32m  const findBoardReaction = async () => {[m
+[32m+[m[32m    try {[m
+[32m+[m[32m      const result = await api.get(`/boards/${boardNo}/reactions`);[m
+[32m+[m
+[32m+[m[32m      console.log(result.data.data);[m
+[32m+[m
+[32m+[m[32m      if (result.data?.data) {[m
+[32m+[m[32m        setReaction(result.data.data);[m
+[32m+[m[32m      }[m
+[32m+[m[32m    } catch (err) {[m
+[32m+[m[32m      console.error("좋아요 조회 실패:", err);[m
+[32m+[m[32m    }[m
+[32m+[m[32m  };[m
+[32m+[m
+[32m+[m[32m  const handleCommentSubmit = async () => {[m
+     if (!comment.trim()) return;[m
+[31m-    setComments([[m
+[31m-      ...comments,[m
+[31m-      {[m
+[31m-        id: Date.now(),[m
+[31m-        writer: currentUser,[m
+[31m-        body: comment,[m
+[31m-        date: "방금",[m
+[31m-        likes: 0,[m
+[31m-        isMine: true,[m
+[31m-        liked: false,[m
+[31m-      },[m
+[31m-    ]);[m
+[31m-    setComment("");[m
+[32m+[m
+[32m+[m[32m    try {[m
+[32m+[m[32m      await api.post(`/boards/${boardNo}/comments`, {[m
+[32m+[m[32m        commentContent: comment,[m
+[32m+[m[32m      });[m
+[32m+[m
+[32m+[m[32m      setComment("");[m
+[32m+[m
+[32m+[m[32m      await findCommentList();[m
+[32m+[m[32m      success("댓글 작성에 성공하였습니다.");[m
+[32m+[m[32m    } catch (err) {[m
+[32m+[m[32m      console.error("댓글 작성 실패:", err.response?.data);[m
+[32m+[m[32m      error("댓글 작성에 실패했습니다.");[m
+[32m+[m[32m    }[m
+   };[m
+ [m
+[31m-  const handleDeleteComment = (id) => {[m
+[31m-    setComments(comments.filter((c) => c.id !== id));[m
+[32m+[m[32m  const findCommentList = async () => {[m
+[32m+[m[32m    try {[m
+[32m+[m[32m      const result = await api.get(`/boards/${boardNo}/comments`);[m
+[32m+[m[32m      console.log(result);[m
+[32m+[m[32m      if (result.data?.data) {[m
+[32m+[m[32m        setComments(result.data.data);[m
+[32m+[m[32m      }[m
+[32m+[m[32m    } catch (err) {[m
+[32m+[m[32m      error("댓글 조회 실패");[m
+[32m+[m[32m    }[m
+   };[m
+[31m-  const handleToggleCommentLike = (id) => {[m
+[31m-    setComments((prev) =>[m
+[31m-      prev.map((c) =>[m
+[31m-        c.id === id[m
+[31m-          ? {[m
+[31m-              ...c,[m
+[31m-              liked: !c.liked,[m
+[31m-              likes: c.liked ? c.likes - 1 : c.likes + 1,[m
+[31m-            }[m
+[31m-          : c,[m
+[31m-      ),[m
+[31m-    );[m
+[32m+[m
+[32m+[m[32m  const handleDeleteComment = async (commentNo) => {[m
+[32m+[m[32m    try {[m
+[32m+[m[32m      const result = await api.delete([m
+[32m+[m[32m        `/boards/${boardNo}/comments/${commentNo}`,[m
+[32m+[m[32m      );[m
+[32m+[m
+[32m+[m[32m      await findCommentList();[m
+[32m+[m[32m      success("댓글 삭제에 성공하였습니다.");[m
+[32m+[m[32m    } catch (err) {[m
+[32m+[m[32m      error("댓글 삭제 실패");[m
+[32m+[m[32m    }[m
+[32m+[m[32m  };[m
+[32m+[m
+[32m+[m[32m  const handleEditCommentOpen = (commentNo, content) => {[m
+[32m+[m[32m    setEditingCommentNo(commentNo);[m
+[32m+[m[32m    setEditComment(content);[m
+[32m+[m[32m  };[m
+[32m+[m
+[32m+[m[32m  const handleEditComment = async (commentNo) => {[m
+[32m+[m[32m    try {[m
+[32m+[m[32m      const result = await api.patch([m
+[32m+[m[32m        `/boards/${boardNo}/comments/${commentNo}`,[m
+[32m+[m[32m        { commentContent: editComment },[m
+[32m+[m[32m      );[m
+[32m+[m[32m      await findCommentList();[m
+[32m+[m[32m      success("댓글 수정에 성공하였습니다.");[m
+[32m+[m[32m      setEditingCommentNo(null);[m
+[32m+[m[32m      setEditComment("");[m
+[32m+[m[32m    } catch (err) {[m
+[32m+[m[32m      error("댓글 수정 실패");[m
+[32m+[m[32m    }[m
+[32m+[m[32m  };[m
+[32m+[m
+[32m+[m[32m  const handleToggleCommentLike = async (commentNo) => {[m
+[32m+[m[32m    try {[m
+[32m+[m[32m      await api.post(`/boards/${boardNo}/comments/${commentNo}/like`);[m
+[32m+[m
+[32m+[m[32m      // 댓글 목록 다시 조회[m
+[32m+[m[32m      await findCommentList();[m
+[32m+[m[32m      success("댓글 좋아요에 성공했습니다.");[m
+[32m+[m[32m    } catch (err) {[m
+[32m+[m[32m      console.error("댓글 좋아요 실패:", err);[m
+[32m+[m[32m      error("댓글 좋아요에 실패했습니다.");[m
+[32m+[m[32m    }[m
+   };[m
+[32m+[m
+   useEffect(() => {[m
+[31m-    api[m
+[31m-      .get(`/boards/${boardNo}`)[m
+[31m-      .then((result) => {[m
+[31m-        if (result.data && result.data.data) {[m
+[31m-          setBoardDetail(result.data.data);[m
+[31m-        }[m
+[31m-      })[m
+[31m-      .catch((err) => console.error("게시글 로딩 실패:", err))[m
+[31m-      .finally(() => setLoading(false));[m
+[32m+[m[32m    const fetchData = async () => {[m
+[32m+[m[32m      await Promise.all([[m
+[32m+[m[32m        findBoardDetail(),[m
+[32m+[m[32m        findBoardReaction(),[m
+[32m+[m[32m        findCommentList(),[m
+[32m+[m[32m      ]);[m
+[32m+[m[32m      setLoading(false);[m
+[32m+[m[32m    };[m
+[32m+[m
+[32m+[m[32m    fetchData();[m
+   }, [boardNo]);[m
+ [m
+   const handleDeleteBoard = () => {[m
+[36m@@ -65,9 +175,10 @@[m [mconst BoardDetail = () => {[m
+       .delete(`/boards/${boardNo}`, {[m
+         withCredentials: true, // JWT 쿠키 or Authorization 헤더 사용 시[m
+       })[m
+[31m-      .then(() => navigate("/board"))[m
+[31m-      .catch((err) => console.error("삭제 실패:", err));[m
+[32m+[m[32m      .then(() => navi("/board"))[m
+[32m+[m[32m      .catch((err) => error("삭제 실패:", err));[m
+   };[m
+[32m+[m
+   if (loading) {[m
+     return <div>로딩중...</div>;[m
+   }[m
+[36m@@ -81,9 +192,20 @@[m [mconst BoardDetail = () => {[m
+       <div style={s.topRow}>[m
+         <h2 style={s.pageTitle}>자유게시판</h2>[m
+         <div style={s.topBtns}>[m
+[32m+[m[32m          <button style={s.btnEdit} onClick={() => navi(`/board/`)}>[m
+[32m+[m[32m            목록[m
+[32m+[m[32m          </button>[m
+           <button[m
+             style={s.btnEdit}[m
+[31m-            onClick={() => navigate(`/board/${boardNo}/edit`)}[m
+[32m+[m[32m            onClick={() => {[m
+[32m+[m[32m              if (!user) {[m
+[32m+[m[32m                error("로그인이 필요합니다.");[m
+[32m+[m[32m                navi("/login");[m
+[32m+[m[32m                return;[m
+[32m+[m[32m              }[m
+[32m+[m
+[32m+[m[32m              navi(`/board/${boardNo}/edit`);[m
+[32m+[m[32m            }}[m
+           >[m
+             수정[m
+           </button>[m
+[36m@@ -94,13 +216,15 @@[m [mconst BoardDetail = () => {[m
+       </div>[m
+ [m
+       {/* 게시글 제목 */}[m
+[31m-      <p style={s.postTitle}>{boardDetail.boardTitle}</p>[m
+[32m+[m[32m      <p style={s.postTitle}>[m
+[32m+[m[32m        [{boardDetail.categoryName}] {boardDetail.boardTitle}[m
+[32m+[m[32m      </p>[m
+ [m
+       {/* 작성자 */}[m
+       <div style={s.meta}>[m
+         <span style={s.metaWriter}>{boardDetail.memberId}</span>[m
+[31m-        <span style={s.metaDot}>·</span>[m
+[31m-        <span style={s.metaDate}>{boardDetail.createdAt}</span>[m
+[32m+[m[32m        <span style={s.metaDot}>작성일</span>[m
+[32m+[m[32m        <span style={s.metaDate}>{boardDetail.createDate}</span>[m
+         <span style={{ marginLeft: "auto", fontSize: "13px", color: "#999" }}>[m
+           조회수: {boardDetail.count}[m
+         </span>[m
+[36m@@ -126,55 +250,116 @@[m [mconst BoardDetail = () => {[m
+ [m
+       {/* 좋아요/싫어요 */}[m
+       <div style={s.likeRow}>[m
+[31m-        <button style={s.btnLike}>좋아요 (0)</button>[m
+[31m-        <button style={s.btnDislike}>싫어요 (0)</button>[m
+[32m+[m[32m        <button style={s.btnLike} onClick={boardLike}>[m
+[32m+[m[32m          좋아요 ({reaction.boardLike})[m
+[32m+[m[32m        </button>[m
+[32m+[m[32m        <button style={s.btnDislike} onClick={boardDislike}>[m
+[32m+[m[32m          싫어요 ({reaction.boardDislike})[m
+[32m+[m[32m        </button>[m
+       </div>[m
+ [m
+       <hr style={s.divider} />[m
+ [m
+       {/* 댓글 목록 */}[m
+       {comments.map((c) => ([m
+[31m-        <div key={c.id} style={s.comment}>[m
+[32m+[m[32m        <div key={c.commentNo} style={s.comment}>[m
+           <div style={s.commentHeader}>[m
+             <img[m
+[31m-              src={boardDetail.writer || "https://placehold.co/28x28"}[m
+[32m+[m[32m              src={[m
+[32m+[m[32m                c.imgPath && c.saveName[m
+[32m+[m[32m                  ? `http://localhost${c.imgPath}${c.saveName}`[m
+[32m+[m[32m                  : defaultImg[m
+[32m+[m[32m              }[m
+               alt="profile"[m
+               style={s.cAvatar}[m
+             />[m
+[31m-            <span style={s.cName}>{c.writer}</span>[m
+[31m-            <span style={s.cCount}>{c.likes}</span>[m
+[32m+[m[32m            <span style={s.cName}>{c.memberName}</span>[m
+[32m+[m[32m            <span style={s.cCount}>{c.commentLikeCount}</span>[m
+             {/* 좋아요 아이콘 */}[m
+             <span[m
+               style={{[m
+                 ...s.cThumb,[m
+                 cursor: "pointer",

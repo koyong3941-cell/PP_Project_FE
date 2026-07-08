@@ -155,7 +155,7 @@ const Header = () => {
         <img
           src={
             user?.delYn === "N" && user?.imgPath && user?.saveName
-              ? `http://localhost${user.imgPath}/${user.saveName}`
+              ? `http://localhost${user.imgPath}${user.saveName}`
               : defaultImg
           }
           alt="User"
