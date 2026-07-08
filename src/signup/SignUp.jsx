@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import * as S from "../components/auth/Auth.styles"; // 스타일 파일 경로에 맞게 수정하세요
+import * as S from "../components/auth/Auth.styles";
 import logo from "../assets/logo.png";
 import { useAlertify } from "../hooks/useAlertify";
 
@@ -9,9 +9,12 @@ const Signup = () => {
   const [memberId, setMemberId] = useState("");
   const [memberPwd, setMemberPwd] = useState("");
   const [memberName, setMemberName] = useState("");
-  const [email, setEmail] = useState("");
+
+  const [emailId, setEmailId] = useState("");
+  const [emailDomain, setEmailDomain] = useState("naver.com");
+
   const { success, error } = useAlertify();
-  // const [status, setStatus] = useState("");
+
   const [loading, isLoading] = useState(false);
   const navi = useNavigate();
 
@@ -22,16 +25,26 @@ const Signup = () => {
       error("비속어 혹은 공백은 사용할 수 없습니다");
       return;
     }
+
     if (!/^[a-zA-Z0-9]{5,12}$/.test(memberId)) {
       error("아이디는 5~12자의 영문, 숫자만 가능합니다.");
       return;
     }
+
     if (!/^[a-zA-Z0-9]{6,15}$/.test(memberPwd)) {
       error("비밀번호는 6~15자의 영문, 숫자만 가능합니다.");
       return;
     }
 
+    if (!emailId) {
+      error("이메일을 입력해주세요.");
+      return;
+    }
+
+    const email = `${emailId}@${emailDomain}`;
+
     isLoading(true);
+
     try {
       await axios.post("http://localhost/api/members", {
         memberId,
@@ -39,11 +52,13 @@ const Signup = () => {
         memberName,
         email,
       });
+
       success("가입 성공!");
       navi("/login");
     } catch (err) {
       const serverMessage = err.response?.data?.message || "가입 실패";
-      success(serverMessage);
+
+      error(serverMessage);
     } finally {
       isLoading(false);
     }
@@ -54,13 +69,17 @@ const Signup = () => {
       <div>
         <S.LogoImage src={logo} alt="Plant Plant" />
       </div>
+
       <S.MainBanner>Plant Plants</S.MainBanner>
+
       <S.Title>계정 생성</S.Title>
+
       <form onSubmit={handleSubmit} style={{ width: "100%" }}>
         <S.Field>
           <S.Label>
             닉네임<S.RequiredStar>*</S.RequiredStar>
           </S.Label>
+
           <S.Input
             value={memberName}
             onChange={(e) => setMemberName(e.target.value)}
@@ -72,6 +91,7 @@ const Signup = () => {
           <S.Label>
             아이디<S.RequiredStar>*</S.RequiredStar>
           </S.Label>
+
           <S.Input
             value={memberId}
             onChange={(e) => setMemberId(e.target.value)}
@@ -81,11 +101,9 @@ const Signup = () => {
 
         <S.Field>
           <S.Label>
-            비밀번호
-            <S.RequiredStar>
-              <S.RequiredStar>*</S.RequiredStar>
-            </S.RequiredStar>
+            비밀번호<S.RequiredStar>*</S.RequiredStar>
           </S.Label>
+
           <S.Input
             type="password"
             value={memberPwd}
@@ -98,23 +116,39 @@ const Signup = () => {
           <S.Label>
             이메일<S.RequiredStar>*</S.RequiredStar>
           </S.Label>
-          <S.Input
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="이메일을 입력하세요"
-          />
+
+          <S.EmailRow>
+            <S.EmailInput
+              value={emailId}
+              onChange={(e) => setEmailId(e.target.value)}
+              placeholder="이메일 입력"
+            />
+
+            <span>@</span>
+
+            <S.EmailSelect
+              value={emailDomain}
+              onChange={(e) => setEmailDomain(e.target.value)}
+            >
+              <option value="naver.com">naver.com</option>
+
+              <option value="gmail.com">gmail.com</option>
+
+              <option value="daum.net">daum.net</option>
+            </S.EmailSelect>
+          </S.EmailRow>
         </S.Field>
 
         <S.SubmitButton type="submit" disabled={loading}>
           {loading ? "가입 중..." : "가입하기"}
         </S.SubmitButton>
+
         <S.Pstyled style={{ textAlign: "center" }}>
           <span style={{ fontWeight: "bold" }}>‘가입하기'</span>를 클릭함으로써,
           이용약관 및 <span style={{ fontWeight: "bold" }}>개인정보</span>{" "}
           처리방침에 동의하는 것으로 간주됩니다
         </S.Pstyled>
       </form>
-      {status && <p>{status}</p>}
     </S.AuthContainer>
   );
 };

@@ -107,6 +107,18 @@ const Header = () => {
             >
               식물 목록
             </div>
+            <div
+              style={styles.dropdownItem}
+              onClick={() => handleNavigation("/admin")}
+            >
+              관리자 페이지
+            </div>
+            <div
+              style={styles.dropdownItem}
+              onClick={() => handleNavigation("/member")}
+            >
+              관리자 페이지
+            </div>
           </div>
         )}
       </div>
@@ -143,7 +155,7 @@ const Header = () => {
         <img
           src={
             user?.delYn === "N" && user?.imgPath && user?.saveName
-              ? `http://localhost${user.imgPath}/${user.saveName}`
+              ? `http://localhost${user.imgPath}${user.saveName}`
               : defaultImg
           }
           alt="User"

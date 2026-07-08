@@ -84,3 +84,25 @@ export const Pstyled = styled.a`
   margin-top: 5px;
   margin-left: 3px;
 `;
+
+export const EmailRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+`;
+
+export const EmailInput = styled(Input)`
+  flex: 1;
+`;
+
+export const EmailSelect = styled.select`
+  flex: 1;
+  padding: 10px;
+  height: 40px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  background-color: white;
+  cursor: pointer;
+`;
