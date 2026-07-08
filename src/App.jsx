@@ -14,18 +14,11 @@ import BoardChage from "./board/BoardChange";
 import Notice from "./notice/Notice";
 import ProfileEdit from "./mypage/ProfileEdit";
 import MyPage from "./mypage/MyPage";
-import Main from "./main/Main";
 
 // Layout용 Outlet
 import { Outlet } from "react-router-dom";
-import AdminMembers from "./admin/AdminMembers";
-import AdminBoards from "./admin/AdminBoards";
-import AdminPlants from "./admin/AdminPlants";
-import AdminNotices from "./admin/AdminNotices";
-import AdminDash from "./admin/AdminDash";
-import AdminNoticesPlus from "./admin/AdminNoticesPlus";
-import AdminNoticeEdit from "./admin/AdminNoticeEdit";
-import AdminPlantsPlus from "./admin/AdminPlantsPlus";
+import Main_2 from "./main/Main_3";
+import Main from "./main/Main";
 
 function MainLayout() {
   return (
@@ -54,6 +47,7 @@ function App() {
     <Routes>
       {/* Header/Footer 있는 페이지 */}
       <Route element={<MainLayout />}>
+        <Route path="/2" element={<Main_2 />} />
         <Route path="/" element={<Main />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
