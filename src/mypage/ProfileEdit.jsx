@@ -173,8 +173,8 @@ function ProfileEdit() {
             <img
               src={
                 user?.delYn === "N" && user?.imgPath && user?.saveName
-                  ? `http://localhost${user.imgPath}/${user.saveName}`
-                  : profileImg
+                  ? `http://localhost${user.imgPath}${user.saveName}`
+                  : defaultImg
               }
               alt="profile"
               style={styles.profileImage}

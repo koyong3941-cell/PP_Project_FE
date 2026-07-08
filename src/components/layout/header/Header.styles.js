@@ -9,6 +9,8 @@ export const styles = {
     height: "90px",
     width: "100%",
     flexShrink: 0,
+    zIndex: 1100, // 사이드메뉴(1000)보다 높게 설정
+    position: "relative", // z-index가 작동하려면 필요
   },
   leftSection: { display: "flex", alignItems: "center", gap: "20px" },
   menuIcon: {
