@@ -44,7 +44,10 @@ export const RightPanel = styled.div`
       width: 70px;
       height: 70px;
       border-radius: 50%;
-      background: #ddd;
+      background-color: #ddd;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
       margin: 0 auto 10px;
     }
   }
@@ -69,20 +72,20 @@ export const ScrollArea = styled.div`
 
 /* SECTION */
 export const SectionTop = styled.section`
-  height: 50vh;
+  height: 35vh;
   padding: 20px;
   scroll-snap-align: start;
 `;
 
 export const SectionMiddle = styled.section`
-  height: 50vh;
+  height: 35vh;
   padding: 20px;
   scroll-snap-align: start;
 `;
 
 export const SectionBottom = styled.section`
   height: 100vh;
-  padding: 20px;
+  padding: 65px;
   scroll-snap-align: start;
 `;
 
@@ -96,22 +99,59 @@ export const SubText = styled.p`
   color: #777;
 `;
 
-/* TOP GRID */
+/* 식물 카드 영역 + 버튼 */
+export const FlowerContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+/* 카드 가로 스크롤 */
 export const FlowerGrid = styled.div`
   display: flex;
   gap: 15px;
+  flex: 1;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
+/* 좌우 버튼 */
+export const ScrollButton = styled.button`
+  width: 35px;
+  height: 35px;
+  flex-shrink: 0;
+
+  border-radius: 50%;
+  border: none;
+  background: white;
+
+  cursor: pointer;
+  font-size: 18px;
+`;
+
+/* CARD */
 export const Card = styled.div`
-  flex: 1;
+  min-width: 250px;
+
   background: white;
   padding: 15px;
   border-radius: 12px;
 
   .img {
     width: 100%;
-    height: 80px;
-    background: #dff5df;
+    height: 150px;
+
+    background-color: #dff5df;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
     border-radius: 8px;
     margin-bottom: 10px;
   }
@@ -132,22 +172,13 @@ export const Card = styled.div`
 
 /* MIDDLE */
 export const GraphBox = styled.div`
-  display: flex;
-  gap: 20px;
-
-  .chart {
-    flex: 1;
-    height: 200px;
-    background: #fff;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #666;
-  }
+  height: 270px;
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
 `;
 
-/* BOTTOM BIG GRAPH */
+/* BOTTOM */
 export const BigGraphBox = styled.div`
   height: 100%;
   background: white;

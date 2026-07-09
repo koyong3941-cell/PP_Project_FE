@@ -1,6 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import profileDefaultImg from "../assets/unknown.png";
+import plantDefaultImg from "../assets/plant.jpg";
 import api from "../api/axios";
 import React from "react";
 import {
@@ -17,6 +19,8 @@ import {
   BigGraphBox,
   Title,
   SubText,
+  FlowerContainer,
+  ScrollButton,
 } from "./MyPage.styles";
 import {
   ResponsiveContainer,
@@ -27,27 +31,27 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
+  BarChart,
+  Bar,
 } from "recharts";
-
-const dummyFlowers = [
-  { name: "페페로미아", status: "성장중", progress: 62 },
-  { name: "수국", status: "건강", progress: 78 },
-  { name: "몬스테라", status: "주의", progress: 40 },
-];
 
 const MyPage = () => {
   const { user, logout } = useAuth();
+  const flowerRef = useRef(null);
   const navi = useNavigate();
   const [chartData, setChartData] = useState([]);
   const [co2Index, setCo2Index] = useState("");
   const [oxygenIndex, setOxygenIndex] = useState("");
   const [humidity, setHumidity] = useState("");
   const [temperature, setTemperature] = useState("");
+  const [plantData, setPlantData] = useState([]);
+  const [plantCap, setPlantCap] = useState(null);
+  const size = 50;
 
   const profileImg =
     user?.delYn === "N" && user?.imgPath && user?.saveName
-      ? `${user.imgPath}/${user.saveName}`
-      : "/assets/unknown.png";
+      ? `http://localhost${user.imgPath}${user.saveName}`
+      : profileDefaultImg;
 
   const normalizedData = chartData.map((d) => ({
     date: d.measureDate,
@@ -61,10 +65,32 @@ const MyPage = () => {
     temperature: Math.floor(d.temperature * 3), // 25°C → 75 (스케일링)
   }));
 
+  const scrollFlower = (direction) => {
+    if (!flowerRef.current) return;
+
+    flowerRef.current.scrollBy({
+      left: direction === "left" ? -300 : 300,
+      behavior: "smooth",
+    });
+  };
+
   useEffect(() => {
     api.get("/sensors").then((res) => {
       setChartData(res.data.data);
     });
+  }, []);
+
+  useEffect(() => {
+    api
+      .get("/mypage", {
+        params: {
+          size: size,
+        },
+      })
+      .then((res) => {
+        setPlantData(res.data.data.content);
+        setPlantCap(res.data.data);
+      });
   }, []);
 
   const handleNavigation = (path) => {
@@ -95,29 +121,84 @@ const MyPage = () => {
         <SectionTop>
           <Title>🌿 내 식물 현황</Title>
 
-          <FlowerGrid>
-            {dummyFlowers.map((item, idx) => (
-              <Card key={idx}>
-                <div className="img" />
-                <h4>{item.name}</h4>
-                <SubText>{item.status}</SubText>
+          <FlowerContainer>
+            <ScrollButton onClick={() => scrollFlower("left")}>◀</ScrollButton>
 
-                <div className="bar">
-                  <div style={{ width: `${item.progress}%` }} />
-                </div>
-              </Card>
-            ))}
-          </FlowerGrid>
+            <FlowerGrid ref={flowerRef}>
+              {plantData.map((item) => (
+                <Card key={item.plantNo}>
+                  <div
+                    className="img"
+                    style={{
+                      backgroundImage: `url(${
+                        item.imgPath && item.saveName
+                          ? `http://localhost${item.imgPath}${item.saveName}`
+                          : plantDefaultImg
+                      })`,
+                    }}
+                  />
+
+                  <h4>{item.plantName}</h4>
+
+                  <SubText>
+                    {item.classification}
+                    <br />
+                    소형 : {item.smallPlant} / 중형 : {item.middlePlant} / 대형
+                    : {item.bigPlant}
+                  </SubText>
+
+                  <div className="bar">
+                    <div
+                      style={{
+                        width: `${item.carbonCapture}%`,
+                      }}
+                    />
+                  </div>
+                </Card>
+              ))}
+            </FlowerGrid>
+
+            <ScrollButton onClick={() => scrollFlower("right")}>▶</ScrollButton>
+          </FlowerContainer>
         </SectionTop>
 
         {/* 2. MIDDLE 50% */}
         <SectionMiddle>
-          <Title>📊 성장 분석</Title>
+          <Title>🌱 전체 탄소포집량</Title>
 
           <GraphBox>
-            <div className="chart fake1">광합성 효율 그래프</div>
-            <div className="chart fake2">수분 유지율 그래프</div>
+            {plantCap && (
+              <ResponsiveContainer width="100%" height={250}>
+                <BarChart
+                  data={[
+                    {
+                      name: "소형",
+                      value: plantCap.smallPlantCap,
+                    },
+                    {
+                      name: "중형",
+                      value: plantCap.middlePlantCap,
+                    },
+                    {
+                      name: "대형",
+                      value: plantCap.bigPlantCap,
+                    },
+                  ]}
+                  layout="vertical"
+                >
+                  <XAxis type="number" />
+
+                  <YAxis type="category" dataKey="name" />
+
+                  <Tooltip />
+
+                  <Bar dataKey="value" fill="#4caf50" radius={[0, 10, 10, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
           </GraphBox>
+
+          {plantCap && <h3>총 탄소포집량 : {plantCap.countAllPlantCap}</h3>}
         </SectionMiddle>
 
         {/* 3. BOTTOM 100% */}
