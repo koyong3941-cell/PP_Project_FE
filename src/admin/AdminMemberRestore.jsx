@@ -25,6 +25,8 @@ const AdminMemberRestore = () => {
 
     if (!restored) {
       return;
+    } else {
+      navi("/admin/member/restored");
     }
     isLoading(true);
     setStatus("복구하겠습니다");

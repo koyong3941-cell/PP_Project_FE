@@ -20,10 +20,12 @@ const AdminMemberDelete = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    const deleted = window.confirm("정말삭제하시겠습니까?");
+    const deleted = window.confirm("정말 삭제하시겠습니까?");
 
     if (!deleted) {
       return;
+    } else {
+      navi("/admin/member/deleted");
     }
     isLoading(true);
     setStatus("삭제완료");

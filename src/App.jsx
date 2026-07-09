@@ -47,10 +47,8 @@ import AdminBoardDelete from "./admin/AdminBoardDelete";
 import AdminBoardData from "./admin/AdminBoardData";
 import AdminCategoryPlus from "./admin/AdminCategoryPlus";
 import AdminCategoryDelete from "./admin/AdminCategoryDelete";
-import PlantSearch from "./plant/PlantSearch";
-import PlantDetail from "./plant/PlantDetail";
-import PlantDetail1 from "./plant/PlantDetail2";
-import PlantDetail2 from "./plant/PlantDetail1_2";
+import AdminMemberDeleted from "./admin/AdminMemberDeleted";
+import AdminMemberRestored from "./admin/AdminMemberRestored";
 
 function MainLayout() {
   return (
@@ -100,10 +98,15 @@ function App() {
         <Route path="/admin" element={<Admin />} />
         <Route path="/admin/plus" element={<AdminPlus />} />
         <Route path="/admin/member/delete" element={<AdminMemberDelete />} />
+        <Route path="/admin/member/deleted" element={<AdminMemberDeleted />} />
         {/* <Route path="/member" element={<Members />} /> */}
         <Route path="/admin/member" element={<AdminMembers />} />
         <Route path="/admin/masking" element={<AdminMasking />} />
         <Route path="/admin/member/restore" element={<AdminMemberRestore />} />
+        <Route
+          path="/admin/member/restored"
+          element={<AdminMemberRestored />}
+        />
         <Route path="/admin/board" element={<AdminBoards />} />
         <Route path="/admin/board/data" element={<AdminBoardData />} />
         <Route path="/admin/board/delete" element={<AdminBoardDelete />} />
