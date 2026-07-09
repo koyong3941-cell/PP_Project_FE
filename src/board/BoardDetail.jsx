@@ -145,14 +145,31 @@ const BoardDetail = () => {
 
   const handleToggleCommentLike = async (commentNo) => {
     try {
-      await api.post(`/boards/${boardNo}/comments/${commentNo}/like`);
+      const target = comments.find((c) => c.commentNo === commentNo);
 
-      // 댓글 목록 다시 조회
-      await findCommentList();
-      success("댓글 좋아요에 성공했습니다.");
+      if (target.liked) {
+        await api.delete(`/boards/${boardNo}/comments/${commentNo}/like`);
+        error("좋아요 취소에 성공하였습니다!");
+      } else {
+        await api.post(`/boards/${boardNo}/comments/${commentNo}/like`);
+        success("좋아요 추가에 성공하였습니다!");
+      }
+
+      setComments((prev) =>
+        prev.map((c) =>
+          c.commentNo === commentNo
+            ? {
+                ...c,
+                liked: !c.liked,
+                commentLikeCount: c.liked
+                  ? c.commentLikeCount - 1
+                  : c.commentLikeCount + 1,
+              }
+            : c,
+        ),
+      );
     } catch (err) {
-      console.error("댓글 좋아요 실패:", err);
-      error("댓글 좋아요에 실패했습니다.");
+      error("좋아요 설정에 실패했습니다.");
     }
   };
 
@@ -222,7 +239,7 @@ const BoardDetail = () => {
 
       {/* 작성자 */}
       <div style={s.meta}>
-        <span style={s.metaWriter}>{boardDetail.memberId}</span>
+        <span style={s.metaWriter}>{boardDetail.memberName}</span>
         <span style={s.metaDot}>작성일</span>
         <span style={s.metaDate}>{boardDetail.createDate}</span>
         <span style={{ marginLeft: "auto", fontSize: "13px", color: "#999" }}>

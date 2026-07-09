@@ -103,7 +103,7 @@ const Header = () => {
             </div>
             <div
               style={styles.dropdownItem}
-              onClick={() => handleNavigation("/board/3")}
+              onClick={() => handleNavigation("/PlantSearch")}
             >
               식물 목록
             </div>

@@ -185,7 +185,7 @@ const MyPage = () => {
         </div>
 
         <div className="quick">
-          <button onClick={() => handleNavigation("/plant")}>식물검색</button>{" "}
+          <button onClick={() => handleNavigation("/")}>홈</button>{" "}
           {/* 식물 검색 페이지 구현 시 해당 페이지로 랜딩되어야 함 */}
           <button onClick={() => handleNavigation("/profile-edit")}>
             내 정보 수정
