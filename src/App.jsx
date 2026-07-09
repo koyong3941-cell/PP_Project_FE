@@ -7,6 +7,14 @@ import SignUp from "./signup/SignUp";
 import Login from "./login/login";
 
 import Admin from "./admin/Admin";
+import AdminMembers from "./admin/AdminMembers";
+import AdminBoards from "./admin/AdminBoards";
+import AdminPlants from "./admin/AdminPlants";
+import AdminPlantsPlus from "./admin/AdminPlantsPlus";
+import AdminNotices from "./admin/AdminNotices";
+import AdminNoticesPlus from "./admin/AdminNoticesPlus";
+import AdminNoticeEdit from "./admin/AdminNoticeEdit";
+import AdminDash from "./admin/AdminDash";
 import Board from "./board/Board";
 import BoardDetail from "./board/BoardDetail";
 import BoardWrite from "./board/BoardWrite";

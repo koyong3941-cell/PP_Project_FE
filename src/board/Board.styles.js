@@ -118,10 +118,29 @@ export const styles = {
   },
 
   pageButtonHover: {
-    background: "#a8a8a8",
+    backgroundColor: "#a8a8a8",
   },
 
   activePageHover: {
     backgroundColor: "#777777",
+  },
+
+  dropdown: {
+    position: "absolute",
+    top: "42px",
+    right: "0",
+    width: "120px",
+    background: "#fff",
+    border: "1px solid #ddd",
+    borderRadius: "8px",
+    boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+    overflow: "hidden",
+    zIndex: 100,
+  },
+
+  dropdownItem: {
+    padding: "10px 12px",
+    cursor: "pointer",
+    fontSize: "14px",
   },
 };
