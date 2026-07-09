@@ -172,6 +172,7 @@ export const Card = styled.div`
 
 /* MIDDLE */
 export const GraphBox = styled.div`
+  width: 100%;
   height: 270px;
   background: white;
   border-radius: 12px;
@@ -180,7 +181,8 @@ export const GraphBox = styled.div`
 
 /* BOTTOM */
 export const BigGraphBox = styled.div`
-  height: 100%;
+  width: 100%;
+  height: 70%;
   background: white;
   border-radius: 16px;
 

@@ -108,8 +108,6 @@ const MyPage = () => {
       <LeftPanel>
         <h2>마이페이지</h2>
         <ul>
-          <li>회원 정보</li>
-          <li>식물 상태</li>
           <li onClick={() => handleNavigation("/board")}>커뮤니티</li>
           <li onClick={() => handleNavigation("/notice")}>공지사항</li>
         </ul>
