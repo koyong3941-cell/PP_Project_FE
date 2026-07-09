@@ -25,15 +25,20 @@ import MyPage from "./mypage/MyPage";
 
 // Layout용 Outlet
 import { Outlet } from "react-router-dom";
+import Main_2 from "./main/Main_3";
+import Main from "./main/Main";
 import AdminMembers from "./admin/AdminMembers";
 import AdminBoards from "./admin/AdminBoards";
 import AdminPlants from "./admin/AdminPlants";
+import AdminPlantsPlus from "./admin/AdminPlantsPlus";
 import AdminNotices from "./admin/AdminNotices";
-import AdminDash from "./admin/AdminDash";
 import AdminNoticesPlus from "./admin/AdminNoticesPlus";
 import AdminNoticeEdit from "./admin/AdminNoticeEdit";
-import AdminPlantsPlus from "./admin/AdminPlantsPlus";
-import AdminPlantsEdit from "./admin/AdminPlantsEdit";
+import AdminDash from "./admin/AdminDash";
+import PlantSearch from "./plant/PlantSearch";
+import PlantDetail from "./plant/PlantDetail";
+import PlantDetail1 from "./plant/PlantDetail2";
+import PlantDetail2 from "./plant/PlantDetail1_2";
 
 function MainLayout() {
   return (
@@ -72,6 +77,9 @@ function App() {
         <Route path="/board/:boardNo/edit" element={<BoardChage />} />
         <Route path="/board/write" element={<BoardWrite />} />
         <Route path="/notice" element={<Notice />} />
+        <Route path="/plantSearch" element={<PlantSearch />} />
+
+        <Route path="/plants/:plantNo" element={<PlantDetail2 />} />
       </Route>
 
       {/* Header/Footer 없는 페이지 */}
