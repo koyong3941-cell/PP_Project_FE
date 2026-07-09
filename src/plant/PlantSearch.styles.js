@@ -76,7 +76,7 @@ export const styles = {
   },
   pageButton: {
     border: "1px solid #ddd",
-    background: "#fff",
+    backgroundColor: "#fff",
     padding: "6px 10px",
     cursor: "pointer",
     borderRadius: "4px",
@@ -93,10 +93,73 @@ export const styles = {
     gap: "6px",
   },
   pageButtonHover: {
-    background: "#a8a8a8",
+    backgroundColor: "#a8a8a8",
   },
   activePageHover: {
     backgroundColor: "#777777",
   },
   //페이징 처리----------------------------------------------------------------
+
+  //뷰 토글(리스트/그리드) 처리---------------------------------------------
+  viewToggleGroup: {
+    display: "flex",
+    border: "1px solid #ddd",
+    borderRadius: "6px",
+    overflow: "hidden",
+  },
+  viewToggleBtn: {
+    padding: "6px 10px",
+    border: "none",
+    backgroundColor: "#fff",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+  },
+  viewToggleBtnActive: {
+    backgroundColor: "#f3f4f6",
+  },
+  //뷰 토글(리스트/그리드) 처리---------------------------------------------
+
+  //그리드 뷰 처리---------------------------------------------------------
+  gridContainer: {
+    display: "grid",
+    gridTemplateColumns: "repeat(3, 1fr)",
+    gap: "24px",
+  },
+  gridCard: {
+    display: "block",
+    textDecoration: "none",
+    color: "inherit",
+    cursor: "pointer",
+  },
+  gridImageWrap: {
+    width: "100%",
+    aspectRatio: "1 / 1",
+    borderRadius: "8px",
+    overflow: "hidden",
+    backgroundColor: "#f3f4f6",
+  },
+  gridImage: {
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+  },
+  gridInfo: {
+    marginTop: "10px",
+  },
+  gridName: {
+    fontWeight: "600",
+    fontSize: "14px",
+    marginBottom: "4px",
+  },
+  gridMeta: {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+  },
+  gridCount: {
+    fontSize: "12px",
+    color: "#888",
+  },
+  //그리드 뷰 처리---------------------------------------------------------
 };

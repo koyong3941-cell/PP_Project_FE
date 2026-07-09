@@ -25,18 +25,15 @@ const StarRating = ({ value = 0 }) => (
   </div>
 );
 
-const PlantSearch = () => {
+const PlantSearch3 = () => {
   const [findPlantAll, setFindPlantAll] = useState([]);
   const [viewMode, setViewMode] = useState("list");
 
+  // 페이징 처리 부분--------------------------------------------------
   const [page, setPage] = useState(0); // Spring 백엔드가 0번 페이지부터 시작함
   const [totalPages, setTotalPages] = useState(page + 3);
   const pagination = [1, 2, 3, 4, 5];
   const [hoveredButton, setHoveredButton] = useState(null);
-
-  const GRID_PAGE_SIZE = 9;
-  const gridItems = findPlantAll;
-
   const handleFirst = () => setPage(0);
   const handlePrevious = () => {
     if (page >= 1) setPage(page - 1);
@@ -46,17 +43,17 @@ const PlantSearch = () => {
   };
   const handleLast = () => setPage(totalPages);
   // --------------------------------------------------------------------------------
-  const size = viewMode === "grid" ? 9 : 10;
   useEffect(() => {
     api
-      .get(`/plants?page=${page}&size=${size}`)
+      .get(`/plants?page=${page}`)
       .then((result) => {
         console.log(result.data);
+
         setFindPlantAll(result.data.data.content);
         setTotalPages(result.data.data.totalPages);
       })
       .catch((err) => console.error("게시글 로딩 실패:", err));
-  }, [page, viewMode]);
+  }, [page]);
   return (
     <div style={styles.container}>
       <div style={styles.top}>
@@ -72,10 +69,7 @@ const PlantSearch = () => {
           </button>
           <div style={styles.viewToggleGroup}>
             <button
-              onClick={() => {
-                setViewMode("list");
-                setPage(0);
-              }}
+              onClick={() => setViewMode("list")}
               style={{
                 ...styles.viewToggleBtn,
                 ...(viewMode === "list" ? styles.viewToggleBtnActive : {}),
@@ -84,10 +78,7 @@ const PlantSearch = () => {
               <List size={16} />
             </button>
             <button
-              onClick={() => {
-                setViewMode("grid");
-                setPage(0);
-              }}
+              onClick={() => setViewMode("grid")}
               style={{
                 ...styles.viewToggleBtn,
                 ...(viewMode === "grid" ? styles.viewToggleBtnActive : {}),
@@ -129,7 +120,7 @@ const PlantSearch = () => {
                 <td style={styles.td}>{plant.count}</td>
                 <td style={styles.writer}>
                   <img
-                    src={`http://localhost${plant.profileImage || "/uploads/default/profile.png"}`}
+                    src={`http://localhost${plant.mainPlantImages || "/uploads/plant/plant.png"}`}
                     alt={plant.memberName}
                     style={{
                       width: "30px",
@@ -146,7 +137,7 @@ const PlantSearch = () => {
         </table>
       ) : (
         <div style={styles.gridContainer}>
-          {gridItems.map((plant) => (
+          {findPlantAll.map((plant) => (
             <Link
               key={plant.plantNo}
               to={`/plants/${plant.plantNo}`}
@@ -154,7 +145,7 @@ const PlantSearch = () => {
             >
               <div style={styles.gridImageWrap}>
                 <img
-                  src={`http://localhost${plant.mainPlantImage || "/uploads/plant/plant.png"}`}
+                  src={`http://localhost${plant.mainPlantImages || "/uploads/plant/plant.png"}`}
                   alt={plant.plantName}
                   style={styles.gridImage}
                 />
@@ -248,4 +239,4 @@ const PlantSearch = () => {
   );
 };
 
-export default PlantSearch;
+export default PlantSearch3;

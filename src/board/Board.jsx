@@ -2,19 +2,14 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Search, Filter, ChevronLeft, ChevronRight } from "lucide-react";
 import { styles } from "./Board.styles";
-import { useAuth } from "../context/AuthContext";
-import { useAlertify } from "../hooks/useAlertify";
-import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 
 const Board = () => {
   const [findBoardAll, setFindBoardAll] = useState([]);
-  const { user } = useAuth();
-  const navi = useNavigate();
-  const { success, error } = useAlertify();
+
   // 페이징 처리 부분--------------------------------------------------
   const [page, setPage] = useState(0); // Spring 백엔드가 0번 페이지부터 시작함
-  const [totalPages, setTotalPages] = useState(page + 2);
+  const [totalPages, setTotalPages] = useState(page + 3);
   const pagination = [1, 2, 3, 4, 5];
   const [hoveredButton, setHoveredButton] = useState(null);
   const handleFirst = () => setPage(0);
@@ -30,11 +25,9 @@ const Board = () => {
     api
       .get(`/boards?page=${page}`)
       .then((result) => {
-        console.log(result.data.data);
-
+        console.log(result);
         if (result.data && result.data.data) {
-          setFindBoardAll(result.data.data.content);
-          setTotalPages(result.data.data.totalPages);
+          setFindBoardAll(result.data.data);
         }
       })
       .catch((err) => console.error("게시글 로딩 실패:", err));
@@ -57,19 +50,10 @@ const Board = () => {
             필터
           </button>
         </div>
-        <button
-          style={styles.button}
-          onClick={() => {
-            if (!user) {
-              navi("/login");
-              error("로그인이 필요합니다.");
-              return;
-            }
-            navi("/board/write");
-          }}
-        >
-          게시글 작성
-        </button>
+
+        <Link to="/board/write">
+          <button style={styles.button}>게시글 작성</button>
+        </Link>
       </div>
 
       <table style={styles.table}>
@@ -106,8 +90,6 @@ const Board = () => {
                     width: "30px",
                     height: "30px",
                     borderRadius: "50%",
-                    objectFit: "cover",
-                    flexShrink: 0,
                   }}
                 />
 
