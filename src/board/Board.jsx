@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Search, Filter, ChevronLeft, ChevronRight } from "lucide-react";
 import { styles } from "./Board.styles";
 import api from "../api/axios";
+import { useAuth } from "../context/AuthContext";
+import { useAlertify } from "../hooks/useAlertify";
 
 const Board = () => {
   const [findBoardAll, setFindBoardAll] = useState([]);
