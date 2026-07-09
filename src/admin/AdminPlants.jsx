@@ -74,7 +74,14 @@ const AdminPlants = () => {
             >
               수정
             </AddButton>
-            <DeleteButton>삭제</DeleteButton>
+            <DeleteButton
+              onClick={() => {
+                setActiveMenu("삭제");
+                navi("/admin/board/delete");
+              }}
+            >
+              삭제
+            </DeleteButton>
           </ButtonGroup>
         </Toolbar>
 

@@ -31,6 +31,12 @@ import AdminPlus from "./admin/AdminPlus";
 import Main_3 from "./main/Main_3";
 import { Main } from "./admin/admin.style";
 import AdminMemberDelete from "./admin/AdminMemberDelete";
+import AdminMasking from "./admin/AdminMasking";
+import AdminMemberRestore from "./admin/AdminMemberRestore";
+import AdminBoardDelete from "./admin/AdminBoardDelete";
+import AdminBoardData from "./admin/AdminBoardData";
+import AdminCategoryPlus from "./admin/AdminCategoryPlus";
+import AdminCategoryDelete from "./admin/AdminCategoryDelete";
 
 function MainLayout() {
   return (
@@ -79,8 +85,17 @@ function App() {
         <Route path="/admin/member/delete" element={<AdminMemberDelete />} />
         {/* <Route path="/member" element={<Members />} /> */}
         <Route path="/admin/member" element={<AdminMembers />} />
+        <Route path="/admin/masking" element={<AdminMasking />} />
+        <Route path="/admin/member/restore" element={<AdminMemberRestore />} />
         <Route path="/admin/board" element={<AdminBoards />} />
+        <Route path="/admin/board/data" element={<AdminBoardData />} />
+        <Route path="/admin/board/delete" element={<AdminBoardDelete />} />
         <Route path="/admin/category" element={<AdminCategory />} />
+        <Route path="/admin/category/plus" element={<AdminCategoryPlus />} />
+        <Route
+          path="/admin/category/delete"
+          element={<AdminCategoryDelete />}
+        />
         <Route path="/admin/plant" element={<AdminPlants />} />
         <Route path="/admin/plant/plus" element={<AdminPlantsPlus />} />
         <Route path="/admin/plant/edit" element={<AdminPlantsEdit />} />

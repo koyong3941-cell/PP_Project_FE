@@ -28,6 +28,11 @@ const AdminCategory = () => {
 
   const [page, setPage] = useState(1);
   const totalPage = 7;
+  axios.get(`http://localhost/api/notices?page=${page}`).then((res) => {
+    console.log(res);
+    // setNotice(res.data.data.list);
+    // setTotalPage(res.data.data.totalPage);
+  });
 
   return (
     <Container>
@@ -48,8 +53,20 @@ const AdminCategory = () => {
             placeholder="관리자 검색"
           />
           <ButtonGroup>
-            <AddButton>추가</AddButton>
-            <DeleteButton>삭제</DeleteButton>
+            <AddButton
+              onClick={() => {
+                navi("/admin/category/plus");
+              }}
+            >
+              추가
+            </AddButton>
+            <DeleteButton
+              onClick={() => {
+                navi("/admin/category/delete");
+              }}
+            >
+              삭제
+            </DeleteButton>
           </ButtonGroup>
         </Toolbar>
         <Table>

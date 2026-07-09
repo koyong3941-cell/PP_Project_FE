@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../api/axios";
+import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { useAlertify } from "../hooks/useAlertify";
 import {
@@ -12,49 +12,48 @@ import {
   Overlay,
   Title,
 } from "./adminpop.style";
-const AdminMemberDelete = () => {
+const AdminBoardData = () => {
   const navi = useNavigate();
-  const [status, setStatus] = useState("");
+  const [status, useStatus] = useState("");
   const [loading, isLoading] = useState(false);
 
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    const deleted = window.confirm("정말삭제하시겠습니까?");
+    const data = window.confirm("데이터를 복구하겠습니다");
 
-    if (!deleted) {
+    if (!data) {
       return;
     }
     isLoading(true);
-    setStatus("삭제완료");
+    setStatus("복구완료!");
   };
-
   return (
     <Overlay>
       <Modal>
-        <Title>회원을 삭제하시겠습니까?</Title>
+        <Title>DB를 복구하시겠습니까?</Title>
         <Form onSubmit={onSubmit}>
           <ButtonBox>
-            <CancelButton
+            <AddButton
               type="submit"
               onClick={() => {
-                navi("/admin");
+                navi("/admin/board");
               }}
             >
-              삭제
-            </CancelButton>
-            <AddButton
+              복구
+            </AddButton>
+            <CancelButton
               type="button"
               onClick={() => {
-                navi("/admin");
+                navi("/admin/board");
               }}
             >
               취소
-            </AddButton>
+            </CancelButton>
           </ButtonBox>
         </Form>
       </Modal>
     </Overlay>
   );
 };
-export default AdminMemberDelete;
+export default AdminBoardData;

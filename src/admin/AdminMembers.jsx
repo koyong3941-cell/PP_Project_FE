@@ -61,9 +61,30 @@ const AdminMembers = () => {
             placeholder="관리자 검색"
           />
           <ButtonGroup>
-            <AddButton>회원 마스킹 해제</AddButton>
-            <AddButton>복구</AddButton>
-            <DeleteButton>삭제</DeleteButton>
+            <AddButton
+              onClick={() => {
+                setActiveMenu("회원 마스킹 해제");
+                navi("/admin/masking");
+              }}
+            >
+              회원 마스킹 해제
+            </AddButton>
+            <AddButton
+              onClick={() => {
+                setActiveMenu("복구");
+                navi("/admin/member/restore");
+              }}
+            >
+              복구
+            </AddButton>
+            <DeleteButton
+              onClick={() => {
+                setActiveMenu("삭제");
+                navi("/admin/member/delete");
+              }}
+            >
+              삭제
+            </DeleteButton>
           </ButtonGroup>
         </Toolbar>
 

@@ -12,49 +12,51 @@ import {
   Overlay,
   Title,
 } from "./adminpop.style";
-const AdminMemberDelete = () => {
-  const navi = useNavigate();
+
+const AdminMemberRestore = () => {
   const [status, setStatus] = useState("");
-  const [loading, isLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navi = useNavigate();
 
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    const deleted = window.confirm("정말삭제하시겠습니까?");
+    const restored = window.confirm("정말 복구하시겠습니까?");
 
-    if (!deleted) {
+    if (!restored) {
       return;
     }
     isLoading(true);
-    setStatus("삭제완료");
+    setStatus("복구하겠습니다");
   };
 
   return (
     <Overlay>
       <Modal>
-        <Title>회원을 삭제하시겠습니까?</Title>
+        <Title>회원을 복구하시겠습니까?</Title>
         <Form onSubmit={onSubmit}>
           <ButtonBox>
-            <CancelButton
+            <AddButton
               type="submit"
               onClick={() => {
-                navi("/admin");
+                navi("/admin/member");
               }}
             >
-              삭제
-            </CancelButton>
-            <AddButton
+              복구
+            </AddButton>
+            <CancelButton
               type="button"
               onClick={() => {
-                navi("/admin");
+                navi("/admin/member");
               }}
             >
               취소
-            </AddButton>
+            </CancelButton>
           </ButtonBox>
         </Form>
       </Modal>
     </Overlay>
   );
 };
-export default AdminMemberDelete;
+
+export default AdminMemberRestore;
