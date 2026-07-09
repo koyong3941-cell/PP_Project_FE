@@ -7,48 +7,151 @@ import api from "../api/axios";
 const Board = () => {
   const [findBoardAll, setFindBoardAll] = useState([]);
 
+  const { user } = useAuth();
+  const navi = useNavigate();
+  const { success, error } = useAlertify();
+  const [showFilter, setShowFilter] = useState(false);
+  const [searchType, setSearchType] = useState("all");
+  const [filterName, setFilterName] = useState("필터");
+  const [keyword, setKeyword] = useState("");
+  const filters = [
+    { label: "전체", value: "all" },
+    { label: "작성자", value: "writer" },
+    // { label: "카테고리", value: "category" },
+    { label: "제목", value: "title" },
+  ];
+
   // 페이징 처리 부분--------------------------------------------------
   const [page, setPage] = useState(0); // Spring 백엔드가 0번 페이지부터 시작함
-  const [totalPages, setTotalPages] = useState(page + 3);
-  const pagination = [1, 2, 3, 4, 5];
+  const [totalPages, setTotalPages] = useState(0);
+  // const pagination = [1, 2, 3, 4, 5];
   const [hoveredButton, setHoveredButton] = useState(null);
-  const handleFirst = () => setPage(0);
+  const [searchMode, setSearchMode] = useState(false);
+  const handleFirst = () => {
+    setPage(0);
+  };
+
   const handlePrevious = () => {
-    if (page >= 1) setPage(page - 1);
+    if (page > 0) {
+      setPage(page - 1);
+    }
   };
+
+  // const [isSearching, setIsSearching] = useState(false);
   const handleNext = () => {
-    if (page < totalPages) setPage(page + 1);
+    if (page < totalPages - 1) setPage(page + 1);
   };
-  const handleLast = () => setPage(totalPages);
+  const handleLast = () => {
+    if (totalPages > 0) {
+      setPage(totalPages - 1);
+    }
+  };
   // --------------------------------------------------------------------------------
+  const handleSearch = async () => {
+    try {
+      setSearchMode(true);
+      setPage(0);
+
+      const result = await api.get("/boards/search", {
+        params: {
+          page: 0,
+          keyword,
+          target: searchType,
+        },
+      });
+
+      setFindBoardAll(result.data.data.content);
+      setTotalPages(result.data.data.totalPages);
+    } catch (err) {
+      console.error("검색 실패:", err);
+      error("검색에 실패했습니다.");
+    }
+  };
+
+  const fetchBoard = async () => {
+    const result = await api.get(`/boards?page=${page}`);
+
+    setFindBoardAll(result.data.data.content);
+    setTotalPages(result.data.data.totalPages);
+  };
+
+  const fetchSearchBoard = async () => {
+    const result = await api.get("/boards/search", {
+      params: {
+        page,
+        keyword,
+        target: searchType,
+      },
+    });
+
+    setFindBoardAll(result.data.data.content);
+    setTotalPages(result.data.data.totalPages);
+  };
+
   useEffect(() => {
-    api
-      .get(`/boards?page=${page}`)
-      .then((result) => {
-        console.log(result);
-        if (result.data && result.data.data) {
-          setFindBoardAll(result.data.data);
-        }
-      })
-      .catch((err) => console.error("게시글 로딩 실패:", err));
-  }, [page]);
+    if (searchMode) {
+      fetchSearchBoard();
+    } else {
+      fetchBoard();
+    }
+  }, [page, searchMode]);
+
   return (
     <div style={styles.container}>
       <div style={styles.top}>
         <h2>유저 커뮤니티</h2>
-        <div style={{ display: "flex", gap: "10px" }}>
+        <div style={{ display: "flex", gap: "10px", position: "relative" }}>
           <div style={styles.searchBox}>
             <Search size={16} />
             <input
               style={styles.input}
               type="text"
               placeholder="게시글 검색..."
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSearch();
+                }
+              }}
             />
           </div>
-          <button style={styles.button}>
+
+          <button
+            style={styles.button}
+            onClick={() => setShowFilter((prev) => !prev)}
+          >
             <Filter size={16} />
-            필터
+            {filterName}
           </button>
+
+          {showFilter && (
+            <div style={styles.dropdown}>
+              {filters.map((item) => (
+                <div
+                  key={item.value}
+                  style={{
+                    ...styles.dropdownItem,
+                    backgroundColor:
+                      searchType === item.value ? "#f1f5f9" : "white",
+                  }}
+                  onClick={() => {
+                    setSearchType(item.value);
+
+                    if (item.value === "all") {
+                      setFilterName("필터");
+                    } else {
+                      setFilterName(item.label);
+                    }
+
+                    setShowFilter(false);
+                  }}
+                >
+                  {item.label}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <Link to="/board/write">
@@ -130,26 +233,25 @@ const Board = () => {
           Previous
         </button>
 
-        {pagination.map((pageNum) => (
-          <button
-            key={pageNum}
-            style={{
-              ...styles.pageButton,
-              ...(pageNum === page + 1 ? styles.activePage : {}),
-              ...(hoveredButton === `page-${pageNum}` && pageNum !== page + 1
-                ? styles.pageButtonHover
-                : {}),
-              ...(hoveredButton === `page-${pageNum}` && pageNum === page + 1
-                ? styles.activePageHover
-                : {}),
-            }}
-            onClick={() => setPage(pageNum - 1)}
-            onMouseEnter={() => setHoveredButton(`page-${pageNum}`)}
-            onMouseLeave={() => setHoveredButton(null)}
-          >
-            {pageNum}
-          </button>
-        ))}
+        {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+          (pageNum) => (
+            <button
+              key={pageNum}
+              style={{
+                ...styles.pageButton,
+                ...(pageNum === page + 1 ? styles.activePage : {}),
+                ...(hoveredButton === `page-${pageNum}`
+                  ? styles.pageButtonHover
+                  : {}),
+              }}
+              onClick={() => setPage(pageNum - 1)}
+              onMouseEnter={() => setHoveredButton(`page-${pageNum}`)}
+              onMouseLeave={() => setHoveredButton(null)}
+            >
+              {pageNum}
+            </button>
+          ),
+        )}
 
         <button
           style={{
