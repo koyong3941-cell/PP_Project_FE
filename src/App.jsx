@@ -1,85 +1,35 @@
-import { Routes, Route } from "react-router-dom";
-import Header from "./components/layout/header/Header";
-import Footer from "./components/layout/footer/Footer";
+import { Route, Routes } from "react-router-dom";
 import "./App.css";
 
-import SignUp from "./signup/SignUp";
-import Login from "./login/login";
-
-import Admin from "./admin/Admin";
-import AdminMembers from "./admin/AdminMembers";
-import AdminBoards from "./admin/AdminBoards";
-import AdminPlants from "./admin/AdminPlants";
-import AdminPlantsPlus from "./admin/AdminPlantsPlus";
-import AdminNotices from "./admin/AdminNotices";
-import AdminNoticesPlus from "./admin/AdminNoticesPlus";
-import AdminNoticeEdit from "./admin/AdminNoticeEdit";
-import AdminDash from "./admin/AdminDash";
-import Board from "./board/Board";
-import BoardDetail from "./board/BoardDetail";
-import BoardWrite from "./board/BoardWrite";
-import BoardChage from "./board/BoardChange";
-import Notice from "./notice/Notice";
-import ProfileEdit from "./mypage/ProfileEdit";
-import MyPage from "./mypage/MyPage";
-
 // Layout용 Outlet
-import { Outlet } from "react-router-dom";
-import Main_2 from "./main/Main_3";
-import Main from "./main/Main";
-
-function MainLayout() {
-  return (
-    <div className="app-container">
-      <Header />
-
-      <main className="main-content">
-        <Outlet />
-      </main>
-
-      <Footer />
-    </div>
-  );
-}
-
-function EmptyLayout() {
-  return (
-    <div className="app-container">
-      <Outlet />
-    </div>
-  );
-}
+import EmptyLayout from "./layout/EmptyLayout";
+import MainLayout from "./layout/MainLayout";
+import {
+  AdminRoutes,
+  BoardRoutes,
+  MainRoutes,
+  MemberRoutes,
+  MyPageRoutes,
+  NoticeRoutes,
+  PlantRoutes,
+} from "./routes";
 
 function App() {
   return (
     <Routes>
       {/* Header/Footer 있는 페이지 */}
       <Route element={<MainLayout />}>
-        <Route path="/2" element={<Main_2 />} />
-        <Route path="/" element={<Main />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/profile-edit" element={<ProfileEdit />} />
-        <Route path="/board" element={<Board />} />
-        <Route path="/board/:boardNo" element={<BoardDetail />} />
-        <Route path="/board/:boardNo/edit" element={<BoardChage />} />
-        <Route path="/board/write" element={<BoardWrite />} />
-        <Route path="/notice" element={<Notice />} />
+        {MainRoutes}
+        {MemberRoutes}
+        {BoardRoutes}
+        {PlantRoutes}
+        {NoticeRoutes}
       </Route>
 
       {/* Header/Footer 없는 페이지 */}
       <Route element={<EmptyLayout />}>
-        <Route path="/mypage" element={<MyPage />} />
-        <Route path="/admin" element={<Admin />} />
-        {/* <Route path="/member" element={<Members />} /> */}
-        <Route path="/admin/member" element={<AdminMembers />} />
-        <Route path="/admin/board" element={<AdminBoards />} />
-        <Route path="/admin/plant" element={<AdminPlants />} />
-        <Route path="/admin/plant/plus" element={<AdminPlantsPlus />} />
-        <Route path="/admin/notice" element={<AdminNotices />} />
-        <Route path="/admin/notice/plus" element={<AdminNoticesPlus />} />
-        <Route path="/admin/notice/edit" element={<AdminNoticeEdit />} />
-        <Route path="/admin/dash" element={<AdminDash />} />
+        {AdminRoutes}
+        {MyPageRoutes}
       </Route>
     </Routes>
   );

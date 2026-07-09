@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Search, Filter, ChevronLeft, ChevronRight } from "lucide-react";
 import { styles } from "./Board.styles";
+import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 import { useAlertify } from "../hooks/useAlertify";
-import { useNavigate } from "react-router-dom";
-import api from "../api/axios";
 
 const Board = () => {
   const [findBoardAll, setFindBoardAll] = useState([]);
+
   const { user } = useAuth();
   const navi = useNavigate();
   const { success, error } = useAlertify();
@@ -155,19 +155,10 @@ const Board = () => {
             </div>
           )}
         </div>
-        <button
-          style={styles.button}
-          onClick={() => {
-            if (!user) {
-              navi("/login");
-              error("로그인이 필요합니다.");
-              return;
-            }
-            navi("/board/write");
-          }}
-        >
-          게시글 작성
-        </button>
+
+        <Link to="/board/write">
+          <button style={styles.button}>게시글 작성</button>
+        </Link>
       </div>
 
       <table style={styles.table}>
@@ -204,8 +195,6 @@ const Board = () => {
                     width: "30px",
                     height: "30px",
                     borderRadius: "50%",
-                    objectFit: "cover",
-                    flexShrink: 0,
                   }}
                 />
 
