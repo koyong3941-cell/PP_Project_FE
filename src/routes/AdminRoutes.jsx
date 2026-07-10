@@ -1,8 +1,13 @@
 import { Route } from "react-router-dom";
 
 import Admin from "../admin/Admin";
-import AdminDash from "../admin/AdminDash";
+import AdminPlus from "../admin/AdminPlus";
 import AdminMembers from "../admin/AdminMembers";
+import AdminMasking from "../admin/AdminMasking";
+import AdminMemberRestore from "../admin/AdminMemberRestore";
+import AdminMemberRestored from "../admin/AdminMemberRestored";
+import AdminMemberDelete from "../admin/AdminMemberDelete";
+import AdminMemberDeleted from "../admin/AdminMemberDeleted";
 import AdminBoards from "../admin/AdminBoards";
 import AdminBoardData from "../admin/AdminBoardData";
 import AdminBoardDelete from "../admin/AdminBoardDelete";
@@ -12,11 +17,39 @@ import AdminPlantsEdit from "../admin/AdminPlantsEdit";
 import AdminNotices from "../admin/AdminNotices";
 import AdminNoticesPlus from "../admin/AdminNoticesPlus";
 import AdminNoticeEdit from "../admin/AdminNoticeEdit";
+import AdminDash from "../admin/AdminDash";
 
 export const AdminRoutes = [
   <Route key="admin" path="/admin" element={<Admin />} />,
+  <Route key="admin-plus" path="/admin/plus" element={<AdminPlus />} />,
 
+  //회원관리
   <Route key="admin-member" path="/admin/member" element={<AdminMembers />} />,
+  <Route
+    key="admin-masking"
+    path="/admin/masking"
+    element={<AdminMasking />}
+  />,
+  <Route
+    key="admin-member-restore"
+    path="/admin/member/restore"
+    element={<AdminMemberRestore />}
+  />,
+  <Route
+    key="admin-member-restored"
+    path="/admin/member/restored"
+    element={<AdminMemberRestored />}
+  />,
+  <Route
+    key="admin-member-delete"
+    path="/admin/member/delete"
+    element={<AdminMemberDelete />}
+  />,
+  <Route
+    key="admin-member-deleted"
+    path="/admin/member/deleted"
+    element={<AdminMemberDeleted />}
+  />,
 
   //공지사항 관련
   <Route key="admin-board" path="/admin/board" element={<AdminBoards />} />,
