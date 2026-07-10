@@ -108,6 +108,9 @@ const MyPage = () => {
       <LeftPanel>
         <h2>마이페이지</h2>
         <ul>
+          <li onClick={() => handleNavigation("/PlantSearch")}>
+            식물 추가하기
+          </li>
           <li onClick={() => handleNavigation("/board")}>커뮤니티</li>
           <li onClick={() => handleNavigation("/notice")}>공지사항</li>
         </ul>
@@ -141,8 +144,8 @@ const MyPage = () => {
                   <SubText>
                     {item.classification}
                     <br />
-                    소형 : {item.smallPlant} / 중형 : {item.middlePlant} / 대형
-                    : {item.bigPlant}
+                    보유 식물 소형 : {item.smallPlant} / 중형 :{" "}
+                    {item.middlePlant} / 대형 : {item.bigPlant}
                   </SubText>
 
                   <div className="bar">
