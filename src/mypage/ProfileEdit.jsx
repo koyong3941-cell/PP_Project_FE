@@ -39,6 +39,9 @@ function ProfileEdit() {
   // INIT (user → form state)
   // =========================
   useEffect(() => {
+    console.log("delYn :", user?.delYn);
+    console.log("imgPath :", user?.imgPath);
+    console.log("saveName :", user?.saveName);
     if (user?.email) {
       const [id, domain] = user.email.split("@");
       setEmailId(id);
@@ -80,7 +83,7 @@ function ProfileEdit() {
         memberPwd,
         email: fullEmail,
       });
-
+      await refreshUser();
       success("수정 성공!");
       navi("/");
     } catch (err) {
@@ -141,7 +144,21 @@ function ProfileEdit() {
       error("업로드 실패");
     }
   };
+  // =========================
+  // ImageRemove
+  // =========================
+  const handleRemoveProfile = async () => {
+    try {
+      await api.delete("/members/profile/image");
 
+      await refreshUser();
+
+      success("기본 프로필로 변경되었습니다.");
+    } catch (err) {
+      console.error(err);
+      error("프로필 삭제에 실패했습니다.");
+    }
+  };
   // =========================
   // RENDER
   // =========================
@@ -174,7 +191,7 @@ function ProfileEdit() {
               src={
                 user?.delYn === "N" && user?.imgPath && user?.saveName
                   ? `http://localhost${user.imgPath}${user.saveName}`
-                  : defaultImg
+                  : profileImg
               }
               alt="profile"
               style={styles.profileImage}
@@ -218,7 +235,9 @@ function ProfileEdit() {
                 </button>
               </div>
 
-              <button style={styles.removeBtn}>🗑 Remove</button>
+              <button style={styles.removeBtn} onClick={handleRemoveProfile}>
+                🗑 Remove
+              </button>
             </div>
           </div>
 
