@@ -169,6 +169,34 @@ export const CareBox = styled.div`
   padding: 24px 26px;
 `;
 
+/* ---------------------------- Rating: Empty state --------------------- */
+
+export const EmptyReviewBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+  padding: 56px 24px;
+  background: #fbfaf5;
+  border: 1px solid #e7e2d6;
+  border-radius: 14px;
+`;
+
+export const EmptyReviewTitle = styled.h2`
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+  color: #23291f;
+`;
+
+export const EmptyReviewHint = styled.p`
+  margin: 0 0 14px;
+  font-size: 13.5px;
+  color: #8a8578;
+`;
+
 /* ---------------------------- Rating -------------------------------- */
 
 export const RatingHeader = styled.div`
@@ -179,13 +207,14 @@ export const RatingHeader = styled.div`
   gap: 12px;
 `;
 
+/* bars on the left, average block on the right */
 export const RatingSummary = styled.section`
   background: #fbfaf5;
   border: 1px solid #e7e2d6;
   border-radius: 14px;
   padding: 28px 32px;
   display: grid;
-  grid-template-columns: 180px 1fr;
+  grid-template-columns: 1fr 190px;
   gap: 32px;
   align-items: center;
 
@@ -194,20 +223,42 @@ export const RatingSummary = styled.section`
   }
 `;
 
+export const SummaryCol = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+`;
+
+export const SummaryLabel = styled.span`
+  font-size: 13px;
+  font-weight: 700;
+  color: #8a8578;
+  letter-spacing: 0.02em;
+`;
+
 export const AverageBlock = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  border-right: 1px solid #e7e2d6;
-  padding-right: 24px;
+  border-left: 1px solid #e7e2d6;
+  padding-left: 24px;
 
   strong {
-    font-size: 40px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 32px;
     font-weight: 800;
     color: #23291f;
     line-height: 1;
+  }
+
+  strong::after {
+    content: "★";
+    font-size: 20px;
+    color: #e3a73b;
   }
 
   span {
@@ -216,8 +267,10 @@ export const AverageBlock = styled.div`
   }
 
   @media (max-width: 560px) {
-    border-right: none;
-    padding-right: 0;
+    border-left: none;
+    padding-left: 0;
+    padding-top: 20px;
+    border-top: 1px solid #e7e2d6;
   }
 `;
 
@@ -258,8 +311,9 @@ export const BarFill = styled.div`
   transition: width 0.4s ease;
 `;
 
+/* small outline button (used in empty state) */
 export const WriteReviewButton = styled.button`
-  padding: 10px 18px;
+  padding: 10px 20px;
   border-radius: 10px;
   border: 1px solid #3f6b4a;
   background: #fff;
@@ -272,37 +326,240 @@ export const WriteReviewButton = styled.button`
     background: #3f6b4a;
     color: #fff;
   }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #fff;
+    color: #3f6b4a;
+  }
+`;
+
+/* wide filled button under the rating summary */
+export const WriteReviewWideButton = styled.button`
+  width: 100%;
+  height: 46px;
+  margin-top: 16px;
+  border-radius: 10px;
+  border: none;
+  background: #23291f;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:hover {
+    background: #35392c;
+  }
+
+  &:disabled {
+    background: #cfcabc;
+    cursor: not-allowed;
+  }
+`;
+
+/* ---------------------------- Review form (작성 / 수정) ---------------------------- */
+
+export const ReviewFormBox = styled.div`
+  background: #fff;
+  border: 1px solid #e7e2d6;
+  border-radius: 14px;
+  padding: 20px 22px;
+  margin-top: 16px;
+`;
+
+export const ReviewFormHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+`;
+
+export const CancelButton = styled.button`
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13.5px;
+  color: #8a8578;
+  cursor: pointer;
+
+  &:hover {
+    color: #5c584d;
+  }
+`;
+
+export const SubmitReviewButton = styled.button`
+  padding: 9px 22px;
+  border-radius: 8px;
+  border: none;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  background: ${(props) => (props.$active ? "#e3a73b" : "#f1efe6")};
+  color: ${(props) => (props.$active ? "#fff" : "#a29d8f")};
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+`;
+
+export const RatingFieldLabel = styled.div`
+  font-size: 12.5px;
+  color: #a29d8f;
+  margin-bottom: 6px;
+`;
+
+export const StarPicker = styled.div`
+  display: flex;
+  gap: 4px;
+  margin-bottom: 18px;
+  font-size: 22px;
+  color: #e3a73b;
+  line-height: 1;
+
+  span {
+    cursor: pointer;
+  }
+`;
+
+export const FormTitleInput = styled.input`
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid #e7e2d6;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #2b2b26;
+  margin-bottom: 10px;
+  font-family: inherit;
+
+  &:focus {
+    outline: none;
+    border-color: #3f6b4a;
+  }
+`;
+
+export const FormContentTextarea = styled.textarea`
+  width: 100%;
+  min-height: 120px;
+  padding: 12px 14px;
+  border: 1px solid #e7e2d6;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #2b2b26;
+  resize: vertical;
+  font-family: inherit;
+  margin-bottom: 14px;
+
+  &:focus {
+    outline: none;
+    border-color: #3f6b4a;
+  }
+`;
+
+export const FormImageRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+`;
+
+export const FormImageThumb = styled.div`
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #eef0e6;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+`;
+
+export const RemoveImageButton = styled.button`
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 10px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+`;
+
+export const AddImageButton = styled.label`
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  border: 1px dashed #cfcabc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #a29d8f;
+  cursor: pointer;
+  background: #fbfaf5;
+
+  &:hover {
+    border-color: #3f6b4a;
+    color: #3f6b4a;
+  }
+
+  input {
+    display: none;
+  }
 `;
 
 /* ---------------------------- Reviews -------------------------------- */
 
+export const ReviewCountTitle = styled.h3`
+  margin: 40px 0 16px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #23291f;
+`;
+
 export const ReviewList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 export const ReviewCard = styled.article`
-  padding: 20px 0;
-  border-bottom: 1px solid #ece8dc;
-
-  &:last-child {
-    border-bottom: none;
-  }
+  display: flex;
+  flex-direction: column;
+  padding: 18px 20px;
+  background: #fff;
+  border: 1px solid #ece8dc;
+  border-radius: 12px;
 `;
 
 export const ReviewHead = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   margin-bottom: 8px;
+  gap: 10px;
 `;
 
 export const ReviewerInfo = styled.div`
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  gap: 2px;
 `;
 
 export const Nickname = styled.span`
@@ -312,11 +569,12 @@ export const Nickname = styled.span`
 `;
 
 export const ReviewDate = styled.span`
-  font-size: 12.5px;
+  font-size: 12px;
   color: #a29d8f;
 `;
 
 export const MyReviewTag = styled.span`
+  align-self: flex-start;
   font-size: 11.5px;
   font-weight: 600;
   color: #3f6b4a;
@@ -325,9 +583,16 @@ export const MyReviewTag = styled.span`
   border-radius: 999px;
 `;
 
+export const ReviewTitle = styled.h4`
+  margin: 4px 0 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #23291f;
+`;
+
 export const ReviewContent = styled.p`
   margin: 8px 0 12px;
-  font-size: 14.5px;
+  font-size: 14px;
   line-height: 1.6;
   color: #3c382f;
   white-space: pre-line;
@@ -337,11 +602,12 @@ export const ReviewImageRow = styled.div`
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+  margin-bottom: 12px;
 `;
 
 export const ReviewImage = styled.img`
-  width: 84px;
-  height: 84px;
+  width: 72px;
+  height: 72px;
   object-fit: cover;
   border-radius: 10px;
   background: #eef0e6;
@@ -359,6 +625,48 @@ export const EditButton = styled.button`
   &:hover {
     color: #3f6b4a;
   }
+`;
+
+export const ReviewDeleteButton = styled.button`
+  font-size: 12.5px;
+  color: #d2574c;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+
+  &:hover {
+    color: #b8483e;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
+
+export const ReviewFooter = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 8px;
+`;
+
+export const ReviewFooterLeft = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+export const LikeBadge = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: ${(props) => (props.$liked ? "#d2574c" : "#a29d8f")};
 `;
 
 /* ---------------------------- Pagination -------------------------------- */
@@ -388,28 +696,6 @@ export const PageButton = styled.button`
   }
 `;
 
-export const LikeBadge = styled.span`
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: ${(props) => (props.$liked ? "#d2574c" : "#a29d8f")};
-`;
-
-export const ReviewFooter = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 6px;
-`;
-
-export const ReviewTitle = styled.h3`
-  margin: 4px 0 0;
-  font-size: 15.5px;
-  font-weight: 700;
-  color: #23291f;
-`;
 /* ---------------------------- Add Plant ------------------------------ */
 
 export const AddPlantSection = styled.section`
