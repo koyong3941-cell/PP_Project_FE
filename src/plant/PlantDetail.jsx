@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 import {
@@ -17,8 +17,12 @@ import {
   Section,
   SectionTitle,
   CareBox,
-  RatingHeader,
+  EmptyReviewBox,
+  EmptyReviewTitle,
+  EmptyReviewHint,
   RatingSummary,
+  SummaryCol,
+  SummaryLabel,
   AverageBlock,
   StarRow,
   BarList,
@@ -26,6 +30,20 @@ import {
   BarTrack,
   BarFill,
   WriteReviewButton,
+  WriteReviewWideButton,
+  ReviewFormBox,
+  ReviewFormHeader,
+  CancelButton,
+  SubmitReviewButton,
+  RatingFieldLabel,
+  StarPicker,
+  FormTitleInput,
+  FormContentTextarea,
+  FormImageRow,
+  FormImageThumb,
+  RemoveImageButton,
+  AddImageButton,
+  ReviewCountTitle,
   ReviewList,
   ReviewCard,
   ReviewHead,
@@ -38,8 +56,10 @@ import {
   ReviewImageRow,
   ReviewImage,
   ReviewFooter,
+  ReviewFooterLeft,
   LikeBadge,
   EditButton,
+  ReviewDeleteButton,
   Pagination,
   PageButton,
   AddPlantSection,
@@ -133,11 +153,10 @@ function reviewImageSrc(img) {
   return `${IMG_HOST}${path}${name}`;
 }
 
-export default function PlantDetail({ currentMemberNo }) {
+export default function PlantDetail() {
   const { user } = useAuth();
   const { success, error } = useAlertify();
-  // currentMemberNo: 로그인한 사용자의 memberNo (본인 리뷰에 "수정" 버튼을 보여주기 위함)
-  // 인증 컨텍스트/훅이 따로 있다면 여기서 props 대신 그걸로 받아오면 됩니다.
+  // 로그인한 사용자의 memberNo는 useAuth()의 user.memberNo로 판단합니다.
   const [ownedSizes, setOwnedSizes] = useState(null); // null = 아직 미보유
   const [sizeInputs, setSizeInputs] = useState({
     small: "",
@@ -151,7 +170,6 @@ export default function PlantDetail({ currentMemberNo }) {
     setSizeInputs((prev) => ({ ...prev, [key]: onlyDigits }));
   };
   const { plantNo } = useParams();
-  const navigate = useNavigate();
   const [plant, setPlant] = useState(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(null);
@@ -196,7 +214,168 @@ export default function PlantDetail({ currentMemberNo }) {
   const [reviews, setReviews] = useState([]);
   const [reviewPage, setReviewPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [totalReviewCount, setTotalReviewCount] = useState(0);
   const [reviewLoading, setReviewLoading] = useState(true);
+
+  // 리뷰 작성 / 수정 폼
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [editingReviewNo, setEditingReviewNo] = useState(null);
+  const [formRating, setFormRating] = useState(0);
+  const [formTitle, setFormTitle] = useState("");
+  const [formContent, setFormContent] = useState("");
+  const [formImages, setFormImages] = useState([]); // { file?, preview, existing?, imgNo? }
+  const [submittingReview, setSubmittingReview] = useState(false);
+
+  const resetReviewForm = () => {
+    setFormRating(0);
+    setFormTitle("");
+    setFormContent("");
+    setFormImages([]);
+    setEditingReviewNo(null);
+  };
+
+  const openNewReviewForm = () => {
+    resetReviewForm();
+    setShowReviewForm(true);
+  };
+
+  const openEditReviewForm = (review) => {
+    setEditingReviewNo(review.reviewNo);
+    setFormRating(toFiveScale(review.rating));
+    setFormTitle(review.reviewTitle ?? "");
+    setFormContent(review.reviewContent ?? "");
+    setFormImages(
+      (review.plantReviewImages ?? []).map((img) => ({
+        preview: reviewImageSrc(img),
+        existing: true,
+        imgNo: img.imgNo,
+      })),
+    );
+    setShowReviewForm(true);
+  };
+
+  const closeReviewForm = () => {
+    setShowReviewForm(false);
+    resetReviewForm();
+  };
+
+  const handleFormImageChange = (e) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+    const next = files.map((file) => ({
+      file,
+      preview: URL.createObjectURL(file),
+      existing: false,
+    }));
+    setFormImages((prev) => [...prev, ...next]);
+    e.target.value = "";
+  };
+
+  const handleRemoveFormImage = (index) => {
+    setFormImages((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const isFormValid =
+    formRating > 0 &&
+    formTitle.trim().length > 0 &&
+    formContent.trim().length > 0;
+
+  const handleSubmitReview = async () => {
+    if (!isFormValid || submittingReview) return;
+    setSubmittingReview(true);
+    try {
+      const payload = new FormData();
+      payload.append("rating", String(Math.round(formRating * 2)));
+      payload.append("reviewTitle", formTitle.trim());
+      payload.append("reviewContent", formContent.trim());
+
+      formImages
+        .filter((img) => !img.existing)
+        .forEach((img) => payload.append("imageFiles", img.file));
+
+      if (editingReviewNo) {
+        // 삭제 버튼을 누르지 않아 "그대로 남아있는" 기존 이미지 번호들
+        const keepImgNos = formImages
+          .filter((img) => img.existing)
+          .map((img) => img.imgNo);
+
+        keepImgNos.forEach((no) => payload.append("keepImgNos", no));
+        // 남은 기존 이미지가 하나도 없을 때도 서버가 "전체 삭제" 요청임을
+        // 구분할 수 있도록 플래그를 하나 같이 보내는 걸 추천합니다.
+        payload.append("hasKeepImgNos", "true");
+
+        await api.patch(
+          `/plants/${plantNo}/reviews/${editingReviewNo}`,
+          payload,
+          { headers: { "Content-Type": "multipart/form-data" } },
+        );
+        success?.("리뷰를 수정했어요.");
+      } else {
+        await api.post(`/plants/${plantNo}/reviews`, payload, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        success?.("리뷰를 등록했어요.");
+      }
+      closeReviewForm();
+      fetchReviews(reviewPage);
+      const ratingRes = await api.get(`/plants/${plantNo}/reviews/rating`);
+      setRating(ratingRes.data?.data ?? null);
+    } catch (err) {
+      error?.("리뷰 저장에 실패했습니다.");
+    } finally {
+      setSubmittingReview(false);
+    }
+  };
+
+  // 삭제 중인 리뷰 번호 (버튼 disabled 처리용)
+  const [deletingReviewNo, setDeletingReviewNo] = useState(null);
+
+  const handleDeleteReview = async (reviewNo) => {
+    if (!window.confirm("리뷰를 삭제할까요?")) return;
+    setDeletingReviewNo(reviewNo);
+    try {
+      await api.delete(`/plants/${plantNo}/reviews/${reviewNo}`);
+      success?.("리뷰를 삭제했어요.");
+      if (editingReviewNo === reviewNo) {
+        closeReviewForm();
+      }
+      fetchReviews(reviewPage);
+      const ratingRes = await api.get(`/plants/${plantNo}/reviews/rating`);
+      setRating(ratingRes.data?.data ?? null);
+    } catch (err) {
+      error?.("리뷰 삭제에 실패했습니다.");
+    } finally {
+      setDeletingReviewNo(null);
+    }
+  };
+
+  // 좋아요 토글 (타인 리뷰에서만 사용) - 이미 눌렀으면 DELETE, 아니면 POST
+  const handleToggleLike = async (review) => {
+    const { reviewNo, isLiked } = review;
+    try {
+      if (isLiked) {
+        await api.delete(`/plants/${plantNo}/reviews/${reviewNo}/like`);
+      } else {
+        await api.post(`/plants/${plantNo}/reviews/${reviewNo}/like`);
+      }
+      setReviews((prev) =>
+        prev.map((r) =>
+          r.reviewNo === reviewNo
+            ? {
+                ...r,
+                isLiked: !isLiked,
+                likeCount: isLiked
+                  ? Math.max(0, (r.likeCount ?? 0) - 1)
+                  : (r.likeCount ?? 0) + 1,
+              }
+            : r,
+        ),
+      );
+    } catch (err) {
+      error?.("좋아요 처리에 실패했습니다.");
+    }
+  };
+
   const handleDeletePlant = async () => {
     if (!window.confirm("보유한 식물 정보를 삭제할까요?")) return;
     setSavingOwned(true);
@@ -216,8 +395,6 @@ export default function PlantDetail({ currentMemberNo }) {
     let ignore = false;
     async function fetchOwned() {
       if (!user?.memberNo) return; // 로그인 안 했으면 조회 스킵
-      console.log("memberNo =", user?.memberNo);
-      console.log("plantNo =", plantNo);
       try {
         const res = await api.get(
           `/members/${user.memberNo}/plants/${plantNo}`,
@@ -282,8 +459,10 @@ export default function PlantDetail({ currentMemberNo }) {
         const data = res.data?.data;
         setReviews(data?.content ?? []);
         setTotalPages(data?.totalPages ?? 0);
+        setTotalReviewCount(data?.totalElements ?? data?.content?.length ?? 0);
       } catch (err) {
         setReviews([]);
+        setTotalReviewCount(0);
       } finally {
         setReviewLoading(false);
       }
@@ -316,6 +495,7 @@ export default function PlantDetail({ currentMemberNo }) {
 
   const barCounts = STAR_KEYS.map((key) => rating?.[key] ?? 0);
   const maxBarCount = Math.max(1, ...barCounts);
+  const hasReviews = (rating?.totalRating ?? 0) > 0;
 
   const coverImage = plant.plantImages?.[0]
     ? `${IMG_HOST}${plant.plantImages[0].imgPath || "/uploads/plant/"}${
@@ -377,6 +557,7 @@ export default function PlantDetail({ currentMemberNo }) {
           </CareBox>
         </Section>
       )}
+
       {/* ---------------- 식물 추가하기 / 추가됨 ---------------- */}
       <AddPlantSection>
         <AddPlantHeader>
@@ -443,131 +624,254 @@ export default function PlantDetail({ currentMemberNo }) {
           </AddPlantActions>
         </SizeGrid>
       </AddPlantSection>
+
       {/* ---------------- 평점 & 리뷰 ---------------- */}
       <Section>
-        <RatingHeader>
-          <SectionTitle style={{ margin: 0 }}>
-            평점 & 리뷰 ({rating?.totalRating ?? 0})
-          </SectionTitle>
-          <WriteReviewButton
-            disabled={rating?.hasMyReview}
-            onClick={() => navigate(`/plants/${plantNo}/reviews/new`)}
-          >
-            {rating?.hasMyReview ? "이미 리뷰를 작성했어요" : "리뷰 남기기"}
-          </WriteReviewButton>
-        </RatingHeader>
-
-        <div style={{ marginTop: 16 }}>
-          <RatingSummary>
-            <AverageBlock>
-              <strong>{(rating?.averageRating ?? 0).toFixed(1)}</strong>
-              <Stars value={rating?.averageRating ?? 0} />
-              <span>{rating?.totalRating ?? 0}개의 리뷰</span>
-            </AverageBlock>
-
-            <BarList>
-              {STAR_KEYS.map((key, idx) => {
-                const cnt = barCounts[idx];
-                const percent = (cnt / maxBarCount) * 100;
-                return (
-                  <BarRow key={key}>
-                    <span>{STAR_LABEL[key]}</span>
-                    <BarTrack>
-                      <BarFill $percent={percent} />
-                    </BarTrack>
-                    <span>{cnt}</span>
-                  </BarRow>
-                );
-              })}
-            </BarList>
-          </RatingSummary>
-        </div>
-
-        {/* ---------------- 리뷰 목록 ---------------- */}
-        {reviewLoading ? (
-          <StateBox>리뷰를 불러오는 중입니다...</StateBox>
-        ) : reviews.length === 0 ? (
-          <StateBox>아직 작성된 리뷰가 없습니다.</StateBox>
-        ) : (
-          <ReviewList>
-            {reviews.map((review) => {
-              const isMine =
-                currentMemberNo != null && review.memberNo === currentMemberNo;
-              return (
-                <ReviewCard key={review.reviewNo}>
-                  <ReviewHead>
-                    <ReviewerInfo>
-                      <Nickname>{review.memberName || "익명"}</Nickname>
-                      {isMine && <MyReviewTag>내 리뷰</MyReviewTag>}
-                      <ReviewDate>{formatDate(review.createDate)}</ReviewDate>
-                    </ReviewerInfo>
-                    <Stars value={toFiveScale(review.rating)} />
-                  </ReviewHead>
-
-                  <ReviewTitle>{review.reviewTitle}</ReviewTitle>
-                  <ReviewContent>{review.reviewContent}</ReviewContent>
-
-                  {review.plantReviewImages?.length > 0 && (
-                    <ReviewImageRow>
-                      {review.plantReviewImages.map((img, index) => (
-                        <ReviewImage
-                          key={img.imgNo ?? `${img.saveName}-${index}`}
-                          src={reviewImageSrc(img)}
-                          alt={img.originalName || "review-image"}
-                        />
-                      ))}
-                    </ReviewImageRow>
-                  )}
-
-                  <ReviewFooter>
-                    <LikeBadge $liked={review.isLiked}>
-                      {review.isLiked ? "♥" : "♡"} {review.likeCount ?? 0}
-                    </LikeBadge>
-                    {isMine && (
-                      <EditButton
-                        onClick={() =>
-                          navigate(
-                            `/plants/${plantNo}/reviews/${review.reviewNo}/edit`,
-                          )
-                        }
-                      >
-                        수정하기
-                      </EditButton>
-                    )}
-                  </ReviewFooter>
-                </ReviewCard>
-              );
-            })}
-          </ReviewList>
+        {!hasReviews && !showReviewForm && (
+          /* 리뷰가 하나도 없을 때: 중앙 정렬 안내 박스 */
+          <EmptyReviewBox>
+            <EmptyReviewTitle>평점 & 리뷰</EmptyReviewTitle>
+            <EmptyReviewHint>
+              아직 등록된 리뷰가 없어요. 첫 리뷰를 남겨보세요.
+            </EmptyReviewHint>
+            <WriteReviewButton onClick={openNewReviewForm}>
+              리뷰 작성하기
+            </WriteReviewButton>
+          </EmptyReviewBox>
         )}
 
-        {/* ---------------- 페이지네이션 ---------------- */}
-        {totalPages > 1 && (
-          <Pagination>
-            <PageButton
-              disabled={reviewPage === 0}
-              onClick={() => setReviewPage((p) => Math.max(0, p - 1))}
-            >
-              ‹
-            </PageButton>
-            {Array.from({ length: totalPages }, (_, i) => i).map((p) => (
-              <PageButton
-                key={p}
-                $active={p === reviewPage}
-                onClick={() => setReviewPage(p)}
-              >
-                {p + 1}
-              </PageButton>
-            ))}
-            <PageButton
-              disabled={reviewPage >= totalPages - 1}
-              onClick={() =>
-                setReviewPage((p) => Math.min(totalPages - 1, p + 1))
-              }
-            >
-              ›
-            </PageButton>
-          </Pagination>
+        {(hasReviews || showReviewForm) && (
+          <>
+            {hasReviews && (
+              <>
+                <SectionTitle>
+                  평점 & 리뷰 ({rating?.totalRating ?? 0})
+                </SectionTitle>
+
+                <RatingSummary>
+                  <SummaryCol>
+                    <SummaryLabel>Summary</SummaryLabel>
+                    <BarList>
+                      {STAR_KEYS.map((key, idx) => {
+                        const cnt = barCounts[idx];
+                        const percent = (cnt / maxBarCount) * 100;
+                        return (
+                          <BarRow key={key}>
+                            <span>{STAR_LABEL[key]}</span>
+                            <BarTrack>
+                              <BarFill $percent={percent} />
+                            </BarTrack>
+                            <span>{cnt}</span>
+                          </BarRow>
+                        );
+                      })}
+                    </BarList>
+                  </SummaryCol>
+
+                  <AverageBlock>
+                    <strong>
+                      {(rating?.averageRating / 2 ?? 0).toFixed(1)}
+                    </strong>
+                    <span>{rating?.totalRating ?? 0} Reviews</span>
+                  </AverageBlock>
+                </RatingSummary>
+              </>
+            )}
+
+            {showReviewForm ? (
+              /* ---------------- 리뷰 작성 / 수정 폼 ---------------- */
+              <ReviewFormBox>
+                <ReviewFormHeader>
+                  <CancelButton onClick={closeReviewForm}>
+                    취소하기
+                  </CancelButton>
+                  <SubmitReviewButton
+                    type="button"
+                    $active={isFormValid}
+                    disabled={!isFormValid || submittingReview}
+                    onClick={handleSubmitReview}
+                  >
+                    작성하기
+                  </SubmitReviewButton>
+                </ReviewFormHeader>
+
+                <RatingFieldLabel>평점:</RatingFieldLabel>
+                <StarPicker>
+                  {[1, 2, 3, 4, 5].map((n) => (
+                    <span key={n} onClick={() => setFormRating(n)}>
+                      {n <= formRating ? "★" : "☆"}
+                    </span>
+                  ))}
+                </StarPicker>
+
+                <FormTitleInput
+                  placeholder="제목"
+                  value={formTitle}
+                  onChange={(e) => setFormTitle(e.target.value)}
+                />
+                <FormContentTextarea
+                  placeholder="리뷰 내용"
+                  value={formContent}
+                  onChange={(e) => setFormContent(e.target.value)}
+                />
+
+                <FormImageRow>
+                  {formImages.map((img, idx) => (
+                    <FormImageThumb key={img.imgNo ?? img.preview ?? idx}>
+                      <img src={img.preview} alt={`review-${idx}`} />
+                      <RemoveImageButton
+                        type="button"
+                        onClick={() => handleRemoveFormImage(idx)}
+                      >
+                        ×
+                      </RemoveImageButton>
+                    </FormImageThumb>
+                  ))}
+                  <AddImageButton>
+                    +
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={handleFormImageChange}
+                    />
+                  </AddImageButton>
+                </FormImageRow>
+              </ReviewFormBox>
+            ) : (
+              hasReviews && (
+                <WriteReviewWideButton
+                  disabled={rating?.hasMyReview}
+                  onClick={openNewReviewForm}
+                >
+                  {rating?.hasMyReview
+                    ? "이미 리뷰를 작성했어요"
+                    : "리뷰 남기기"}
+                </WriteReviewWideButton>
+              )
+            )}
+
+            {/* ---------------- 리뷰 목록 ---------------- */}
+            {hasReviews && (
+              <ReviewCountTitle>리뷰({totalReviewCount})</ReviewCountTitle>
+            )}
+
+            {hasReviews && reviewLoading ? (
+              <StateBox>리뷰를 불러오는 중입니다...</StateBox>
+            ) : hasReviews && reviews.length === 0 ? (
+              <StateBox>아직 작성된 리뷰가 없습니다.</StateBox>
+            ) : hasReviews ? (
+              <ReviewList>
+                {reviews.map((review) => {
+                  const myMemberNo = user?.memberNo;
+                  const isMine =
+                    myMemberNo != null &&
+                    review.memberNo != null &&
+                    Number(myMemberNo) === Number(review.memberNo);
+                  return (
+                    <ReviewCard key={review.reviewNo}>
+                      <ReviewHead>
+                        <ReviewerInfo>
+                          <Nickname>{review.memberName || "익명"}</Nickname>
+                          <ReviewDate>
+                            {formatDate(review.createDate)}
+                          </ReviewDate>
+                          {isMine && <MyReviewTag>내 리뷰</MyReviewTag>}
+                        </ReviewerInfo>
+                        <Stars value={toFiveScale(review.rating)} />
+                      </ReviewHead>
+
+                      <ReviewTitle>{review.reviewTitle}</ReviewTitle>
+                      <ReviewContent>{review.reviewContent}</ReviewContent>
+
+                      {review.plantReviewImages?.length > 0 && (
+                        <ReviewImageRow>
+                          {review.plantReviewImages.map((img, index) => (
+                            <ReviewImage
+                              key={img.imgNo ?? `${img.saveName}-${index}`}
+                              src={reviewImageSrc(img)}
+                              alt={img.originalName || "review-image"}
+                            />
+                          ))}
+                        </ReviewImageRow>
+                      )}
+
+                      <ReviewFooter>
+                        <ReviewFooterLeft>
+                          {isMine && (
+                            <>
+                              <EditButton
+                                onClick={() => openEditReviewForm(review)}
+                              >
+                                수정하기
+                              </EditButton>
+                              <ReviewDeleteButton
+                                disabled={deletingReviewNo === review.reviewNo}
+                                onClick={() =>
+                                  handleDeleteReview(review.reviewNo)
+                                }
+                              >
+                                삭제하기
+                              </ReviewDeleteButton>
+                            </>
+                          )}
+                        </ReviewFooterLeft>
+
+                        {isMine ? (
+                          // 내 리뷰: 좋아요 개수만 표시 (클릭 불가)
+                          <LikeBadge>♥ {review.likeCount ?? 0}</LikeBadge>
+                        ) : (
+                          // 타인 리뷰: 좋아요 버튼 + 개수 (클릭해서 토글)
+                          <LikeBadge
+                            as="button"
+                            type="button"
+                            $liked={review.isLiked}
+                            onClick={() => handleToggleLike(review)}
+                            style={{
+                              background: "none",
+                              border: "none",
+                              cursor: "pointer",
+                            }}
+                          >
+                            {review.isLiked ? "♥" : "♡"} {review.likeCount ?? 0}
+                          </LikeBadge>
+                        )}
+                      </ReviewFooter>
+                    </ReviewCard>
+                  );
+                })}
+              </ReviewList>
+            ) : null}
+
+            {/* ---------------- 페이지네이션 ---------------- */}
+            {hasReviews && totalPages > 1 && (
+              <Pagination>
+                <PageButton
+                  disabled={reviewPage === 0}
+                  onClick={() => setReviewPage((p) => Math.max(0, p - 1))}
+                >
+                  ‹
+                </PageButton>
+                {Array.from({ length: totalPages }, (_, i) => i).map((p) => (
+                  <PageButton
+                    key={p}
+                    $active={p === reviewPage}
+                    onClick={() => setReviewPage(p)}
+                  >
+                    {p + 1}
+                  </PageButton>
+                ))}
+                <PageButton
+                  disabled={reviewPage >= totalPages - 1}
+                  onClick={() =>
+                    setReviewPage((p) => Math.min(totalPages - 1, p + 1))
+                  }
+                >
+                  ›
+                </PageButton>
+              </Pagination>
+            )}
+          </>
         )}
       </Section>
     </Wrapper>

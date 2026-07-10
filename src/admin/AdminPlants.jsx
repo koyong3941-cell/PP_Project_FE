@@ -48,8 +48,9 @@ const AdminPlants = () => {
         <Toolbar>
           <Select>
             <option>All</option>
-            <option>사용</option>
-            <option>미사용</option>
+            <option>식물ID</option>
+            <option>게시자</option>
+            <option>식물명</option>
           </Select>
           <SearchInput
             value={keyword}
@@ -73,7 +74,14 @@ const AdminPlants = () => {
             >
               수정
             </AddButton>
-            <DeleteButton>삭제</DeleteButton>
+            <DeleteButton
+              onClick={() => {
+                setActiveMenu("삭제");
+                navi("/admin/board/delete");
+              }}
+            >
+              삭제
+            </DeleteButton>
           </ButtonGroup>
         </Toolbar>
 

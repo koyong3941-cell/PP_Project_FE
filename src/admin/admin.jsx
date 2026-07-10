@@ -43,9 +43,7 @@ const Admin = () => {
 
   return (
     <Container>
-      {/* 사이드바 */}
       <Sidebars />
-      {/* 메인 */}
       <Main>
         <Header>
           <Title>관리자 관리</Title>
@@ -54,8 +52,9 @@ const Admin = () => {
         <Toolbar>
           <Select>
             <option>All</option>
-            <option>사용</option>
-            <option>미사용</option>
+            <option>관리자ID</option>
+            <option>관리자명</option>
+            <option>관리자이메일</option>
           </Select>
 
           <SearchInput
@@ -65,8 +64,22 @@ const Admin = () => {
           />
 
           <ButtonGroup>
-            <AddButton>추가</AddButton>
-            <DeleteButton>삭제</DeleteButton>
+            <AddButton
+              onClick={() => {
+                setActiveMenu("추가");
+                navi("/admin/plus");
+              }}
+            >
+              추가
+            </AddButton>
+            <DeleteButton
+              onClick={() => {
+                setActiveMenu("삭제");
+                navi("/admin/member/delete");
+              }}
+            >
+              삭제
+            </DeleteButton>
           </ButtonGroup>
         </Toolbar>
 
