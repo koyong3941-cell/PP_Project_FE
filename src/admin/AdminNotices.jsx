@@ -45,8 +45,9 @@ const AdminNotices = () => {
         <Toolbar>
           <Select>
             <option>All</option>
-            <option>사용</option>
-            <option>미사용</option>
+            <option>회원ID</option>
+            <option>회원명</option>
+            <option>공지사항 명</option>
           </Select>
           <SearchInput
             value={keyword}
@@ -70,7 +71,14 @@ const AdminNotices = () => {
             >
               수정
             </AddButton>
-            <DeleteButton>삭제</DeleteButton>
+            <DeleteButton
+              onClick={() => {
+                setActiveMenu("삭제");
+                navi("/admin/board/delete");
+              }}
+            >
+              삭제
+            </DeleteButton>
           </ButtonGroup>
         </Toolbar>
 
