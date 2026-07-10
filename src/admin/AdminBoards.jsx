@@ -50,8 +50,9 @@ const AdminBoards = () => {
         <Toolbar>
           <Select>
             <option>All</option>
-            <option>사용</option>
-            <option>미사용</option>
+            <option>회원ID</option>
+            <option>회원명</option>
+            <option>게시글 이름</option>
           </Select>
           <SearchInput
             value={keyword}
@@ -59,8 +60,22 @@ const AdminBoards = () => {
             placeholder="관리자 검색"
           />
           <ButtonGroup>
-            <AddButton>복구</AddButton>
-            <DeleteButton>삭제</DeleteButton>
+            <AddButton
+              onClick={() => {
+                setActiveMenu("복구");
+                navi("/admin/board/data");
+              }}
+            >
+              복구
+            </AddButton>
+            <DeleteButton
+              onClick={() => {
+                setActiveMenu("삭제");
+                navi("/admin/board/delete");
+              }}
+            >
+              삭제
+            </DeleteButton>
           </ButtonGroup>
         </Toolbar>
 

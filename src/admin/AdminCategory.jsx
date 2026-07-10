@@ -1,28 +1,23 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Sidebars from "./Sidebars";
 import {
   AddButton,
   ButtonGroup,
   Container,
   DeleteButton,
   Header,
-  Logo,
-  LowBar,
   Main,
-  Menu,
-  MenuItem,
   SearchInput,
   Select,
-  Sidebar,
   Table,
   Title,
   Toolbar,
 } from "./admin.style";
-import Sidebars from "./Sidebars";
 import LowBars from "./Lowbars";
 
-const AdminMembers = () => {
+const AdminCategory = () => {
   const [admins, setAdmins] = useState("");
   const [keyword, setKeyword] = useState("");
   const [selected, setSelected] = useState("");
@@ -33,11 +28,10 @@ const AdminMembers = () => {
 
   const [page, setPage] = useState(1);
   const totalPage = 7;
-
-  axios.get(`http://localhost/api/boards?page=${page}`).then((res) => {
+  axios.get(`http://localhost/api/notices?page=${page}`).then((res) => {
     console.log(res);
-    //setNotice(res.data.data.list);
-    //setTotalPage(res.data.data.totalPage);
+    // setNotice(res.data.data.list);
+    // setTotalPage(res.data.data.totalPage);
   });
 
   return (
@@ -45,15 +39,13 @@ const AdminMembers = () => {
       <Sidebars />
       <Main>
         <Header>
-          <Title>회원 관리</Title>
+          <Title>카테고리 관리</Title>
         </Header>
-
         <Toolbar>
           <Select>
             <option>All</option>
-            <option>회원ID</option>
-            <option>회원명</option>
-            <option>회원이메일</option>
+            <option>사용</option>
+            <option>미사용</option>
           </Select>
           <SearchInput
             value={keyword}
@@ -63,46 +55,30 @@ const AdminMembers = () => {
           <ButtonGroup>
             <AddButton
               onClick={() => {
-                setActiveMenu("회원 마스킹 해제");
-                navi("/admin/masking");
+                navi("/admin/category/plus");
               }}
             >
-              회원 마스킹 해제
-            </AddButton>
-            <AddButton
-              onClick={() => {
-                setActiveMenu("복구");
-                navi("/admin/member/restore");
-              }}
-            >
-              복구
+              추가
             </AddButton>
             <DeleteButton
               onClick={() => {
-                setActiveMenu("삭제");
-                navi("/admin/member/delete");
+                navi("/admin/category/delete");
               }}
             >
               삭제
             </DeleteButton>
           </ButtonGroup>
         </Toolbar>
-
         <Table>
           <thead>
             <tr>
               <th>
                 <input type="checkbox" />
               </th>
-              <th>회원키</th>
-              <th>생성날짜</th>
-              <th>관리자 ID</th>
-              <th>관리자명</th>
-              <th>관리자 이메일</th>
-              <th>사용여부</th>
+              <th>번호</th>
+              <th>카테고리 이름</th>
             </tr>
           </thead>
-
           <tbody>
             {admins.length === 0 ? (
               <tr>
@@ -110,11 +86,7 @@ const AdminMembers = () => {
                   <input type="checkbox" />
                 </th>
                 <th>#1</th>
-                <th>23/09/2022</th>
-                <th>tidgus</th>
-                <th>김*환</th>
-                <th>t*dg*s@gmail.com</th>
-                <th>Y</th>
+                <th>자유</th>
               </tr>
             ) : (
               admins.map((admin) => (
@@ -139,15 +111,14 @@ const AdminMembers = () => {
                   <input type="checkbox" />
                 </th>
                 <th>#2</th>
-                <th>23/09/2022</th>
-                <th>tidgus</th>
-                <th>최*개</th>
-                <th>t*dg*s@gmail.com</th>
-                <th>Y</th>
+                <th>개그</th>
               </tr>
             ) : (
               admins.map((admin) => (
                 <tr key={admin.memberNo}>
+                  <td>
+                    <input type="checkbox" />
+                  </td>
                   <td>{admin.memberNo}</td>
                   <td>{admin.createDate}</td>
                   <td>{admin.memberId}</td>
@@ -165,15 +136,14 @@ const AdminMembers = () => {
                   <input type="checkbox" />
                 </th>
                 <th>#3</th>
-                <th>23/09/2022</th>
-                <th>tidgus</th>
-                <th>백*만</th>
-                <th>t*dg*s@gmail.com</th>
-                <th>Y</th>
+                <th>꿀팁</th>
               </tr>
             ) : (
               admins.map((admin) => (
                 <tr key={admin.memberNo}>
+                  <td>
+                    <input type="checkbox" />
+                  </td>
                   <td>{admin.memberNo}</td>
                   <td>{admin.createDate}</td>
                   <td>{admin.memberId}</td>
@@ -190,4 +160,4 @@ const AdminMembers = () => {
     </Container>
   );
 };
-export default AdminMembers;
+export default AdminCategory;

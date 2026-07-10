@@ -50,7 +50,7 @@ const BOARD_ITEMS = [
 
 const SECTION_COUNT = 4;
 
-export default function Main_2() {
+export default function Main_3() {
   const pageRef = useRef(null);
 
   const [reviewItems, setReviewItems] = useState([]);
