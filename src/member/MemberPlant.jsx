@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import api from "../api/axios";
 import { styles } from "./MemberPlant.styles";
+import { error, success } from "alertifyjs";
 
 const DEFAULT_PLANT_IMAGE = "/uploads/plant/plant.png";
 
@@ -25,10 +26,17 @@ const MemberPlant = () => {
   const navigate = useNavigate();
 
   const [myPlantAll, setMyPlantAll] = useState([]);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editTarget, setEditTarget] = useState(null); // { memberNo, plantNo }
+  const [editForm, setEditForm] = useState({
+    smallPlant: 0,
+    middlePlant: 0,
+    bigPlant: 0,
+  });
   const [viewMode, setViewMode] = useState("list");
   const [page, setPage] = useState(0); // Spring 백엔드가 0번 페이지부터 시작함
   const [totalPages, setTotalPages] = useState(page + 3);
-  const pagination = [1, 2, 3, 4, 5];
+
   const [hoveredButton, setHoveredButton] = useState(null);
 
   const handleFirst = () => setPage(0);
@@ -36,9 +44,9 @@ const MemberPlant = () => {
     if (page >= 1) setPage(page - 1);
   };
   const handleNext = () => {
-    if (page < totalPages) setPage(page + 1);
+    if (page < totalPages - 1) setPage(page + 1);
   };
-  const handleLast = () => setPage(totalPages);
+  const handleLast = () => setPage(totalPages - 1);
   // --------------------------------------------------------------------------------
 
   const fetchMyPlantList = () => {
@@ -55,11 +63,45 @@ const MemberPlant = () => {
   useEffect(() => {
     fetchMyPlantList();
   }, [page]);
+  // plantNo나 plantName이 없는 빈 데이터(placeholder row)는 제외
+  const validPlantList = myPlantAll.filter(
+    (plant) => plant && plant.plantNo != null && plant.plantName,
+  );
+  const handleEdit = (plant) => {
+    setEditTarget({ memberNo: plant.memberNo, plantNo: plant.plantNo });
+    setEditForm({
+      smallPlant: plant.smallPlant ?? 0,
+      middlePlant: plant.middlePlant ?? 0,
+      bigPlant: plant.bigPlant ?? 0,
+    });
+    setShowEditModal(true);
+  };
 
-  const handleEdit = (memberNo, plantNo) => {
-    // 상세 조회(GET /api/members/{memberNo}/plants/{plantNo}) 결과로
-    // 수정 폼을 채운 뒤, 저장 시 PATCH 요청을 보내는 페이지로 이동
-    navigate(`/mypage/members/${memberNo}/plants/${plantNo}/edit`);
+  const handleCloseEditModal = () => {
+    setShowEditModal(false);
+    setEditTarget(null);
+  };
+
+  const handleSaveEdit = () => {
+    if (!editTarget) return;
+    const { memberNo, plantNo } = editTarget;
+
+    const body = {
+      memberNo,
+      plantNo,
+      smallPlant: editForm.smallPlant,
+      middlePlant: editForm.middlePlant,
+      bigPlant: editForm.bigPlant,
+    };
+
+    api
+      .patch(`/members/${memberNo}/plants/${plantNo}`, body)
+      .then(() => {
+        handleCloseEditModal();
+        fetchMyPlantList();
+        success("수정 성공!");
+      })
+      .catch((err) => console.error("식물 수정 실패:", err));
   };
 
   const handleDelete = (memberNo, plantNo) => {
@@ -69,6 +111,7 @@ const MemberPlant = () => {
       .delete(`/members/${memberNo}/plants/${plantNo}`)
       .then(() => {
         fetchMyPlantList();
+        success("삭제 성공!");
       })
       .catch((err) => console.error("식물 삭제 실패:", err));
   };
@@ -119,7 +162,7 @@ const MemberPlant = () => {
         </div>
       </div>
 
-      {myPlantAll.length === 0 ? (
+      {validPlantList.length === 0 ? (
         <div style={styles.empty}>보유한 식물이 없습니다.</div>
       ) : viewMode === "list" ? (
         <table style={styles.table}>
@@ -135,7 +178,7 @@ const MemberPlant = () => {
             </tr>
           </thead>
           <tbody>
-            {myPlantAll.map((plant) => (
+            {validPlantList.map((plant) => (
               <tr key={plant.plantNo}>
                 <td style={styles.td}>{plant.plantNo}</td>
                 <td style={styles.title}>{plant.plantName}</td>
@@ -160,7 +203,7 @@ const MemberPlant = () => {
                           ? styles.editButtonHover
                           : {}),
                       }}
-                      onClick={() => handleEdit(plant.memberNo, plant.plantNo)}
+                      onClick={() => handleEdit(plant)}
                       onMouseEnter={() =>
                         setHoveredButton(`edit-${plant.plantNo}`)
                       }
@@ -193,7 +236,7 @@ const MemberPlant = () => {
         </table>
       ) : (
         <div style={styles.gridContainer}>
-          {myPlantAll.map((plant) => (
+          {validPlantList.map((plant) => (
             <div key={plant.plantNo} style={styles.gridCard}>
               <div style={styles.gridImageWrap}>
                 <img
@@ -214,7 +257,7 @@ const MemberPlant = () => {
                 <div style={styles.gridActionGroup}>
                   <button
                     style={styles.gridEditButton}
-                    onClick={() => handleEdit(plant.memberNo, plant.plantNo)}
+                    onClick={() => handleEdit(plant)}
                   >
                     수정
                   </button>
@@ -258,7 +301,7 @@ const MemberPlant = () => {
           Previous
         </button>
 
-        {pagination.map((pageNum) => (
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
           <button
             key={pageNum}
             style={{
@@ -305,6 +348,91 @@ const MemberPlant = () => {
           <ChevronRight size={15} />
         </button>
       </div>
+      {showEditModal && editTarget && (
+        <div style={styles.modalOverlay} onClick={handleCloseEditModal}>
+          <div style={styles.modalCard} onClick={(e) => e.stopPropagation()}>
+            <div style={styles.modalLeft}>
+              <div style={styles.modalTitle}>식물 수정</div>
+              <div style={styles.modalDesc}>해당 식물을 수정해 보세요.</div>
+            </div>
+            <div style={styles.modalSizeGroup}>
+              <div style={styles.modalSizeLabel}>대</div>
+              <div style={styles.modalSizeInputRow}>
+                <span style={styles.modalSizeRange}>
+                  크기
+                  <br />
+                  20~30cm
+                </span>
+                <input
+                  type="number"
+                  min={0}
+                  style={styles.modalSizeInput}
+                  value={editForm.bigPlant}
+                  onChange={(e) =>
+                    setEditForm({
+                      ...editForm,
+                      bigPlant: Number(e.target.value),
+                    })
+                  }
+                />
+                <span style={styles.modalUnit}>개</span>
+              </div>
+            </div>
+
+            <div style={styles.modalSizeGroup}>
+              <div style={styles.modalSizeLabel}>중</div>
+              <div style={styles.modalSizeInputRow}>
+                <span style={styles.modalSizeRange}>
+                  크기
+                  <br />
+                  10~20cm
+                </span>
+                <input
+                  type="number"
+                  min={0}
+                  style={styles.modalSizeInput}
+                  value={editForm.middlePlant}
+                  onChange={(e) =>
+                    setEditForm({
+                      ...editForm,
+                      middlePlant: Number(e.target.value),
+                    })
+                  }
+                />
+                <span style={styles.modalUnit}>개</span>
+              </div>
+            </div>
+
+            <div style={styles.modalSizeGroup}>
+              <div style={styles.modalSizeLabel}>소</div>
+              <div style={styles.modalSizeInputRow}>
+                <span style={styles.modalSizeRange}>
+                  크기
+                  <br />
+                  0~10cm
+                </span>
+                <input
+                  type="number"
+                  min={0}
+                  style={styles.modalSizeInput}
+                  value={editForm.smallPlant}
+                  onChange={(e) =>
+                    setEditForm({
+                      ...editForm,
+                      smallPlant: Number(e.target.value),
+                    })
+                  }
+                />
+                <span style={styles.modalUnit}>개</span>
+              </div>
+            </div>
+
+            <button style={styles.modalSubmitButton} onClick={handleSaveEdit}>
+              변경하기
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

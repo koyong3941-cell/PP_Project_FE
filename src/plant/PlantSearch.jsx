@@ -49,7 +49,7 @@ const PlantSearch = () => {
   const [rating, setRating] = useState(null);
   const [page, setPage] = useState(0); // Spring 백엔드가 0번 페이지부터 시작함
   const [totalPages, setTotalPages] = useState(page + 3);
-  const pagination = [1, 2, 3, 4, 5];
+  //const pagination = [1, 2, 3, 4, 5];
   const [hoveredButton, setHoveredButton] = useState(null);
 
   const GRID_PAGE_SIZE = 9;
@@ -218,7 +218,7 @@ const PlantSearch = () => {
           Previous
         </button>
 
-        {pagination.map((pageNum) => (
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
           <button
             key={pageNum}
             style={{
