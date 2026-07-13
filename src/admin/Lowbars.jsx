@@ -1,12 +1,12 @@
 import { LowBar } from "./admin.style";
 
 const LowBars = ({ currentPage, totalPages, onPageChange }) => {
-  const page = currentPage;
+  const page = currentPage + 1;
   const totalPage = totalPages || 1;
 
   const goToPage = (newPage) => {
     if (newPage >= 1 && newPage <= totalPage) {
-      onPageChange(newPage);
+      onPageChange(newPage - 1);
     }
   };
 

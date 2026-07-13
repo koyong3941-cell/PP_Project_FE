@@ -26,7 +26,7 @@ const Admin = () => {
   const navi = useNavigate();
   const alert = useAlertify();
 
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const size = 10;
 
@@ -58,7 +58,7 @@ const Admin = () => {
       setLoading(true);
       const res = await api.get("/admins/admins", {
         params: {
-          page: page - 1,
+          page: page,
           size: size,
         },
       });
