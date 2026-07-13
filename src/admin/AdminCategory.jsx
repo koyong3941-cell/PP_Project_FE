@@ -1,5 +1,7 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { useAlertify } from "../hooks/useAlertify";
 import axios from "axios";
 import Sidebars from "./Sidebars";
 import {
@@ -16,24 +18,81 @@ import {
   Toolbar,
 } from "./admin.style";
 import LowBars from "./Lowbars";
+import api from "../api/axios";
 
 const AdminCategory = () => {
+  const { user } = useAuth();
+  const navi = useNavigate();
+  const { success, error } = useAlertify();
+
   const [admins, setAdmins] = useState("");
   const [keyword, setKeyword] = useState("");
   const [selected, setSelected] = useState("");
-  const [loading, setLoading] = useState(false);
-  const navi = useNavigate();
-
   const [activeMenu, setActiveMenu] = useState("");
 
-  const [page, setPage] = useState(1);
-  const totalPage = 7;
-  axios.get(`http://localhost/api/notices?page=${page}`).then((res) => {
-    console.log(res);
-    // setNotice(res.data.data.list);
-    // setTotalPage(res.data.data.totalPage);
-  });
+  const [category, setCategory] = useState([]);
+  const [categoryNo, setCategoryNo] = useState([]);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const size = 10;
+
+  const fetchAdmins = async (page) => {
+    try {
+      setLoading(true);
+      const res = await api.get("/admins/category", {
+        params: {
+          page: page - 1,
+          size: size,
+        },
+      });
+      const data = res.data.data;
+      setAdmins(data.content || []);
+      setTotalPages(data.tatoalPages || 0);
+    } catch (err) {
+      console.error(err);
+      if (err.response?.status === 403) {
+        alert.error("관리자 권한이 없습니다");
+        navi("/");
+      } else {
+        alert.error("데이터를 불러오는데 실패했습니다");
+      }
+      setAdmins([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAdmins(currentPage);
+  }, [currentPage]);
+
+  const toggleSelect = (categoryNo) => {
+    setSelectNos((prev) =>
+      prev.includes(categoryNo)
+        ? prev.filter((no) => no !== categoryNo)
+        : [...prev, categoryNo],
+    );
+  };
+
+  const onCheck = (e) => {
+    if (e.target.checked) {
+      setCategoryNo([...categoryNos, e.target.id]);
+    } else {
+      setCategoryNo([...plantNos.filter((e) => e != e.target.id)]);
+    }
+  };
+
+  const onDelete = async (e) => {
+    e.preventDefault();
+    if (!confirm("정말 삭제하시겠습니까?")) return;
+
+    try {
+      await api.delete(`/admin/category/${categoryNo}`);
+    } catch {
+      alert("삭제에 실패했습니다");
+    }
+  };
   return (
     <Container>
       <Sidebars />
@@ -80,82 +139,32 @@ const AdminCategory = () => {
             </tr>
           </thead>
           <tbody>
-            {admins.length === 0 ? (
-              <tr>
-                <th>
-                  <input type="checkbox" />
-                </th>
-                <th>#1</th>
-                <th>자유</th>
-              </tr>
-            ) : (
-              admins.map((admin) => (
-                <tr key={admin.memberNo}>
+            {category.length != 0 ? (
+              category.map((c) => (
+                <tr key={c.categoryNo}>
                   <td>
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      id={c.categoryNo}
+                      onChange={onCheck}
+                    />
                   </td>
-                  <td>{admin.memberNo}</td>
-                  <td>{admin.createDate}</td>
-                  <td>{admin.memberId}</td>
-                  <td>{admin.memberName}</td>
-                  <td>{admin.memberEmail}</td>
-                  <td>{admin.useYn}</td>
+                  <td>{c.categoryNo}</td>
+                  <td>{c.categoryName}</td>
                 </tr>
               ))
-            )}
-          </tbody>
-          <tbody>
-            {admins.length === 0 ? (
-              <tr>
-                <th>
-                  <input type="checkbox" />
-                </th>
-                <th>#2</th>
-                <th>개그</th>
-              </tr>
             ) : (
-              admins.map((admin) => (
-                <tr key={admin.memberNo}>
-                  <td>
-                    <input type="checkbox" />
-                  </td>
-                  <td>{admin.memberNo}</td>
-                  <td>{admin.createDate}</td>
-                  <td>{admin.memberId}</td>
-                  <td>{admin.memberName}</td>
-                  <td>{admin.memberEmail}</td>
-                  <td>{admin.useYn}</td>
-                </tr>
-              ))
-            )}
-          </tbody>
-          <tbody>
-            {admins.length === 0 ? (
               <tr>
-                <th>
-                  <input type="checkbox" />
-                </th>
-                <th>#3</th>
-                <th>꿀팁</th>
+                <td colSpan={7}>아직 존재하지 않습니다</td>
               </tr>
-            ) : (
-              admins.map((admin) => (
-                <tr key={admin.memberNo}>
-                  <td>
-                    <input type="checkbox" />
-                  </td>
-                  <td>{admin.memberNo}</td>
-                  <td>{admin.createDate}</td>
-                  <td>{admin.memberId}</td>
-                  <td>{admin.memberName}</td>
-                  <td>{admin.memberEmail}</td>
-                  <td>{admin.useYn}</td>
-                </tr>
-              ))
             )}
           </tbody>
         </Table>
-        <LowBars />
+        <LowBars
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       </Main>
     </Container>
   );

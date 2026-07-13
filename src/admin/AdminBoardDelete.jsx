@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 import { useAlertify } from "../hooks/useAlertify";
@@ -18,32 +18,27 @@ const AdminBoardDelete = () => {
   const [status, useStatus] = useState("");
   const [loading, isLoading] = useState(false);
 
-  const onSubmit = async (e) => {
+  const { boardNo } = useParams();
+  const onDelete = async (e) => {
     e.preventDefault();
+    if (!confirm("정말삭제하시겠습니까?")) return;
 
-    const deleted = window.confirm("정말 삭제하시겠습니까?");
-
-    if (!deleted) {
-      return;
+    try {
+      await api.delete(`/boards/${boardNo}`);
+      //navi("/admin/board");
+    } catch {
+      alert("삭제에 실패했습니다");
+      //navi("/admin/board");
     }
-    isLoading(true);
-    setStatus("삭제완료!");
   };
 
   return (
     <Overlay>
       <Modal>
         <Title>게시글을 삭제하시겠습니까?</Title>
-        <Form onSubmit={onSubmit}>
+        <Form onSubmit={onDelete}>
           <ButtonBox>
-            <CancelButton
-              type="submit"
-              onClick={() => {
-                navi("/admin/board");
-              }}
-            >
-              삭제
-            </CancelButton>
+            <CancelButton type="submit">삭제</CancelButton>
             <AddButton
               type="button"
               onClick={() => {
