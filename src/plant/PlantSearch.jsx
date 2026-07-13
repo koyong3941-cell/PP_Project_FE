@@ -28,6 +28,11 @@ const StarRating = ({ value = 0 }) => (
 const PlantSearch = () => {
   const [findPlantAll, setFindPlantAll] = useState([]);
   const [viewMode, setViewMode] = useState("list");
+  const [showFilter, setShowFilter] = useState(false);
+  const [searchType, setSearchType] = useState("all");
+  const [searchMode, setSearchMode] = useState(false);
+  const [filterName, setFilterName] = useState("필터");
+  const [keyword, setKeyword] = useState("");
 
   const [page, setPage] = useState(0); // Spring 백엔드가 0번 페이지부터 시작함
   const [totalPages, setTotalPages] = useState(page + 3);
@@ -46,30 +51,124 @@ const PlantSearch = () => {
   };
   const handleLast = () => setPage(totalPages);
   // --------------------------------------------------------------------------------
+  const filters = [
+    { label: "전체", value: "all" },
+    { label: "식물명", value: "plantName" },
+    { label: "작성자", value: "writer" },
+  ];
+
+  const handleSearch = async () => {
+    try {
+      setSearchMode(true);
+      setPage(0);
+
+      const result = await api.get("/plants/search", {
+        params: {
+          page: 0,
+          size,
+          keyword,
+          target: searchType,
+        },
+      });
+
+      setFindPlantAll(result.data.data.content);
+      setTotalPages(result.data.data.totalPages);
+    } catch (err) {
+      console.error("검색 실패:", err);
+    }
+  };
+
+  const fetchPlant = async () => {
+    const result = await api.get("/plants", {
+      params: {
+        page,
+        size,
+      },
+    });
+
+    setFindPlantAll(result.data.data.content);
+    setTotalPages(result.data.data.totalPages);
+  };
+
+  const fetchSearchPlant = async () => {
+    const result = await api.get("/plants/search", {
+      params: {
+        page,
+        size,
+        keyword,
+        target: searchType,
+      },
+    });
+
+    setFindPlantAll(result.data.data.content);
+    setTotalPages(result.data.data.totalPages);
+  };
+
   const size = viewMode === "grid" ? 9 : 10;
   useEffect(() => {
-    api
-      .get(`/plants?page=${page}&size=${size}`)
-      .then((result) => {
-        console.log(result.data);
-        setFindPlantAll(result.data.data.content);
-        setTotalPages(result.data.data.totalPages);
-      })
-      .catch((err) => console.error("게시글 로딩 실패:", err));
-  }, [page, viewMode]);
+    if (searchMode) {
+      fetchSearchPlant();
+    } else {
+      fetchPlant();
+    }
+  }, [page, viewMode, searchMode]);
   return (
     <div style={styles.container}>
       <div style={styles.top}>
         <h2>식물 목록</h2>
-        <div style={{ display: "flex", gap: "10px" }}>
+        <div style={{ display: "flex", gap: "10px", position: "relative" }}>
           <div style={styles.searchBox}>
             <Search size={16} />
-            <input style={styles.input} type="text" placeholder="검색..." />
+            <input
+              style={styles.input}
+              type="text"
+              placeholder="검색..."
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSearch();
+                }
+              }}
+            />
           </div>
-          <button style={styles.button}>
+
+          <button
+            style={styles.button}
+            onClick={() => setShowFilter((prev) => !prev)}
+          >
             <Filter size={16} />
-            필터
+            {filterName}
           </button>
+
+          {showFilter && (
+            <div style={styles.dropdown}>
+              {filters.map((item) => (
+                <div
+                  key={item.value}
+                  style={{
+                    ...styles.dropdownItem,
+                    backgroundColor:
+                      searchType === item.value ? "#f1f5f9" : "white",
+                  }}
+                  onClick={() => {
+                    setSearchType(item.value);
+
+                    if (item.value === "all") {
+                      setFilterName("필터");
+                    } else {
+                      setFilterName(item.label);
+                    }
+
+                    setShowFilter(false);
+                  }}
+                >
+                  {item.label}
+                </div>
+              ))}
+            </div>
+          )}
+
           <div style={styles.viewToggleGroup}>
             <button
               onClick={() => {
@@ -83,6 +182,7 @@ const PlantSearch = () => {
             >
               <List size={16} />
             </button>
+
             <button
               onClick={() => {
                 setViewMode("grid");
