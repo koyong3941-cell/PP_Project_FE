@@ -1,12 +1,12 @@
 import { LowBar } from "./admin.style";
 
 const LowBars = ({ currentPage, totalPages, onPageChange }) => {
-  const page = currentPage;
+  const page = currentPage + 1;
   const totalPage = totalPages || 1;
 
   const goToPage = (newPage) => {
     if (newPage >= 1 && newPage <= totalPage) {
-      onPageChange(newPage);
+      onPageChange(newPage - 1);
     }
   };
 
@@ -46,10 +46,10 @@ const LowBars = ({ currentPage, totalPages, onPageChange }) => {
           return null;
         })}
       </div>
-      <button disabled={page === totalPage} onClick={() => setPage(page + 1)}>
+      <button disabled={page === totalPage} onClick={() => goToPage(page + 1)}>
         Next &gt;
       </button>
-      <button disabled={page === totalPage} onClick={() => setPage(totalPage)}>
+      <button disabled={page === totalPage} onClick={() => goToPage(totalPage)}>
         ⏭
       </button>
     </LowBar>
