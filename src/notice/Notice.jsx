@@ -10,6 +10,18 @@ const Notice = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [hoveredButton, setHoveredButton] = useState(null);
 
+  const [showFilter, setShowFilter] = useState(false);
+  const [searchType, setSearchType] = useState("all");
+  const [filterName, setFilterName] = useState("필터");
+  const [keyword, setKeyword] = useState("");
+  const [searchMode, setSearchMode] = useState(false);
+
+  const filters = [
+    { label: "전체", value: "all" },
+    { label: "작성자", value: "writer" },
+    { label: "제목", value: "title" },
+  ];
+
   const handleFirst = () => setPage(0);
 
   const handlePrevious = () => {
@@ -30,33 +42,139 @@ const Notice = () => {
     }
   };
 
+  const handleSearch = async () => {
+    try {
+      setSearchMode(true);
+      setPage(0);
+
+      const result = await api.get("/notices/search", {
+        params: {
+          page: 0,
+          keyword,
+          target: searchType,
+        },
+      });
+
+      const data = result.data.data;
+
+      if (Array.isArray(data)) {
+        setFindNoticeAll(data);
+        setTotalPages(1);
+      } else {
+        setFindNoticeAll(data?.content || []);
+        setTotalPages(data?.totalPages || 1);
+      }
+    } catch (err) {
+      console.error("검색 실패:", err);
+      setFindNoticeAll([]);
+      setTotalPages(1);
+    }
+  };
+
+  const fetchNotice = async () => {
+    try {
+      const result = await api.get(`/notices?page=${page}`);
+
+      setFindNoticeAll(result.data.data?.content || []);
+      setTotalPages(result.data.data?.totalPages || 1);
+    } catch (err) {
+      console.error("공지 조회 실패:", err);
+      setFindNoticeAll([]);
+    }
+  };
+
+  const fetchSearchNotice = async () => {
+    try {
+      const result = await api.get("/notices/search", {
+        params: {
+          page,
+          keyword,
+          target: searchType,
+        },
+      });
+
+      const data = result.data.data;
+
+      if (Array.isArray(data)) {
+        setFindNoticeAll(data);
+        setTotalPages(1);
+      } else {
+        setFindNoticeAll(data?.content || []);
+        setTotalPages(data?.totalPages || 1);
+      }
+    } catch (err) {
+      console.error("검색 조회 실패:", err);
+      setFindNoticeAll([]);
+      setTotalPages(1);
+    }
+  };
+
   useEffect(() => {
-    api
-      .get(`/notices?page=${page}`)
-      .then((result) => {
-        if (result.data && result.data.data) {
-          setFindNoticeAll(result.data.data.content);
-          setTotalPages(result.data.data.totalPages);
-        }
-      })
-      .catch((err) => console.error("공지사항 로딩 실패:", err));
-  }, [page]);
+    if (searchMode) {
+      fetchSearchNotice();
+    } else {
+      fetchNotice();
+    }
+  }, [page, searchMode]);
 
   return (
     <div style={styles.container}>
       <div style={styles.top}>
         <h2>공지사항</h2>
 
-        <div style={{ display: "flex", gap: "10px" }}>
+        <div style={{ display: "flex", gap: "10px", position: "relative" }}>
           <div style={styles.searchBox}>
             <Search size={16} />
-            <input style={styles.input} type="text" placeholder="검색..." />
+
+            <input
+              style={styles.input}
+              type="text"
+              placeholder="검색..."
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSearch();
+                }
+              }}
+            />
           </div>
 
-          <button style={styles.button}>
+          <button
+            style={styles.button}
+            onClick={() => setShowFilter((prev) => !prev)}
+          >
             <Filter size={16} />
-            필터
+            {filterName}
           </button>
+
+          {showFilter && (
+            <div style={styles.dropdown}>
+              {filters.map((item) => (
+                <div
+                  key={item.value}
+                  style={{
+                    ...styles.dropdownItem,
+                    backgroundColor:
+                      searchType === item.value ? "#f1f5f9" : "white",
+                  }}
+                  onClick={() => {
+                    setSearchType(item.value);
+
+                    if (item.value === "all") {
+                      setFilterName("필터");
+                    } else {
+                      setFilterName(item.label);
+                    }
+
+                    setShowFilter(false);
+                  }}
+                >
+                  {item.label}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
@@ -72,7 +190,7 @@ const Notice = () => {
         </thead>
 
         <tbody>
-          {findNoticeAll.map((notice) => (
+          {(findNoticeAll || []).map((notice) => (
             <tr key={notice.noticeNo}>
               <td style={styles.td}>{notice.noticeNo}</td>
 
