@@ -1,5 +1,7 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { useAlertify } from "../hooks/useAlertify";
 import axios from "axios";
 import Sidebars from "./Sidebars";
 import {
@@ -16,24 +18,65 @@ import {
   Toolbar,
 } from "./admin.style";
 import LowBars from "./Lowbars";
+import api from "../api/axios";
 
 const AdminCategory = () => {
+  const { user } = useAuth();
+  const navi = useNavigate();
+  const { success, error } = useAlertify();
+
   const [admins, setAdmins] = useState("");
   const [keyword, setKeyword] = useState("");
   const [selected, setSelected] = useState("");
-  const [loading, setLoading] = useState(false);
-  const navi = useNavigate();
-
   const [activeMenu, setActiveMenu] = useState("");
 
-  const [page, setPage] = useState(1);
-  const totalPage = 7;
-  axios.get(`http://localhost/api/notices?page=${page}`).then((res) => {
-    console.log(res);
-    // setNotice(res.data.data.list);
-    // setTotalPage(res.data.data.totalPage);
-  });
+  const [category, setCategory] = useState([]);
+  const [categoryNo, setCategoryNo] = useState([]);
 
+  const [page, setPage] = useState("");
+  const totalPage = Page;
+
+  useEffect(() => {
+    if (!user) {
+      navi("/login");
+      return;
+    }
+
+    if (user.role !== "ROLE_ADMIN") {
+      error("관리자만 접근할수 있습니다");
+      navi("/");
+      return;
+    }
+    api
+      .get(`http://localhost/api/admins/category?page=${page}`)
+      .then((res) => {
+        console.log(res.data.data.content);
+        setCategory(res.data.data.content);
+      })
+      .catch((err) => {
+        console.error(err);
+        error("카테고리를 불러오지 못했습니다");
+      });
+  }, [user, navi, page]);
+
+  const onCheck = (e) => {
+    if (e.target.checked) {
+      setCategoryNo([...categoryNos, e.target.id]);
+    } else {
+      setCategoryNo([...plantNos.filter((e) => e != e.target.id)]);
+    }
+  };
+
+  const onDelete = async (e) => {
+    e.preventDefault();
+    if (!confirm("정말 삭제하시겠습니까?")) return;
+
+    try {
+      await api.delete(`/admin/category/${categoryNo}`);
+    } catch {
+      alert("삭제에 실패했습니다");
+    }
+  };
   return (
     <Container>
       <Sidebars />
@@ -80,78 +123,24 @@ const AdminCategory = () => {
             </tr>
           </thead>
           <tbody>
-            {admins.length === 0 ? (
-              <tr>
-                <th>
-                  <input type="checkbox" />
-                </th>
-                <th>#1</th>
-                <th>자유</th>
-              </tr>
-            ) : (
-              admins.map((admin) => (
-                <tr key={admin.memberNo}>
+            {category.length != 0 ? (
+              category.map((c) => (
+                <tr key={c.categoryNo}>
                   <td>
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      id={c.categoryNo}
+                      onChange={onCheck}
+                    />
                   </td>
-                  <td>{admin.memberNo}</td>
-                  <td>{admin.createDate}</td>
-                  <td>{admin.memberId}</td>
-                  <td>{admin.memberName}</td>
-                  <td>{admin.memberEmail}</td>
-                  <td>{admin.useYn}</td>
+                  <td>{c.categoryNo}</td>
+                  <td>{c.categoryName}</td>
                 </tr>
               ))
-            )}
-          </tbody>
-          <tbody>
-            {admins.length === 0 ? (
-              <tr>
-                <th>
-                  <input type="checkbox" />
-                </th>
-                <th>#2</th>
-                <th>개그</th>
-              </tr>
             ) : (
-              admins.map((admin) => (
-                <tr key={admin.memberNo}>
-                  <td>
-                    <input type="checkbox" />
-                  </td>
-                  <td>{admin.memberNo}</td>
-                  <td>{admin.createDate}</td>
-                  <td>{admin.memberId}</td>
-                  <td>{admin.memberName}</td>
-                  <td>{admin.memberEmail}</td>
-                  <td>{admin.useYn}</td>
-                </tr>
-              ))
-            )}
-          </tbody>
-          <tbody>
-            {admins.length === 0 ? (
               <tr>
-                <th>
-                  <input type="checkbox" />
-                </th>
-                <th>#3</th>
-                <th>꿀팁</th>
+                <td colSpan={7}>아직 존재하지 않습니다</td>
               </tr>
-            ) : (
-              admins.map((admin) => (
-                <tr key={admin.memberNo}>
-                  <td>
-                    <input type="checkbox" />
-                  </td>
-                  <td>{admin.memberNo}</td>
-                  <td>{admin.createDate}</td>
-                  <td>{admin.memberId}</td>
-                  <td>{admin.memberName}</td>
-                  <td>{admin.memberEmail}</td>
-                  <td>{admin.useYn}</td>
-                </tr>
-              ))
             )}
           </tbody>
         </Table>

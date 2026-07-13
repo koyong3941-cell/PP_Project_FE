@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
@@ -15,35 +15,37 @@ import {
   Title,
 } from "./adminpop.style";
 const AdminCategoryPlus = () => {
+  const { user } = useAuth();
   const [categoryName, setCategoryName] = useState("");
   const [status, setStatus] = useState("");
   const [loading, isLoading] = useState(false);
   const navi = useNavigate();
   const { success, error } = useAlertify();
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!categoryName) {
-      setStatus("카테고리 이름을 꼭 입력하세요");
+  useEffect(() => {
+    if (!user) {
+      navi("/login");
       return;
     }
 
-    isLoading(true);
+    if (user.role !== "ROLE_ADMIN") {
+      error("관리자만 접근할수 있습니다");
+      navi("/");
+    }
+  }, [user, navi]);
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
     setStatus("");
 
     try {
-      const result = await api.post("/admin/category", {
-        categoryName,
-      });
-      setCategoryName(result.data);
+      await api.post(`/admins/${categoryNo}/category`);
+      await findBoardReaction();
       success("카테고리 추가");
       navi("/admin/category");
     } catch (err) {
       console.error("카테고리 추가 에러:", err.response?.data);
       setStatus("카테고리 이름을 확인해주세요");
-    } finally {
-      isLoading(false);
     }
   };
   return (

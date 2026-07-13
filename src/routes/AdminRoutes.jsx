@@ -11,6 +11,9 @@ import AdminMemberDeleted from "../admin/AdminMemberDeleted";
 import AdminBoards from "../admin/AdminBoards";
 import AdminBoardData from "../admin/AdminBoardData";
 import AdminBoardDelete from "../admin/AdminBoardDelete";
+import AdminCategory from "../admin/AdminCategory";
+import AdminCategoryPlus from "../admin/AdminCategoryPlus";
+import AdminCategoryDelete from "../admin/AdminCategoryDelete";
 import AdminPlants from "../admin/AdminPlants";
 import AdminPlantsPlus from "../admin/AdminPlantsPlus";
 import AdminPlantsEdit from "../admin/AdminPlantsEdit";
@@ -62,6 +65,23 @@ export const AdminRoutes = [
     key="admin-board-delete"
     path="/admin/board/delete"
     element={<AdminBoardDelete />}
+  />,
+
+  //카테고리 관리
+  <Route
+    key="admin-category"
+    path="/admin/category"
+    element={<AdminCategory />}
+  />,
+  <Route
+    key="admin-category-plus"
+    path="/admin/category/plus"
+    element={<AdminCategoryPlus />}
+  />,
+  <Route
+    key="admin-category-delete"
+    path="/admin/category/delete"
+    element={<AdminCategoryDelete />}
   />,
 
   // 식물 관리
