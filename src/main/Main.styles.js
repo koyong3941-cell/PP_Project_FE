@@ -246,7 +246,7 @@ export const ContentSection = styled.section`
 `;
 
 export const ContentSection2 = styled.section`
-  height: 130vh;
+  height: 120vh;
   width: 100%;
   scroll-snap-align: start;
   scroll-snap-stop: always;
