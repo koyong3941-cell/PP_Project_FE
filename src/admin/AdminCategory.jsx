@@ -28,6 +28,7 @@ const AdminCategory = () => {
   const [admins, setAdmins] = useState("");
   const [keyword, setKeyword] = useState("");
   const [selected, setSelected] = useState("");
+  const [loading, setLoading] = useState(false);
   const [activeMenu, setActiveMenu] = useState("");
 
   const [category, setCategory] = useState([]);
@@ -75,6 +76,17 @@ const AdminCategory = () => {
     );
   };
 
+  const isCategoried =
+    category.length > 0 && selectedNos.length === category.length;
+
+  const toggleSelectCategory = () => {
+    if (isCategoried) {
+      setCategoryNo([]);
+    } else {
+      setCategoryNo(category.map((category) => category.categoryNo));
+    }
+  };
+
   const onCheck = (e) => {
     if (e.target.checked) {
       setCategoryNo([...categoryNos, e.target.id]);
@@ -83,14 +95,16 @@ const AdminCategory = () => {
     }
   };
 
-  const onDelete = async (e) => {
-    e.preventDefault();
-    if (!confirm("정말 삭제하시겠습니까?")) return;
+  const onDelete = async () => {
+    if (selectedNos.length === 0) return;
 
     try {
-      await api.delete(`/admin/category/${categoryNo}`);
+      await api.delete("/admins/category", {
+        data: { categoryNo: category },
+      });
+      alert.success(`${category.length}카테고리를 삭제하였습니다`);
     } catch {
-      alert("삭제에 실패했습니다");
+      alert.error("삭제에 실패했습니다");
     }
   };
   return (
@@ -139,24 +153,32 @@ const AdminCategory = () => {
             </tr>
           </thead>
           <tbody>
-            {category.length != 0 ? (
+            {loading ? (
+              <tr>
+                <td colSpan="7" style={{ textAlign: "center" }}>
+                  로딩중...
+                </td>
+              </tr>
+            ) : category.length === 0 ? (
+              <tr>
+                <td colSpan="7" style={{ textAlign: "center" }}>
+                  데이터가 없습니다
+                </td>
+              </tr>
+            ) : (
               category.map((c) => (
                 <tr key={c.categoryNo}>
                   <td>
                     <input
                       type="checkbox"
-                      id={c.categoryNo}
-                      onChange={onCheck}
+                      id={category.includes(category.categoryNo)}
+                      onChange={() => toggleSelect(category.categoryNo)}
                     />
                   </td>
                   <td>{c.categoryNo}</td>
                   <td>{c.categoryName}</td>
                 </tr>
               ))
-            ) : (
-              <tr>
-                <td colSpan={7}>아직 존재하지 않습니다</td>
-              </tr>
             )}
           </tbody>
         </Table>
