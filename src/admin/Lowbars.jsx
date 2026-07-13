@@ -46,10 +46,10 @@ const LowBars = ({ currentPage, totalPages, onPageChange }) => {
           return null;
         })}
       </div>
-      <button disabled={page === totalPage} onClick={() => setPage(page + 1)}>
+      <button disabled={page === totalPage} onClick={() => goToPage(page + 1)}>
         Next &gt;
       </button>
-      <button disabled={page === totalPage} onClick={() => setPage(totalPage)}>
+      <button disabled={page === totalPage} onClick={() => goToPage(totalPage)}>
         ⏭
       </button>
     </LowBar>
