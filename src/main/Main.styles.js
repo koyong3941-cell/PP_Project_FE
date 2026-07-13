@@ -6,7 +6,7 @@ import styled from "styled-components";
 export const tokens = {
   ink: "#1a1a17",
   paper: "#ffffff",
-  mist: "#f2f1ee",
+  mist: "#ffffff",
   clay: "#8a5a3b",
   cream: "#f6efe4",
   border: "rgba(26, 26, 23, 0.08)",
@@ -84,7 +84,7 @@ export const LeadLine = styled.p`
   margin: 0;
 `;
 
-export const Badge = styled.span`
+export const Badge = styled.button`
   display: inline-flex;
   align-items: center;
   width: fit-content;
@@ -94,7 +94,14 @@ export const Badge = styled.span`
   font-weight: 600;
   letter-spacing: 0.02em;
   padding: 7px 16px;
+  border: none;
   border-radius: 999px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.85;
+  }
 `;
 
 export const BodyText = styled.p`
