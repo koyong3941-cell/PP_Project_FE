@@ -12,23 +12,41 @@ import {
 import api from "../api/axios";
 import { styles } from "./PlantSearch.styles";
 
-const StarRating = ({ value = 0 }) => (
-  <div style={{ display: "flex", gap: "1px" }}>
-    {Array.from({ length: 5 }, (_, i) => (
-      <Star
-        key={i}
-        size={14}
-        color={i < value ? "#f59e0b" : "#d1d5db"}
-        fill={i < value ? "#f59e0b" : "none"}
-      />
-    ))}
-  </div>
-);
+const StarRating = ({ value = 0 }) => {
+  // value: 1~10 (0.5점 단위) -> 5점 만점 환산
+  const five = value / 2;
+  return (
+    <div style={{ display: "flex", gap: "1px" }}>
+      {Array.from({ length: 5 }, (_, i) => {
+        const diff = five - i;
+        const fillPercent = diff >= 1 ? 100 : diff > 0 ? diff * 100 : 0;
+        return (
+          <span key={i} style={{ position: "relative", width: 14, height: 20 }}>
+            <Star
+              size={14}
+              color="#d1d5db"
+              style={{ position: "absolute", height: 23 }}
+            />
+            <span
+              style={{
+                overflow: "hidden",
+                width: `${fillPercent}%`,
+                position: "absolute",
+              }}
+            >
+              <Star size={14} color="#f59e0b" fill="#f59e0b" />
+            </span>
+          </span>
+        );
+      })}
+    </div>
+  );
+};
 
 const PlantSearch = () => {
   const [findPlantAll, setFindPlantAll] = useState([]);
   const [viewMode, setViewMode] = useState("list");
-
+  const [rating, setRating] = useState(null);
   const [page, setPage] = useState(0); // Spring 백엔드가 0번 페이지부터 시작함
   const [totalPages, setTotalPages] = useState(page + 3);
   const pagination = [1, 2, 3, 4, 5];
@@ -117,14 +135,14 @@ const PlantSearch = () => {
                 <td style={styles.td}>{plant.plantNo}</td>
                 <td style={styles.title}>
                   <Link to={`/plants/${plant.plantNo}`} style={styles.link}>
-                    {plant.plantName}
+                    {plant.plantName}[{plant.reviewCount ?? 0}]
                   </Link>
                 </td>
                 <td style={styles.td}>
                   <span style={styles.category}>{plant.classification}</span>
                 </td>
                 <td style={styles.td}>
-                  <StarRating value={plant.symptomLevel} />
+                  <StarRating value={plant.avgRating} id={plant.plantNo} />
                 </td>
                 <td style={styles.td}>{plant.count}</td>
                 <td style={styles.writer}>
@@ -162,9 +180,12 @@ const PlantSearch = () => {
               <div style={styles.gridInfo}>
                 <div style={styles.gridName}>{plant.plantName}</div>
                 <div style={styles.gridMeta}>
-                  <StarRating value={plant.symptomLevel} />
+                  <StarRating value={plant.avgRating} id={plant.plantNo} />
                   <span style={styles.gridCount}>{plant.count}</span>
                 </div>
+                <span style={styles.gridCount}>
+                  reviews [{plant.reviewCount ?? 0}]
+                </span>
               </div>
             </Link>
           ))}
