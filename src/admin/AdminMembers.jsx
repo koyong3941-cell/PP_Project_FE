@@ -22,6 +22,7 @@ import Sidebars from "./Sidebars";
 const AdminMembers = () => {
   const [members, setMembers] = useState([]);
   const [keyword, setKeyword] = useState("");
+  const [target, setTarget] = useState("");
   const [loading, setLoading] = useState(false);
   const navi = useNavigate();
   const alert = useAlertify();
@@ -39,13 +40,26 @@ const AdminMembers = () => {
   };
 
   // ==================== 회원 목록 불러오기 ====================
-  const fetchMembers = async (page) => {
+  const fetchMembers = async (page, searchKeyword = "", searchTarget = "") => {
     try {
       setLoading(true);
-      const res = await api.get("/admins/members", {
-        params: { page, size },
-      });
+
+      const kw = searchKeyword || "";
+      let url = "/admins/members";
+      let params = { page, size };
+
+      // 검색어가 있으면 검색 API 사용
+      if (kw.trim()) {
+        url = "/admins/members/search";
+        params.keyword = searchKeyword.trim();
+        if (searchTarget) {
+          params.target = searchTarget;
+        }
+      }
+
+      const res = await api.get(url, { params });
       const data = res.data.data;
+
       setMembers(data.content || []);
       setTotalPages(data.totalPages || 0);
     } catch (err) {
@@ -62,9 +76,16 @@ const AdminMembers = () => {
     }
   };
 
-  useEffect(() => {
-    fetchMembers(currentPage);
-  }, [currentPage]);
+  const handleSearch = () => {
+    setCurrentPage(0); // 검색 시 첫 페이지로 이동
+    fetchMembers(0, keyword, target);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
 
   // ==================== 체크박스 ====================
   const toggleSelect = (memberNo) => {
@@ -97,7 +118,7 @@ const AdminMembers = () => {
       alert.success(`${selectedNos.length}명의 회원을 탈퇴시켰습니다.`);
       closeModal();
       setSelectedNos([]);
-      fetchMembers(currentPage);
+      fetchMembers(currentPage, keyword, target);
     } catch (err) {
       alert.error("삭제에 실패했습니다.");
     }
@@ -114,7 +135,7 @@ const AdminMembers = () => {
       alert.success(`${selectedNos.length}명의 회원을 복구했습니다.`);
       closeModal();
       setSelectedNos([]);
-      fetchMembers(currentPage);
+      fetchMembers(currentPage, keyword, target);
     } catch (err) {
       const msg = err.response?.data?.message || "복구에 실패했습니다.";
       alert.error(msg);
@@ -147,18 +168,34 @@ const AdminMembers = () => {
         </Header>
 
         <Toolbar>
-          <Select>
-            <option>All</option>
-            <option>회원ID</option>
-            <option>회원명</option>
-            <option>회원이메일</option>
+          <Select value={target} onChange={(e) => setTarget(e.target.value)}>
+            <option value="">All</option>
+            <option value="memberId">회원ID</option>
+            <option value="memberName">회원명</option>
+            <option value="email">회원이메일</option>
           </Select>
 
           <SearchInput
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
+            onKeyDown={handleKeyDown}
             placeholder="회원 검색"
           />
+
+          <button
+            onClick={handleSearch}
+            style={{
+              padding: "8px 16px",
+              background: "#333",
+              color: "white",
+              border: "none",
+              borderRadius: "6px",
+              cursor: "pointer",
+              marginRight: "12px",
+            }}
+          >
+            검색
+          </button>
 
           <ButtonGroup>
             <AddButton
