@@ -128,6 +128,7 @@ const MyPage = () => {
                   <Card key={item.plantNo}>
                     <div
                       className="img"
+                      onClick={() => handleNavigation("/memberPlant")}
                       style={{
                         backgroundImage: `url(${
                           item.imgPath && item.saveName
@@ -149,7 +150,7 @@ const MyPage = () => {
                     <div className="bar">
                       <div
                         style={{
-                          width: `${item.carbonCapture}%`,
+                          width: `${Math.max(0, Math.min(item.carbonCapture, 100))}%`,
                         }}
                       />
                     </div>
