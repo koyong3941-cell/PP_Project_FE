@@ -36,7 +36,7 @@ const Admin = () => {
   const [form, setForm] = useState({
     memberId: "",
     memberName: "",
-    password: "",
+    memberPwd: "",
     email: "",
   });
   const [formError, setFormError] = useState("");
@@ -46,7 +46,7 @@ const Admin = () => {
     setForm({
       memberId: "",
       memberName: "",
-      password: "",
+      memberPwd: "",
       email: "",
     });
     setFormError("");
@@ -107,12 +107,7 @@ const Admin = () => {
   const handleAddAdmin = async () => {
     const { memberId, memberName, memberPwd, email } = form;
 
-    if (
-      !form.memberId ||
-      !form.memberName ||
-      !form.password ||
-      !form.memberEmail
-    ) {
+    if (!form.memberId || !form.memberName || !form.memberPwd || !form.email) {
       setFormError("모든 항목을 입력해주세요.");
       return;
     }
