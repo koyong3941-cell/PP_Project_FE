@@ -33,7 +33,7 @@ export const styles = {
     margin: "0 40px",
     backgroundColor: "#fff",
     borderRadius: "6px",
-    overflow: "hidden",
+    overflow: "hidden", // 다시 hidden
     height: "45px",
     transform: "translate(-65px, 0px)",
   },
@@ -196,5 +196,13 @@ export const customSelectStyles = {
     color: "#333",
     cursor: "pointer",
     fontSize: "14px",
+  }),
+  menuPortal: (base) => ({
+    ...base,
+    zIndex: 99999,
+  }),
+  menu: (base) => ({
+    ...base,
+    zIndex: 99999,
   }),
 };

@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import api from "../api/axios";
 import { styles } from "./PlantSearch.styles";
+import { useLocation } from "react-router-dom";
 
 const StarRating = ({ value = 0 }) => (
   <div style={{ display: "flex", gap: "1px" }}>
@@ -26,6 +27,7 @@ const StarRating = ({ value = 0 }) => (
 );
 
 const PlantSearch = () => {
+  const location = useLocation();
   const [findPlantAll, setFindPlantAll] = useState([]);
   const [viewMode, setViewMode] = useState("list");
   const [showFilter, setShowFilter] = useState(false);
@@ -106,12 +108,20 @@ const PlantSearch = () => {
 
   const size = viewMode === "grid" ? 9 : 10;
   useEffect(() => {
-    if (searchMode) {
-      fetchSearchPlant();
-    } else {
-      fetchPlant();
+    if (location.state?.searchResult) {
+      setFindPlantAll(location.state.searchResult);
+      setTotalPages(location.state.totalPages);
+      return;
     }
-  }, [page, viewMode, searchMode]);
+
+    api
+      .get(`/plants?page=${page}&size=${size}`)
+      .then((result) => {
+        setFindPlantAll(result.data.data.content);
+        setTotalPages(result.data.data.totalPages);
+      })
+      .catch((err) => console.error(err));
+  }, [page, viewMode, location.state]);
   return (
     <div style={styles.container}>
       <div style={styles.top}>
