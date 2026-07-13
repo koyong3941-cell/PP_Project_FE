@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Route, useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
@@ -26,19 +26,41 @@ const AdminBoards = () => {
   const [admins, setAdmins] = useState("");
   const [keyword, setKeyword] = useState("");
   const [selected, setSelected] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [boardNos, setBoardNos] = useState([]);
   const navi = useNavigate();
 
   const [activeMenu, setActiveMenu] = useState("");
+  const [boards, setBoards] = useState([]);
 
   const [page, setPage] = useState(1);
   const totalPage = 7;
 
-  axios.get(`http://localhost/api/boards?page=${page}`).then((res) => {
-    console.log(res);
-    //setNotice(res.data.data.list);
-    //setTotalPage(res.data.data.totalPage);
-  });
+  useEffect(() => {
+    axios.get(`http://localhost/api/boards?page=${page}`).then((res) => {
+      console.log(res.data.data.content);
+      setBoards(res.data.data.content);
+    });
+  }, []);
+
+  const onCheck = (e) => {
+    if (e.target.checked) {
+      setBoardNos([...boardNos, e.target.id]);
+    } else {
+      setBoardNos([...boardNos.filter((e) => e != e.target.id)]);
+    }
+  };
+  const onDelete = async (e) => {
+    e.preventDefault();
+    if (!confirm("정말삭제하시겠습니까?")) return;
+
+    try {
+      await api.delete(`/admin/boards/${boardNos}`);
+      //navi("/admin/board");
+    } catch {
+      alert("삭제에 실패했습니다");
+      //navi("/admin/board");
+    }
+  };
 
   return (
     <Container>
@@ -87,92 +109,31 @@ const AdminBoards = () => {
               </th>
               <th>보드키</th>
               <th>생성 날짜</th>
-              <th>회원 ID</th>
+              <th>조회수</th>
               <th>회원 명</th>
               <th>게시글 이름</th>
-              <th>사용여부</th>
+              <th>좋아요</th>
             </tr>
           </thead>
           <tbody>
-            {admins.length === 0 ? (
-              <tr>
-                <th>
-                  <input type="checkbox" />
-                </th>
-                <th>#1</th>
-                <th>23/09/2022</th>
-                <th>tidgus</th>
-                <th>김*환</th>
-                <th>t*gu*s@gmail.com</th>
-                <th>Y</th>
-              </tr>
-            ) : (
-              admins.map((admin) => (
-                <tr key={admin.memberNo}>
+            {boards.length != 0 ? (
+              boards.map((b) => (
+                <tr key={b.boardNo}>
                   <td>
-                    <input type="checkbox" />
+                    <input type="checkbox" id={b.boardNo} onChange={onCheck} />
                   </td>
-                  <td>{admin.memberNo}</td>
-                  <td>{admin.createDate}</td>
-                  <td>{admin.memberId}</td>
-                  <td>{admin.memberName}</td>
-                  <td>{admin.memberEmail}</td>
-                  <td>{admin.useYn}</td>
+                  <td>{b.boardNo}</td>
+                  <td>{b.createDate}</td>
+                  <td>{b.count}</td>
+                  <td>{b.memberName}</td>
+                  <td>{b.categoryName}</td>
+                  <td>{b.likeCount}</td>
                 </tr>
               ))
-            )}
-          </tbody>
-          <tbody>
-            {admins.length === 0 ? (
-              <tr>
-                <th>
-                  <input type="checkbox" />
-                </th>
-                <th>#2</th>
-                <th>23/09/2022</th>
-                <th>tidugs</th>
-                <th>최*개</th>
-                <th>t*dg*s@gmail.com</th>
-                <th>Y</th>
-              </tr>
             ) : (
-              admins.map((admin) => (
-                <tr key={admin.memberNo}>
-                  <td>
-                    <input type="checkbox" />
-                  </td>
-                  <td>{admin.memberNo}</td>
-                  <td>{admin.createDate}</td>
-                  <td>{admin.memberEmail}</td>
-                  <td>{admin.useYn}</td>
-                </tr>
-              ))
-            )}
-          </tbody>
-          <tbody>
-            {admins.length === 0 ? (
               <tr>
-                <th>
-                  <input type="checkbox" />
-                </th>
-                <th>#3</th>
-                <th>23/09/2022</th>
-                <th>tidgus</th>
-                <th>백*만</th>
-                <th>t*dg*s@gmail.com</th>
-                <th>Y</th>
+                <td colSpan={7}>아직 존재하지 않습니다</td>
               </tr>
-            ) : (
-              admins.map((admin) => (
-                <tr key={admin.memberNo}>
-                  <td>{admin.memberNo}</td>
-                  <td>{admin.createDate}</td>
-                  <td>{admin.memberId}</td>
-                  <td>{admin.memberName}</td>
-                  <td>{admin.memberEmail}</td>
-                  <td>{admin.useYn}</td>
-                </tr>
-              ))
             )}
           </tbody>
         </Table>
