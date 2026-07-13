@@ -33,31 +33,47 @@ const AdminCategory = () => {
   const [category, setCategory] = useState([]);
   const [categoryNo, setCategoryNo] = useState([]);
 
-  const [page, setPage] = useState("");
-  const totalPage = Page;
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const size = 10;
+
+  const fetchAdmins = async (page) => {
+    try {
+      setLoading(true);
+      const res = await api.get("/admins/category", {
+        params: {
+          page: page - 1,
+          size: size,
+        },
+      });
+      const data = res.data.data;
+      setAdmins(data.content || []);
+      setTotalPages(data.tatoalPages || 0);
+    } catch (err) {
+      console.error(err);
+      if (err.response?.status === 403) {
+        alert.error("관리자 권한이 없습니다");
+        navi("/");
+      } else {
+        alert.error("데이터를 불러오는데 실패했습니다");
+      }
+      setAdmins([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    if (!user) {
-      navi("/login");
-      return;
-    }
+    fetchAdmins(currentPage);
+  }, [currentPage]);
 
-    if (user.role !== "ROLE_ADMIN") {
-      error("관리자만 접근할수 있습니다");
-      navi("/");
-      return;
-    }
-    api
-      .get(`http://localhost/api/admins/category?page=${page}`)
-      .then((res) => {
-        console.log(res.data.data.content);
-        setCategory(res.data.data.content);
-      })
-      .catch((err) => {
-        console.error(err);
-        error("카테고리를 불러오지 못했습니다");
-      });
-  }, [user, navi, page]);
+  const toggleSelect = (categoryNo) => {
+    setSelectNos((prev) =>
+      prev.includes(categoryNo)
+        ? prev.filter((no) => no !== categoryNo)
+        : [...prev, categoryNo],
+    );
+  };
 
   const onCheck = (e) => {
     if (e.target.checked) {
@@ -144,7 +160,11 @@ const AdminCategory = () => {
             )}
           </tbody>
         </Table>
-        <LowBars />
+        <LowBars
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       </Main>
     </Container>
   );
