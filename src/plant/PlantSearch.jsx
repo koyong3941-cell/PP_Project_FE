@@ -11,27 +11,52 @@ import {
 } from "lucide-react";
 import api from "../api/axios";
 import { styles } from "./PlantSearch.styles";
+import { useLocation } from "react-router-dom";
 
-const StarRating = ({ value = 0 }) => (
-  <div style={{ display: "flex", gap: "1px" }}>
-    {Array.from({ length: 5 }, (_, i) => (
-      <Star
-        key={i}
-        size={14}
-        color={i < value ? "#f59e0b" : "#d1d5db"}
-        fill={i < value ? "#f59e0b" : "none"}
-      />
-    ))}
-  </div>
-);
+const StarRating = ({ value = 0 }) => {
+  // value: 1~10 (0.5점 단위) -> 5점 만점 환산
+  const five = value / 2;
+  return (
+    <div style={{ display: "flex", gap: "1px" }}>
+      {Array.from({ length: 5 }, (_, i) => {
+        const diff = five - i;
+        const fillPercent = diff >= 1 ? 100 : diff > 0 ? diff * 100 : 0;
+        return (
+          <span key={i} style={{ position: "relative", width: 14, height: 20 }}>
+            <Star
+              size={14}
+              color="#d1d5db"
+              style={{ position: "absolute", height: 23 }}
+            />
+            <span
+              style={{
+                overflow: "hidden",
+                width: `${fillPercent}%`,
+                position: "absolute",
+              }}
+            >
+              <Star size={14} color="#f59e0b" fill="#f59e0b" />
+            </span>
+          </span>
+        );
+      })}
+    </div>
+  );
+};
 
 const PlantSearch = () => {
+  const location = useLocation();
   const [findPlantAll, setFindPlantAll] = useState([]);
   const [viewMode, setViewMode] = useState("list");
+  const [showFilter, setShowFilter] = useState(false);
+  const [searchType, setSearchType] = useState("all");
+  const [searchMode, setSearchMode] = useState(false);
+  const [filterName, setFilterName] = useState("필터");
+  const [keyword, setKeyword] = useState("");
 
   const [page, setPage] = useState(0); // Spring 백엔드가 0번 페이지부터 시작함
   const [totalPages, setTotalPages] = useState(page + 3);
-  const pagination = [1, 2, 3, 4, 5];
+  //const pagination = [1, 2, 3, 4, 5];
   const [hoveredButton, setHoveredButton] = useState(null);
 
   const GRID_PAGE_SIZE = 9;
@@ -46,30 +71,132 @@ const PlantSearch = () => {
   };
   const handleLast = () => setPage(totalPages);
   // --------------------------------------------------------------------------------
+  const filters = [
+    { label: "전체", value: "all" },
+    { label: "식물명", value: "plantName" },
+    { label: "작성자", value: "writer" },
+  ];
+
+  const handleSearch = async () => {
+    try {
+      setSearchMode(true);
+      setPage(0);
+
+      const result = await api.get("/plants/search", {
+        params: {
+          page: 0,
+          size,
+          keyword,
+          target: searchType,
+        },
+      });
+
+      setFindPlantAll(result.data.data.content);
+      setTotalPages(result.data.data.totalPages);
+    } catch (err) {
+      console.error("검색 실패:", err);
+    }
+  };
+
+  const fetchPlant = async () => {
+    const result = await api.get("/plants", {
+      params: {
+        page,
+        size,
+      },
+    });
+
+    setFindPlantAll(result.data.data.content);
+    setTotalPages(result.data.data.totalPages);
+  };
+
+  const fetchSearchPlant = async () => {
+    const result = await api.get("/plants/search", {
+      params: {
+        page,
+        size,
+        keyword,
+        target: searchType,
+      },
+    });
+
+    setFindPlantAll(result.data.data.content);
+    setTotalPages(result.data.data.totalPages);
+  };
+
   const size = viewMode === "grid" ? 9 : 10;
   useEffect(() => {
+    if (location.state?.searchResult) {
+      setFindPlantAll(location.state.searchResult);
+      setTotalPages(location.state.totalPages);
+      return;
+    }
+
     api
       .get(`/plants?page=${page}&size=${size}`)
       .then((result) => {
-        console.log(result.data);
         setFindPlantAll(result.data.data.content);
         setTotalPages(result.data.data.totalPages);
       })
-      .catch((err) => console.error("게시글 로딩 실패:", err));
-  }, [page, viewMode]);
+      .catch((err) => console.error(err));
+  }, [page, viewMode, location.state]);
   return (
     <div style={styles.container}>
       <div style={styles.top}>
         <h2>식물 목록</h2>
-        <div style={{ display: "flex", gap: "10px" }}>
+        <div style={{ display: "flex", gap: "10px", position: "relative" }}>
           <div style={styles.searchBox}>
             <Search size={16} />
-            <input style={styles.input} type="text" placeholder="검색..." />
+            <input
+              style={styles.input}
+              type="text"
+              placeholder="검색..."
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSearch();
+                }
+              }}
+            />
           </div>
-          <button style={styles.button}>
+
+          <button
+            style={styles.button}
+            onClick={() => setShowFilter((prev) => !prev)}
+          >
             <Filter size={16} />
-            필터
+            {filterName}
           </button>
+
+          {showFilter && (
+            <div style={styles.dropdown}>
+              {filters.map((item) => (
+                <div
+                  key={item.value}
+                  style={{
+                    ...styles.dropdownItem,
+                    backgroundColor:
+                      searchType === item.value ? "#f1f5f9" : "white",
+                  }}
+                  onClick={() => {
+                    setSearchType(item.value);
+
+                    if (item.value === "all") {
+                      setFilterName("필터");
+                    } else {
+                      setFilterName(item.label);
+                    }
+
+                    setShowFilter(false);
+                  }}
+                >
+                  {item.label}
+                </div>
+              ))}
+            </div>
+          )}
+
           <div style={styles.viewToggleGroup}>
             <button
               onClick={() => {
@@ -83,6 +210,7 @@ const PlantSearch = () => {
             >
               <List size={16} />
             </button>
+
             <button
               onClick={() => {
                 setViewMode("grid");
@@ -117,14 +245,14 @@ const PlantSearch = () => {
                 <td style={styles.td}>{plant.plantNo}</td>
                 <td style={styles.title}>
                   <Link to={`/plants/${plant.plantNo}`} style={styles.link}>
-                    {plant.plantName}
+                    {plant.plantName}[{plant.reviewCount ?? 0}]
                   </Link>
                 </td>
                 <td style={styles.td}>
                   <span style={styles.category}>{plant.classification}</span>
                 </td>
                 <td style={styles.td}>
-                  <StarRating value={plant.symptomLevel} />
+                  <StarRating value={plant.avgRating} id={plant.plantNo} />
                 </td>
                 <td style={styles.td}>{plant.count}</td>
                 <td style={styles.writer}>
@@ -162,9 +290,12 @@ const PlantSearch = () => {
               <div style={styles.gridInfo}>
                 <div style={styles.gridName}>{plant.plantName}</div>
                 <div style={styles.gridMeta}>
-                  <StarRating value={plant.symptomLevel} />
+                  <StarRating value={plant.avgRating} id={plant.plantNo} />
                   <span style={styles.gridCount}>{plant.count}</span>
                 </div>
+                <span style={styles.gridCount}>
+                  reviews [{plant.reviewCount ?? 0}]
+                </span>
               </div>
             </Link>
           ))}
@@ -197,7 +328,7 @@ const PlantSearch = () => {
           Previous
         </button>
 
-        {pagination.map((pageNum) => (
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
           <button
             key={pageNum}
             style={{

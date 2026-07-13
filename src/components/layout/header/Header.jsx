@@ -8,18 +8,21 @@ import { styles, customSelectStyles } from "./Header.styles";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import { useAlertify } from "../../../hooks/useAlertify";
+import api from "../../../api/axios";
 
 const options = [
-  { value: "all", label: "All" },
-  { value: "plant", label: "Plants" },
-  { value: "schedule", label: "Schedules" },
-  { value: "user", label: "Users" },
+  { value: "all", label: "전체" },
+  { value: "plantName", label: "식물명" },
+  { value: "writer", label: "작성자" },
 ];
 
 const Header = () => {
   const navi = useNavigate();
   const alertify = useAlertify();
   const { user, logout } = useAuth();
+
+  const [searchType, setSearchType] = useState("all");
+  const [keyword, setKeyword] = useState("");
 
   const [isOpen, setIsOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -40,6 +43,34 @@ const Header = () => {
       navi("/");
     } else {
       navi(path);
+    }
+  };
+
+  const handleSearch = async () => {
+    if (!keyword.trim()) {
+      return;
+    }
+
+    try {
+      const result = await api.get("/plants/search", {
+        params: {
+          page: 0,
+          keyword,
+          target: searchType,
+        },
+      });
+
+      navi("/PlantSearch", {
+        state: {
+          searchResult: result.data.data.content,
+          totalPages: result.data.data.totalPages,
+          keyword,
+          searchType,
+        },
+      });
+    } catch (err) {
+      console.error(err);
+      alertify.error("검색에 실패했습니다.");
     }
   };
 
@@ -121,13 +152,27 @@ const Header = () => {
         <div style={styles.selectWrapper}>
           <Select
             options={options}
-            defaultValue={options[0]}
+            value={options.find((o) => o.value === searchType)}
             isSearchable={false}
             styles={customSelectStyles}
+            onChange={(option) => setSearchType(option.value)}
+            menuPortalTarget={document.body}
+            menuPosition="fixed"
           />
         </div>
-        <input type="text" placeholder="Search..." style={styles.searchInput} />
-        <button style={styles.searchButton}>
+        <input
+          type="text"
+          placeholder="Search..."
+          style={styles.searchInput}
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleSearch();
+            }
+          }}
+        />
+        <button style={styles.searchButton} onClick={handleSearch}>
           <img src={search} alt="search" style={{ width: "24px" }} />
         </button>
       </div>
