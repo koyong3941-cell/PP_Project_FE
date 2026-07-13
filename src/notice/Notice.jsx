@@ -15,6 +15,7 @@ const Notice = () => {
   const [filterName, setFilterName] = useState("필터");
   const [keyword, setKeyword] = useState("");
   const [searchMode, setSearchMode] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState("all");
 
   const filters = [
     { label: "전체", value: "all" },
@@ -51,23 +52,14 @@ const Notice = () => {
         params: {
           page: 0,
           keyword,
-          target: searchType,
+          target: selectedFilter,
         },
       });
 
-      const data = result.data.data;
-
-      if (Array.isArray(data)) {
-        setFindNoticeAll(data);
-        setTotalPages(1);
-      } else {
-        setFindNoticeAll(data?.content || []);
-        setTotalPages(data?.totalPages || 1);
-      }
+      setFindNoticeAll(result.data.data || []);
+      setTotalPages(1);
     } catch (err) {
       console.error("검색 실패:", err);
-      setFindNoticeAll([]);
-      setTotalPages(1);
     }
   };
 
@@ -159,7 +151,7 @@ const Notice = () => {
                       searchType === item.value ? "#f1f5f9" : "white",
                   }}
                   onClick={() => {
-                    setSearchType(item.value);
+                    setSelectedFilter(item.value);
 
                     if (item.value === "all") {
                       setFilterName("필터");
