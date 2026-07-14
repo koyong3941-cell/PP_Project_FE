@@ -70,21 +70,6 @@ const NoticeDetail = () => {
           <button style={s.btnEdit} onClick={() => navi("/notice")}>
             목록
           </button>
-
-          {user?.role === "ROLE_ADMIN" && (
-            <>
-              <button
-                style={s.btnEdit}
-                onClick={() => navi(`/notice/${noticeNo}/edit`)}
-              >
-                수정
-              </button>
-
-              <button style={s.btnDel} onClick={handleDeleteNotice}>
-                삭제
-              </button>
-            </>
-          )}
         </div>
       </div>
 
