@@ -21,6 +21,8 @@ import {
   SubText,
   FlowerContainer,
   ScrollButton,
+  NoData,
+  ProfileAvatar,
 } from "./MyPage.styles";
 import {
   ResponsiveContainer,
@@ -53,17 +55,42 @@ const MyPage = () => {
       ? `http://localhost${user.imgPath}${user.saveName}`
       : profileDefaultImg;
 
-  const normalizedData = chartData.map((d) => ({
-    date: d.measureDate,
+  const carbonData = plantCap
+    ? [
+        {
+          name: "소형",
+          value: plantCap.smallPlantCap,
+        },
+        {
+          name: "중형",
+          value: plantCap.middlePlantCap,
+        },
+        {
+          name: "대형",
+          value: plantCap.bigPlantCap,
+        },
+      ]
+    : [];
 
-    co2: Math.min(100, Math.floor(d.co2 / 10)), // 400~500 → 40~50
+  const normalizedData = Object.values(
+    chartData.reduce((acc, d) => {
+      const date = d.measureDate;
 
-    spo2: d.spo2, // 이미 0~100
+      if (!acc[date]) {
+        acc[date] = {
+          date,
+          co2: Math.min(100, Math.floor(d.co2 / 10)),
+          spo2: d.spo2,
+          humidity: d.humidity,
+          temperature: Math.floor(d.temperature * 3),
+        };
+      }
 
-    humidity: d.humidity, // 0~100
+      return acc;
+    }, {}),
+  );
 
-    temperature: Math.floor(d.temperature * 3), // 25°C → 75 (스케일링)
-  }));
+  console.log(normalizedData.map((d) => d.date));
 
   const scrollFlower = (direction) => {
     if (!flowerRef.current) return;
@@ -157,16 +184,7 @@ const MyPage = () => {
                   </Card>
                 ))
               ) : (
-                <div
-                  style={{
-                    width: "100%",
-                    textAlign: "center",
-                    padding: "50px 0",
-                    fontSize: "18px",
-                  }}
-                >
-                  데이터가 없습니다.
-                </div>
+                <NoData>데이터가 없습니다.</NoData>
               )}
             </FlowerGrid>
 
@@ -181,23 +199,7 @@ const MyPage = () => {
           <GraphBox>
             {plantCap ? (
               <ResponsiveContainer width="100%" height={250}>
-                <BarChart
-                  data={[
-                    {
-                      name: "소형",
-                      value: plantCap.smallPlantCap,
-                    },
-                    {
-                      name: "중형",
-                      value: plantCap.middlePlantCap,
-                    },
-                    {
-                      name: "대형",
-                      value: plantCap.bigPlantCap,
-                    },
-                  ]}
-                  layout="vertical"
-                >
+                <BarChart data={carbonData} layout="vertical">
                   <XAxis type="number" />
 
                   <YAxis type="category" dataKey="name" />
@@ -208,18 +210,7 @@ const MyPage = () => {
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <div
-                style={{
-                  width: "100%",
-                  height: "250px",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  fontSize: "18px",
-                }}
-              >
-                데이터가 없습니다.
-              </div>
+              <NoData height="250px">데이터가 없습니다.</NoData>
             )}
           </GraphBox>
 
@@ -242,7 +233,7 @@ const MyPage = () => {
                 >
                   <CartesianGrid strokeDasharray="3 3" />
 
-                  <XAxis dataKey="date" />
+                  <XAxis dataKey="date" interval="preserveStartEnd" />
 
                   <YAxis
                     domain={[0, 100]}
@@ -284,18 +275,7 @@ const MyPage = () => {
                 </LineChart>
               </ResponsiveContainer>
             ) : (
-              <div
-                style={{
-                  width: "100%",
-                  height: "500px",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  fontSize: "18px",
-                }}
-              >
-                데이터가 없습니다.
-              </div>
+              <div className="noData">데이터가 없습니다.</div>
             )}
           </BigGraphBox>
         </SectionBottom>
@@ -304,10 +284,7 @@ const MyPage = () => {
       {/* 우측 유저 정보 섹션 */}
       <RightPanel>
         <div className="profile">
-          <div
-            className="avatar"
-            style={{ backgroundImage: `url(${profileImg})` }}
-          />
+          <ProfileAvatar image={profileImg} />
           <h3>{user.memberId}님</h3>
           <p>{user.memberName}</p>
         </div>

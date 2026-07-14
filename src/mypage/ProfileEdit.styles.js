@@ -1,171 +1,199 @@
-export const styles = {
-  page: {
-    minHeight: "100vh",
-    background: "#fff",
-    fontFamily: "Pretendard",
-  },
+import styled from "styled-components";
 
-  header: {
-    height: "70px",
-    display: "flex",
-    justifyContent: "flex-end",
-    alignItems: "center",
-    padding: "0 60px",
-  },
+export const Page = styled.div`
+  min-height: 100vh;
+  background: #fff;
+  font-family: Pretendard, sans-serif;
+`;
 
-  homeIcon: {
-    width: "34px",
-    cursor: "pointer",
-  },
+export const Header = styled.header`
+  height: 70px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 60px;
+`;
 
-  container: {
-    display: "flex",
-    width: "1200px",
-    margin: "0 auto",
-  },
+export const HomeIcon = styled.img`
+  width: 34px;
+  cursor: pointer;
+`;
 
-  logoArea: {
-    width: "220px",
-  },
+export const Container = styled.div`
+  display: flex;
+  width: 1200px;
+  margin: 0 auto;
+`;
 
-  logo: {
-    fontSize: "64px",
-    lineHeight: "58px",
-    fontWeight: "700",
-  },
+export const LogoArea = styled.div`
+  width: 220px;
+`;
 
-  content: {
-    flex: 1,
-  },
+export const Logo = styled.h1`
+  font-size: 64px;
+  line-height: 58px;
+  font-weight: 700;
+`;
 
-  path: {
-    marginBottom: "40px",
-    fontSize: "22px",
-  },
+export const Content = styled.div`
+  flex: 1;
+`;
 
-  profileArea: {
-    display: "flex",
-    gap: "30px",
-    alignItems: "center",
-    marginBottom: "40px",
-  },
+export const Path = styled.div`
+  margin-bottom: 40px;
+  font-size: 22px;
+`;
 
-  profileImage: {
-    width: "90px",
-    height: "90px",
-    borderRadius: "50%",
-    objectFit: "cover",
-  },
+export const ProfileArea = styled.div`
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  margin-bottom: 40px;
+`;
 
-  id: {
-    fontSize: "13px",
-    color: "#666",
-  },
+export const ProfileImage = styled.img`
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+`;
 
-  nameRow: {
-    display: "flex",
-    alignItems: "center",
-    gap: "15px",
-  },
+export const HiddenInput = styled.input`
+  display: none;
+`;
 
-  name: {
-    margin: 0,
-    fontSize: "40px",
-  },
+export const Id = styled.div`
+  font-size: 13px;
+  color: #666;
+`;
 
-  editButton: {
-    border: "none",
-    background: "none",
-    cursor: "pointer",
-    fontSize: "20px",
-  },
+export const NameRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 15px;
+`;
 
-  removeBtn: {
-    marginTop: "10px",
-    border: "none",
-    background: "none",
-    color: "#777",
-    cursor: "pointer",
-  },
+export const Name = styled.h2`
+  margin: 0;
+  font-size: 40px;
+`;
 
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    width: "600px",
-    gap: "10px",
-  },
+export const NameInput = styled.input`
+  font-size: 32px;
+  font-weight: 700;
 
-  notice: {
-    color: "red",
-    fontSize: "12px",
-    marginBottom: "5px",
-  },
+  border: 1px solid #ccc;
+  border-radius: 6px;
 
-  input: {
-    height: "48px",
-    border: "1px solid #ddd",
-    borderRadius: "6px",
-    padding: "0 15px",
-    marginBottom: "20px",
-  },
+  padding: 4px 10px;
+  outline: none;
 
-  nameInput: {
-    fontSize: "32px",
-    fontWeight: "700",
-    border: "1px solid #ccc",
-    borderRadius: "6px",
-    padding: "4px 10px",
-    outline: "none",
-    width: "250px",
-  },
+  width: 250px;
+`;
 
-  emailRow: {
-    display: "flex",
-    gap: "10px",
-    alignItems: "center",
-  },
+export const EditButton = styled.button`
+  border: none;
+  background: none;
 
-  emailInput: {
-    width: "220px",
-    height: "48px",
-    border: "1px solid #ddd",
-    borderRadius: "6px",
-    padding: "0 15px",
-  },
+  cursor: pointer;
+  font-size: 20px;
+`;
 
-  select: {
-    width: "220px",
-    height: "48px",
-    borderRadius: "6px",
-    border: "1px solid #ddd",
-  },
+export const RemoveButton = styled.button`
+  margin-top: 10px;
 
-  buttonArea: {
-    marginTop: "120px",
-    display: "flex",
-    justifyContent: "flex-end",
-    gap: "15px",
-  },
+  border: none;
+  background: none;
 
-  edit: {
-    width: "120px",
-    height: "48px",
-    borderRadius: "24px",
-    background: "#111",
-    color: "#fff",
-    border: "none",
-    cursor: "pointer",
-    fontWeight: "700",
-  },
+  color: #777;
+  cursor: pointer;
+`;
 
-  withdraw: {
-    width: "120px",
-    height: "48px",
-    borderRadius: "24px",
-    background: "#ff4b4b",
-    color: "#fff",
-    border: "none",
-    cursor: "pointer",
-    fontWeight: "700",
-  },
-};
+export const Form = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  width: 600px;
+  gap: 10px;
+`;
+
+export const Notice = styled.span`
+  color: red;
+  font-size: 12px;
+  margin-bottom: 5px;
+`;
+
+export const Input = styled.input`
+  height: 48px;
+
+  border: 1px solid #ddd;
+  border-radius: 6px;
+
+  padding: 0 15px;
+
+  margin-bottom: 20px;
+`;
+
+export const EmailRow = styled.div`
+  display: flex;
+  gap: 10px;
+  align-items: center;
+`;
+
+export const EmailInput = styled.input`
+  width: 220px;
+  height: 48px;
+
+  border: 1px solid #ddd;
+  border-radius: 6px;
+
+  padding: 0 15px;
+`;
+
+export const Select = styled.select`
+  width: 220px;
+  height: 48px;
+
+  border-radius: 6px;
+  border: 1px solid #ddd;
+`;
+
+export const ButtonArea = styled.div`
+  margin-top: 120px;
+
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 15px;
+`;
+
+export const EditButtonSubmit = styled.button`
+  width: 120px;
+  height: 48px;
+
+  border-radius: 24px;
+
+  background: #111;
+  color: white;
+
+  border: none;
+
+  cursor: pointer;
+  font-weight: 700;
+`;
+
+export const WithdrawButton = styled.button`
+  width: 120px;
+  height: 48px;
+
+  border-radius: 24px;
+
+  background: #ff4b4b;
+  color: white;
+
+  border: none;
+
+  cursor: pointer;
+  font-weight: 700;
+`;
