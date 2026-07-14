@@ -39,7 +39,7 @@ const AdminMembers = () => {
     setSelectedNos([]);
   };
 
-  // ==================== 회원 목록 불러오기 ====================
+  // ==================== 데이터 불러오기 (검색/일반 통합) ====================
   const fetchMembers = async (page, searchKeyword = "", searchTarget = "") => {
     try {
       setLoading(true);
@@ -48,10 +48,9 @@ const AdminMembers = () => {
       let url = "/admins/members";
       let params = { page, size };
 
-      // 검색어가 있으면 검색 API 사용
       if (kw.trim()) {
         url = "/admins/members/search";
-        params.keyword = searchKeyword.trim();
+        params.keyword = kw.trim();
         if (searchTarget) {
           params.target = searchTarget;
         }
@@ -76,8 +75,14 @@ const AdminMembers = () => {
     }
   };
 
+  // ==================== 초기 로딩 + 페이지 변경 시 ====================
+  useEffect(() => {
+    fetchMembers(currentPage, keyword, target);
+  }, [currentPage]);
+
+  // ==================== 검색 ====================
   const handleSearch = () => {
-    setCurrentPage(0); // 검색 시 첫 페이지로 이동
+    setCurrentPage(0);
     fetchMembers(0, keyword, target);
   };
 
@@ -118,7 +123,7 @@ const AdminMembers = () => {
       alert.success(`${selectedNos.length}명의 회원을 탈퇴시켰습니다.`);
       closeModal();
       setSelectedNos([]);
-      fetchMembers(currentPage, keyword, target);
+      fetchMembers(currentPage, keyword, target); // 검색 상태 유지
     } catch (err) {
       alert.error("삭제에 실패했습니다.");
     }
@@ -135,7 +140,7 @@ const AdminMembers = () => {
       alert.success(`${selectedNos.length}명의 회원을 복구했습니다.`);
       closeModal();
       setSelectedNos([]);
-      fetchMembers(currentPage, keyword, target);
+      fetchMembers(currentPage, keyword, target); // 검색 상태 유지
     } catch (err) {
       const msg = err.response?.data?.message || "복구에 실패했습니다.";
       alert.error(msg);
@@ -200,9 +205,7 @@ const AdminMembers = () => {
           <ButtonGroup>
             <AddButton
               onClick={openRestoreModal}
-              style={{
-                background: "#28a745",
-              }}
+              style={{ background: "#28a745", color: "white" }}
             >
               복구
             </AddButton>
