@@ -15,6 +15,7 @@ import {
   NoticeRoutes,
   PlantRoutes,
 } from "./routes";
+import AdminRoute from "./routes/AdminRoute";
 
 function App() {
   return (
@@ -31,7 +32,7 @@ function App() {
 
       {/* Header/Footer 없는 페이지 */}
       <Route element={<EmptyLayout />}>
-        {AdminRoutes}
+        <Route element={<AdminRoute />}>{AdminRoutes}</Route>
         {MyPageRoutes}
       </Route>
     </Routes>

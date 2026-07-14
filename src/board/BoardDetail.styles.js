@@ -173,7 +173,7 @@ export const detailStyles = {
     borderBottom: "1px solid #eee",
   },
   metaWriter: { fontSize: "13px", fontWeight: "500", color: "#333" },
-  metaDot: { fontSize: "13px", color: "#ccc" },
+  metaDot: { fontSize: "13px", color: "#757272" },
   metaDate: { fontSize: "13px", color: "#999" },
   cThumb: { fontSize: "13px", cursor: "pointer" },
 };

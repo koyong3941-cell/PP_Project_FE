@@ -39,17 +39,6 @@ export const RightPanel = styled.div`
   .profile {
     text-align: center;
     margin-bottom: 30px;
-
-    .avatar {
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      background-color: #ddd;
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      margin: 0 auto 10px;
-    }
   }
 
   .quick button {
@@ -151,7 +140,7 @@ export const Card = styled.div`
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-
+    cursor: pointer;
     border-radius: 8px;
     margin-bottom: 10px;
   }
@@ -186,6 +175,40 @@ export const BigGraphBox = styled.div`
   background: white;
   border-radius: 16px;
 
+  .noData {
+    width: 100%;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    color: #666;
+  }
+`;
+
+export const NoData = styled.div`
+  width: 100%;
+  height: ${(props) => props.height || "500px"};
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   font-size: 18px;
   color: #666;
+`;
+
+export const ProfileAvatar = styled.div`
+  width: 70px;
+  height: 70px;
+
+  border-radius: 50%;
+
+  background-color: #ddd;
+  background-image: url(${(props) => props.image});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  margin: 0 auto 10px;
 `;

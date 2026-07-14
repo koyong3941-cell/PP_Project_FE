@@ -21,6 +21,8 @@ import {
   SubText,
   FlowerContainer,
   ScrollButton,
+  NoData,
+  ProfileAvatar,
 } from "./MyPage.styles";
 import {
   ResponsiveContainer,
@@ -66,17 +68,42 @@ const MyPage = () => {
       ? `http://localhost${user.imgPath}${user.saveName}`
       : profileDefaultImg;
 
-  const normalizedData = chartData.map((d) => ({
-    date: d.measureDate,
+  const carbonData = plantCap
+    ? [
+        {
+          name: "소형",
+          value: plantCap.smallPlantCap,
+        },
+        {
+          name: "중형",
+          value: plantCap.middlePlantCap,
+        },
+        {
+          name: "대형",
+          value: plantCap.bigPlantCap,
+        },
+      ]
+    : [];
 
-    co2: Math.min(100, Math.floor(d.co2 / 10)), // 400~500 → 40~50
+  const normalizedData = Object.values(
+    chartData.reduce((acc, d) => {
+      const date = d.measureDate;
 
-    spo2: d.spo2, // 이미 0~100
+      if (!acc[date]) {
+        acc[date] = {
+          date,
+          co2: Math.min(100, Math.floor(d.co2 / 10)),
+          spo2: d.spo2,
+          humidity: d.humidity,
+          temperature: Math.floor(d.temperature * 3),
+        };
+      }
 
-    humidity: d.humidity, // 0~100
+      return acc;
+    }, {}),
+  );
 
-    temperature: Math.floor(d.temperature * 3), // 25°C → 75 (스케일링)
-  }));
+  console.log(normalizedData.map((d) => d.date));
 
   const scrollFlower = (direction) => {
     if (!flowerRef.current) return;
@@ -136,37 +163,42 @@ const MyPage = () => {
             <ScrollButton onClick={() => scrollFlower("left")}>◀</ScrollButton>
 
             <FlowerGrid ref={flowerRef}>
-              {plantData.map((item) => (
-                <Card key={item.plantNo}>
-                  <div
-                    className="img"
-                    style={{
-                      backgroundImage: `url(${
-                        item.imgPath && item.saveName
-                          ? `http://localhost${item.imgPath}${item.saveName}`
-                          : plantDefaultImg
-                      })`,
-                    }}
-                  />
-
-                  <h4>{item.plantName}</h4>
-
-                  <SubText>
-                    {item.classification}
-                    <br />
-                    소형 : {item.smallPlant} / 중형 : {item.middlePlant} / 대형
-                    : {item.bigPlant}
-                  </SubText>
-
-                  <div className="bar">
+              {plantData.length > 0 ? (
+                plantData.map((item) => (
+                  <Card key={item.plantNo}>
                     <div
+                      className="img"
+                      onClick={() => handleNavigation("/memberPlant")}
                       style={{
-                        width: `${item.carbonCapture}%`,
+                        backgroundImage: `url(${
+                          item.imgPath && item.saveName
+                            ? `http://localhost${item.imgPath}${item.saveName}`
+                            : plantDefaultImg
+                        })`,
                       }}
                     />
-                  </div>
-                </Card>
-              ))}
+
+                    <h4>{item.plantName}</h4>
+
+                    <SubText>
+                      {item.classification}
+                      <br />
+                      소형 : {item.smallPlant} / 중형 : {item.middlePlant} /
+                      대형 :{item.bigPlant}
+                    </SubText>
+
+                    <div className="bar">
+                      <div
+                        style={{
+                          width: `${Math.max(0, Math.min(item.carbonCapture, 100))}%`,
+                        }}
+                      />
+                    </div>
+                  </Card>
+                ))
+              ) : (
+                <NoData>데이터가 없습니다.</NoData>
+              )}
             </FlowerGrid>
 
             <ScrollButton onClick={() => scrollFlower("right")}>▶</ScrollButton>
@@ -178,25 +210,9 @@ const MyPage = () => {
           <Title>🌱 전체 탄소포집량</Title>
 
           <GraphBox>
-            {plantCap && (
+            {plantCap ? (
               <ResponsiveContainer width="100%" height={250}>
-                <BarChart
-                  data={[
-                    {
-                      name: "소형",
-                      value: plantCap.smallPlantCap,
-                    },
-                    {
-                      name: "중형",
-                      value: plantCap.middlePlantCap,
-                    },
-                    {
-                      name: "대형",
-                      value: plantCap.bigPlantCap,
-                    },
-                  ]}
-                  layout="vertical"
-                >
+                <BarChart data={carbonData} layout="vertical">
                   <XAxis type="number" />
 
                   <YAxis type="category" dataKey="name" />
@@ -206,61 +222,74 @@ const MyPage = () => {
                   <Bar dataKey="value" fill="#4caf50" radius={[0, 10, 10, 0]} />
                 </BarChart>
               </ResponsiveContainer>
+            ) : (
+              <NoData height="250px">데이터가 없습니다.</NoData>
             )}
           </GraphBox>
 
-          {plantCap && <h3>총 탄소포집량 : {plantCap.countAllPlantCap}</h3>}
+          {plantCap ? (
+            <h3>총 탄소포집량 : {plantCap.countAllPlantCap}</h3>
+          ) : (
+            <h3>총 탄소포집량 : 데이터가 없습니다.</h3>
+          )}
         </SectionMiddle>
 
         {/* 3. BOTTOM 100% */}
         <SectionBottom>
           <Title>📈 식물 실내 환경 측정기</Title>
           <BigGraphBox>
-            <ResponsiveContainer width="98%" height={500}>
-              <LineChart
-                data={normalizedData}
-                margin={{ top: 100, right: 10, bottom: 20, left: 20 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
+            {normalizedData.length > 0 ? (
+              <ResponsiveContainer width="98%" height={500}>
+                <LineChart
+                  data={normalizedData}
+                  margin={{ top: 100, right: 10, bottom: 20, left: 20 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
 
-                <XAxis dataKey="date" />
+                  <XAxis dataKey="date" interval="preserveStartEnd" />
 
-                <YAxis
-                  domain={[0, 100]}
-                  ticks={[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]}
-                  interval={0}
-                  tickMargin={8}
-                />
+                  <YAxis
+                    domain={[0, 100]}
+                    ticks={[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]}
+                    interval={0}
+                    tickMargin={8}
+                  />
 
-                <Tooltip />
-                <Legend />
+                  <Tooltip />
+                  <Legend />
 
-                <Line
-                  type="natural"
-                  dataKey="co2"
-                  stroke="#F4B942"
-                  name="이산화탄소"
-                />
-                <Line
-                  type="natural"
-                  dataKey="spo2"
-                  stroke="#4F46E5"
-                  name="산소"
-                />
-                <Line
-                  type="natural"
-                  dataKey="humidity"
-                  stroke="#FF5A5F"
-                  name="습도"
-                />
-                <Line
-                  type="natural"
-                  dataKey="temperature"
-                  stroke="#2CB67D"
-                  name="온도"
-                />
-              </LineChart>
-            </ResponsiveContainer>
+                  <Line
+                    type="natural"
+                    dataKey="co2"
+                    stroke="#F4B942"
+                    name="이산화탄소"
+                  />
+
+                  <Line
+                    type="natural"
+                    dataKey="spo2"
+                    stroke="#4F46E5"
+                    name="산소"
+                  />
+
+                  <Line
+                    type="natural"
+                    dataKey="humidity"
+                    stroke="#FF5A5F"
+                    name="습도"
+                  />
+
+                  <Line
+                    type="natural"
+                    dataKey="temperature"
+                    stroke="#2CB67D"
+                    name="온도"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="noData">데이터가 없습니다.</div>
+            )}
           </BigGraphBox>
         </SectionBottom>
       </ScrollArea>
@@ -268,17 +297,13 @@ const MyPage = () => {
       {/* 우측 유저 정보 섹션 */}
       <RightPanel>
         <div className="profile">
-          <div
-            className="avatar"
-            style={{ backgroundImage: `url(${profileImg})` }}
-          />
+          <ProfileAvatar image={profileImg} />
           <h3>{user.memberId}님</h3>
           <p>{user.memberName}</p>
         </div>
 
         <div className="quick">
           <button onClick={() => handleNavigation("/")}>홈</button>{" "}
-          {/* 식물 검색 페이지 구현 시 해당 페이지로 랜딩되어야 함 */}
           <button onClick={() => handleNavigation("/profile-edit")}>
             내 정보 수정
           </button>

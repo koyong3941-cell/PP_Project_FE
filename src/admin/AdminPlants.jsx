@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Navigate, useParams } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { useAlertify } from "../hooks/useAlertify";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
@@ -21,23 +24,56 @@ import {
 } from "./admin.style";
 import Sidebars from "./Sidebars";
 import LowBars from "./Lowbars";
+import api from "../api/axios";
 const AdminPlants = () => {
+  const { user } = useAuth();
   const navi = useNavigate();
+  const { success, error } = useAlertify();
   const [admins, setAdmins] = useState("");
   const [keyword, setKeyword] = useState("");
   const [selected, setSelected] = useState("");
-  const [loading, setLoading] = useState(false);
-
   const [activeMenu, setActiveMenu] = useState("");
 
-  const [page, setPage] = useState(1);
-  const totalPage = 7;
+  const [plants, setPlants] = useState([]);
+  const [plantNos, setPlantNos] = useState([]);
 
-  axios.get(`http://localhost/api/plants?page=${page}`).then((res) => {
-    console.log(res);
-    // setNotice(res.data.data.list);
-    // setTotalPage(res.data.data.totalPage);
-  });
+  const [page, setPage] = useState("");
+  const totalPage = Page;
+
+  useEffect(() => {
+    if (!user) {
+      navi("/login");
+      return;
+    }
+    api
+      .get(`http://localhost/api/admins/plants?page=${page - 1}`)
+      .then((res) => {
+        console.log(res.data.data.content);
+        setPlants(res.data.data.content);
+      });
+  }, [user, navi, page]);
+
+  const onCheck = (e) => {
+    if (e.target.checked) {
+      setPlantNos([...plantNos, e.target.id]);
+    } else {
+      setPlantNos([...plantNos.filter((e) => e != e.target.id)]);
+    }
+  };
+
+  const onDelete = async (e) => {
+    e.preventDefault();
+    if (!confirm("정말삭제하시겠습니까?")) return;
+
+    try {
+      await api.delete(`/admin/plants/${plantsNo}`);
+      //navi("/admin/board");
+    } catch {
+      alert("삭제에 실패했습니다");
+      //navi("/admin/board");
+    }
+  };
+
   return (
     <Container>
       <Sidebars />
@@ -74,14 +110,7 @@ const AdminPlants = () => {
             >
               수정
             </AddButton>
-            <DeleteButton
-              onClick={() => {
-                setActiveMenu("삭제");
-                navi("/admin/board/delete");
-              }}
-            >
-              삭제
-            </DeleteButton>
+            <DeleteButton onClick={() => {}}>삭제</DeleteButton>
           </ButtonGroup>
         </Toolbar>
 
@@ -92,99 +121,31 @@ const AdminPlants = () => {
                 <input type="checkbox" />
               </th>
               <th>식물 키</th>
-              <th>게시 날짜</th>
               <th>식물명</th>
               <th>게시자</th>
-              <th>식물요약</th>
+              <th>게시 날짜</th>
               <th>게시여부</th>
             </tr>
           </thead>
 
           <tbody>
-            {admins.length === 0 ? (
-              <tr>
-                <th>
-                  <input type="checkbox" />
-                </th>
-                <th>#1</th>
-                <th>23/09/2022</th>
-                <th>t*dg*s</th>
-                <th>김*환</th>
-                <th>t*dg*s@gmail.com</th>
-                <th>Y</th>
-              </tr>
-            ) : (
-              admins.map((admin) => (
-                <tr key={admin.memberNo}>
+            {plants.length != 0 ? (
+              plants.map((p) => (
+                <tr key={p.plantNo}>
                   <td>
-                    <input type="checkbox" />
+                    <input type="checkbox" id={p.plantNo} onChange={onCheck} />
                   </td>
-                  <td>{admin.memberNo}</td>
-                  <td>{admin.createDate}</td>
-                  <td>{admin.memberId}</td>
-                  <td>{admin.memberName}</td>
-                  <td>{admin.memberEmail}</td>
-                  <td>{admin.useYn}</td>
+                  <td>{p.plantNo}</td>
+                  <td>{p.plantName}</td>
+                  <td>{p.memberName}</td>
+                  <td>{p.createDate}</td>
+                  <td>{p.count}</td>
                 </tr>
               ))
-            )}
-          </tbody>
-          <tbody>
-            {admins.length === 0 ? (
-              <tr>
-                <th>
-                  <input type="checkbox" />
-                </th>
-                <th>#2</th>
-                <th>23/09/2022</th>
-                <th>t*dg*s</th>
-                <th>최*개</th>
-                <th>t*dg*s@gmail.com</th>
-                <th>Y</th>
-              </tr>
             ) : (
-              admins.map((admin) => {
-                <tr key={admin.memberNo}>
-                  <td>
-                    <input type="checkbox" />
-                  </td>
-                  <td>{admin.memberNo}</td>
-                  <td>{admin.createDate}</td>
-                  <td>{admin.memberId}</td>
-                  <td>{admin.memberName}</td>
-                  <td>{admin.memberEmail}</td>
-                  <td>{admin.useYn}</td>
-                </tr>;
-              })
-            )}
-          </tbody>
-          <tbody>
-            {admins.length === 0 ? (
               <tr>
-                <th>
-                  <input type="checkbox" />
-                </th>
-                <th>#3</th>
-                <th>23/09/2022</th>
-                <th>t*dg*s</th>
-                <th>백*만</th>
-                <th>t*dg*s@gmail.com</th>
-                <th>Y</th>
+                <td colSpan={7}>아직 존재하지 않습니다</td>
               </tr>
-            ) : (
-              admins.map((admin) => {
-                <tr key={admin.memberNo}>
-                  <td>
-                    <input type="checkbox" />
-                  </td>
-                  <td>{admin.memberNo}</td>
-                  <td>{admin.createDate}</td>
-                  <td>{admin.memberId}</td>
-                  <td>{admin.memberName}</td>
-                  <td>{admin.memberEmail}</td>
-                  <td>{admin.useYn}</td>
-                </tr>;
-              })
             )}
           </tbody>
         </Table>

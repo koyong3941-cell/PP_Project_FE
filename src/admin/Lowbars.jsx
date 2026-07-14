@@ -1,16 +1,24 @@
-import { useState } from "react";
 import { LowBar } from "./admin.style";
 
-const LowBars = () => {
-  const [page, setPage] = useState(1);
-  const totalPage = 7;
+const LowBars = ({ currentPage, totalPages, onPageChange }) => {
+  const page = currentPage + 1;
+  const totalPage = totalPages || 1;
+
+  const goToPage = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPage) {
+      onPageChange(newPage - 1);
+    }
+  };
+
+  if (totalPage <= 0) return null;
+
   return (
     <LowBar>
-      <button disabled={page === 1} onClick={() => setPage(1)}>
+      <button disabled={page === 1} onClick={() => goToPage(1)}>
         ⏮
       </button>
 
-      <button disabled={page === 1} onClick={() => setPage(page - 1)}>
+      <button disabled={page === 1} onClick={() => goToPage(page - 1)}>
         &lt; Previous
       </button>
 
@@ -26,7 +34,7 @@ const LowBars = () => {
               <button
                 key={pageNum}
                 className={page === pageNum ? "active" : ""}
-                onClick={() => setPage(pageNum)}
+                onClick={() => goToPage(pageNum)}
               >
                 {pageNum}
               </button>
@@ -38,10 +46,10 @@ const LowBars = () => {
           return null;
         })}
       </div>
-      <button disabled={page === totalPage} onClick={() => setPage(page + 1)}>
+      <button disabled={page === totalPage} onClick={() => goToPage(page + 1)}>
         Next &gt;
       </button>
-      <button disabled={page === totalPage} onClick={() => setPage(totalPage)}>
+      <button disabled={page === totalPage} onClick={() => goToPage(totalPage)}>
         ⏭
       </button>
     </LowBar>
