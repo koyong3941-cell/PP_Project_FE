@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
+import ErrorPage from "./error/errorPage";
 
 // Layout용 Outlet
 
@@ -25,6 +26,7 @@ function App() {
         {BoardRoutes}
         {PlantRoutes}
         {NoticeRoutes}
+        <Route path="*" element={<ErrorPage />} />
       </Route>
 
       {/* Header/Footer 없는 페이지 */}
