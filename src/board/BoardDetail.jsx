@@ -222,7 +222,6 @@ const BoardDetail = () => {
     <div style={s.container}>
       {/* 상단 */}
       <div style={s.topRow}>
-        <h2 style={s.pageTitle}>자유게시판</h2>
         <div style={s.topBtns}>
           <button style={s.btnEdit} onClick={() => navi(`/board/`)}>
             목록
