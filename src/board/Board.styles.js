@@ -103,6 +103,11 @@ export const styles = {
     padding: "6px 10px",
     cursor: "pointer",
     borderRadius: "4px",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "4px",
+    lineHeight: 1,
   },
 
   button: {
