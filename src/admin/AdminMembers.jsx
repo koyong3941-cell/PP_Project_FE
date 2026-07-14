@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import { useAlertify } from "../hooks/useAlertify";
@@ -123,7 +123,7 @@ const AdminMembers = () => {
       alert.success(`${selectedNos.length}명의 회원을 탈퇴시켰습니다.`);
       closeModal();
       setSelectedNos([]);
-      fetchMembers(currentPage, keyword, target); // 검색 상태 유지
+      fetchMembers(currentPage, keyword, target);
     } catch (err) {
       alert.error("삭제에 실패했습니다.");
     }
@@ -140,7 +140,7 @@ const AdminMembers = () => {
       alert.success(`${selectedNos.length}명의 회원을 복구했습니다.`);
       closeModal();
       setSelectedNos([]);
-      fetchMembers(currentPage, keyword, target); // 검색 상태 유지
+      fetchMembers(currentPage, keyword, target);
     } catch (err) {
       const msg = err.response?.data?.message || "복구에 실패했습니다.";
       alert.error(msg);
