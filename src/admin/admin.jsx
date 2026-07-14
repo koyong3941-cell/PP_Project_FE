@@ -333,6 +333,7 @@ const Admin = () => {
         onDelete={handleDelete}
         onRestore={handleRestore}
         selectedCount={selectedNos.length}
+        entityName="관리자"
       />
     </Container>
   );

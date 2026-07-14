@@ -286,6 +286,7 @@ const AdminMembers = () => {
         onDelete={handleDelete}
         onRestore={handleRestore}
         selectedCount={selectedNos.length}
+        entityName="회원"
       />
     </Container>
   );
