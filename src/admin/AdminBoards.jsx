@@ -287,6 +287,7 @@ const AdminBoards = () => {
         onDelete={handleDelete}
         onRestore={handleRestore}
         selectedCount={selectedNos.length}
+        entityName="게시글"
       />
     </Container>
   );

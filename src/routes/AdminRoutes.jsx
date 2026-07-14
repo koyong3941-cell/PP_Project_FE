@@ -54,7 +54,7 @@ export const AdminRoutes = [
     element={<AdminMemberDeleted />}
   />,
 
-  //공지사항 관련
+  //일반 게시판 관련
   <Route key="admin-board" path="/admin/board" element={<AdminBoards />} />,
   <Route
     key="admin-board-data"
@@ -93,7 +93,7 @@ export const AdminRoutes = [
   />,
   <Route
     key="admin-plant-edit"
-    path="/admin/plant/edit"
+    path="/admin/plant/edit/:plantNo"
     element={<AdminPlantsEdit />}
   />,
 
@@ -106,7 +106,7 @@ export const AdminRoutes = [
   />,
   <Route
     key="admin-notice-edit"
-    path="/admin/notice/edit"
+    path="/admin/notice/edit/:noticeNo"
     element={<AdminNoticeEdit />}
   />,
 

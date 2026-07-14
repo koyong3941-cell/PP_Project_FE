@@ -22,6 +22,7 @@ import Sidebars from "./Sidebars";
 const Admin = () => {
   const [admins, setAdmins] = useState([]);
   const [keyword, setKeyword] = useState("");
+  const [target, setTarget] = useState("");
   const [loading, setLoading] = useState(false);
   const navi = useNavigate();
   const alert = useAlertify();
@@ -53,17 +54,26 @@ const Admin = () => {
     setSelectedNos([]);
   };
 
-  const fetchAdmins = async (page) => {
+  // ==================== 데이터 불러오기 (검색/일반 통합) ====================
+  const fetchAdmins = async (page, searchKeyword = "", searchTarget = "") => {
     try {
       setLoading(true);
-      const res = await api.get("/admins/admins", {
-        params: {
-          page: page,
-          size: size,
-        },
-      });
 
+      const kw = searchKeyword || "";
+      let url = "/admins/admins";
+      let params = { page, size };
+
+      if (kw.trim()) {
+        url = "/admins/admins/search";
+        params.keyword = kw.trim();
+        if (searchTarget) {
+          params.target = searchTarget;
+        }
+      }
+
+      const res = await api.get(url, { params });
       const data = res.data.data;
+
       setAdmins(data.content || []);
       setTotalPages(data.totalPages || 0);
     } catch (err) {
@@ -80,10 +90,24 @@ const Admin = () => {
     }
   };
 
+  // ==================== 초기 로딩 + 페이지 변경 시 ====================
   useEffect(() => {
-    fetchAdmins(currentPage);
+    fetchAdmins(currentPage, keyword, target);
   }, [currentPage]);
 
+  // ==================== 검색 ====================
+  const handleSearch = () => {
+    setCurrentPage(0);
+    fetchAdmins(0, keyword, target);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+  // ==================== 체크박스 ====================
   const toggleSelect = (memberNo) => {
     setSelectedNos((prev) =>
       prev.includes(memberNo)
@@ -122,7 +146,7 @@ const Admin = () => {
 
       alert.success("관리자가 성공적으로 추가되었습니다.");
       closeModal();
-      fetchAdmins(currentPage);
+      fetchAdmins(currentPage, keyword, target);
     } catch (err) {
       const msg = err.response?.data?.message || "추가에 실패했습니다.";
       setFormError(msg);
@@ -141,7 +165,7 @@ const Admin = () => {
       alert.success(`${selectedNos.length}명의 관리자를 탈퇴시켰습니다.`);
       closeModal();
       setSelectedNos([]);
-      fetchAdmins(currentPage);
+      fetchAdmins(currentPage, keyword, target);
     } catch (err) {
       alert.error("삭제에 실패했습니다.");
     }
@@ -158,7 +182,7 @@ const Admin = () => {
       alert.success(`${selectedNos.length}명의 관리자를 복구했습니다.`);
       closeModal();
       setSelectedNos([]);
-      fetchAdmins(currentPage);
+      fetchAdmins(currentPage, keyword, target);
     } catch (err) {
       alert.error("복구에 실패했습니다.");
     }
@@ -196,18 +220,34 @@ const Admin = () => {
         </Header>
 
         <Toolbar>
-          <Select>
-            <option>All</option>
-            <option>관리자ID</option>
-            <option>관리자명</option>
-            <option>관리자이메일</option>
+          <Select value={target} onChange={(e) => setTarget(e.target.value)}>
+            <option value="">All</option>
+            <option value="memberId">관리자ID</option>
+            <option value="memberName">관리자명</option>
+            <option value="email">관리자이메일</option>
           </Select>
 
           <SearchInput
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
+            onKeyDown={handleKeyDown}
             placeholder="관리자 검색"
           />
+
+          <button
+            onClick={handleSearch}
+            style={{
+              padding: "8px 16px",
+              background: "#333",
+              color: "white",
+              border: "none",
+              borderRadius: "6px",
+              cursor: "pointer",
+              marginRight: "12px",
+            }}
+          >
+            검색
+          </button>
 
           <ButtonGroup>
             <AddButton onClick={openAddModal}>추가</AddButton>
@@ -215,7 +255,6 @@ const Admin = () => {
               onClick={openRestoreModal}
               style={{
                 background: "#28a745",
-                color: "white",
               }}
             >
               복구
@@ -294,6 +333,7 @@ const Admin = () => {
         onDelete={handleDelete}
         onRestore={handleRestore}
         selectedCount={selectedNos.length}
+        entityName="관리자"
       />
     </Container>
   );
