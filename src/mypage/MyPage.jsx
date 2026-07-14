@@ -39,6 +39,19 @@ import {
 
 const MyPage = () => {
   const { user, logout } = useAuth();
+
+  if (!user) {
+    return (
+      <Navigate
+        to="/error"
+        replace
+        state={{
+          title: "로그인이 필요합니다.",
+          description: "로그인 후 이용할 수 있는 페이지입니다.",
+        }}
+      />
+    );
+  }
   const flowerRef = useRef(null);
   const navi = useNavigate();
   const [chartData, setChartData] = useState([]);

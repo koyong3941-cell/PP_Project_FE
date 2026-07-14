@@ -2,27 +2,24 @@ import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import errorImage from "../assets/errorPage.png";
 
-const ErrorPage = () => {
+const ErrorPage = ({ errorInfo }) => {
   const location = useLocation();
-
-  const title = location.state?.title || "페이지를 찾을 수 없습니다.";
-
+  const title =
+    location.state?.title || errorInfo?.title || "페이지를 찾을 수 없습니다.";
   const description =
     location.state?.description ||
+    errorInfo?.description ||
     "요청하신 페이지가 존재하지 않거나\n이동 또는 삭제되었을 수 있습니다.";
 
   return (
     <Container>
       <Image src={errorImage} alt="Error" />
-
       <Title>{title}</Title>
-
       <Description>
         {description.split("\n").map((text, index) => (
           <div key={index}>{text}</div>
         ))}
       </Description>
-
       <HomeButton to="/">홈으로 돌아가기</HomeButton>
     </Container>
   );
@@ -58,7 +55,7 @@ const Title = styled.h1`
   font-weight: 700;
 `;
 
-const Description = styled.p`
+const Description = styled.div`
   text-align: center;
   color: #666;
   font-size: 1.1rem;
