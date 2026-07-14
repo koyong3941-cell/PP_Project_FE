@@ -106,7 +106,13 @@ const Header = () => {
             >
               {user?.memberId ? (
                 // 로그인 후 화면
-                <span>{user.memberId} 님 반갑습니다!</span>
+                <span
+                  onClick={() => {
+                    handleNavigation("/mypage");
+                  }}
+                >
+                  {user.memberId} 님 반갑습니다!
+                </span>
               ) : (
                 // 로그인 전 화면
                 <span>로그인 후 이용해 주시기 바랍니다. </span>
@@ -138,12 +144,14 @@ const Header = () => {
             >
               식물 목록
             </div>
-            <div
-              style={styles.dropdownItem}
-              onClick={() => handleNavigation("/admin")}
-            >
-              관리자 페이지
-            </div>
+            {user?.role === "ROLE_ADMIN" && (
+              <div
+                style={styles.dropdownItem}
+                onClick={() => handleNavigation("/admin")}
+              >
+                관리자 페이지
+              </div>
+            )}
           </div>
         )}
       </div>
