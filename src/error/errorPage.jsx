@@ -55,7 +55,7 @@ const Title = styled.h1`
   font-weight: 700;
 `;
 
-const Description = styled.p`
+const Description = styled.div`
   text-align: center;
   color: #666;
   font-size: 1.1rem;
