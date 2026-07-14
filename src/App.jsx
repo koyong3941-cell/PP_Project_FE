@@ -27,7 +27,7 @@ function App() {
         {BoardRoutes}
         {PlantRoutes}
         {NoticeRoutes}
-        <Route path="*" element={<ErrorPage />} />
+        <Route path="*" element={<ErrorPage />} />,
       </Route>
 
       {/* Header/Footer 없는 페이지 */}

@@ -1,18 +1,26 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import errorImage from "../assets/errorPage.png";
 
 const ErrorPage = () => {
+  const location = useLocation();
+
+  const title = location.state?.title || "페이지를 찾을 수 없습니다.";
+
+  const description =
+    location.state?.description ||
+    "요청하신 페이지가 존재하지 않거나\n이동 또는 삭제되었을 수 있습니다.";
+
   return (
     <Container>
-      <Image src={errorImage} alt="404 Page Not Found" />
+      <Image src={errorImage} alt="Error" />
 
-      <Title>페이지를 찾을 수 없습니다.</Title>
+      <Title>{title}</Title>
 
       <Description>
-        요청하신 페이지가 존재하지 않거나
-        <br />
-        이동 또는 삭제되었을 수 있습니다.
+        {description.split("\n").map((text, index) => (
+          <div key={index}>{text}</div>
+        ))}
       </Description>
 
       <HomeButton to="/">홈으로 돌아가기</HomeButton>
