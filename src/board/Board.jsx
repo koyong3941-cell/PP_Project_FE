@@ -161,7 +161,6 @@ const Board = () => {
             style={styles.button}
             onClick={(e) => {
               if (!user) {
-                e.preventDefault();
                 error("로그인 후 이용 가능합니다.");
                 navi("/login");
                 return;
