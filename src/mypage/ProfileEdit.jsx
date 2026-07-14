@@ -1,4 +1,32 @@
-import { styles } from "./ProfileEdit.styles";
+import {
+  Page,
+  Header,
+  HomeIcon,
+  Container,
+  LogoArea,
+  Logo,
+  Content,
+  Path,
+  ProfileArea,
+  ProfileImage,
+  HiddenInput,
+  Id,
+  NameRow,
+  Name,
+  NameInput,
+  EditButton,
+  RemoveButton,
+  Form,
+  Notice,
+  Input,
+  EmailRow,
+  EmailInput,
+  Select,
+  ButtonArea,
+  EditButtonSubmit,
+  WithdrawButton,
+} from "./ProfileEdit.styles";
+
 import { useEffect, useState, useRef } from "react";
 import homeLogo from "../assets/home.png";
 import profileImg from "../assets/unknown.png";
@@ -10,12 +38,10 @@ import Popup from "../popup/PopUp";
 
 function ProfileEdit() {
   const navi = useNavigate();
-  const { user, logout } = useAuth();
+
+  const { user, logout, refreshUser } = useAuth();
   const { success, error } = useAlertify();
 
-  // =========================
-  // STATE
-  // =========================
   const [selectedFile, setSelectedFile] = useState(null);
 
   const [memberPwd, setMemberPwd] = useState("");
@@ -32,16 +58,9 @@ function ProfileEdit() {
 
   const [isOpen, setOpen] = useState(false);
 
-  const openDeletePopup = () => setOpen(true);
-  const { refreshUser } = useAuth();
+  const fileInputRef = useRef(null);
 
-  // =========================
-  // INIT (user → form state)
-  // =========================
   useEffect(() => {
-    console.log("delYn :", user?.delYn);
-    console.log("imgPath :", user?.imgPath);
-    console.log("saveName :", user?.saveName);
     if (user?.email) {
       const [id, domain] = user.email.split("@");
       setEmailId(id);
@@ -53,15 +72,11 @@ function ProfileEdit() {
     }
   }, [user]);
 
-  // =========================
-  // EDIT SUBMIT
-  // =========================
   const handleEditSubmit = async (e) => {
     e.preventDefault();
 
     const fullEmail = `${emailId}@${emailDomain}`;
 
-    // validation
     if (/\s/.test(memberName) || /시발|싯팔|개자식/i.test(memberName)) {
       error("비속어 혹은 공백은 사용할 수 없습니다.");
       return;
@@ -83,7 +98,9 @@ function ProfileEdit() {
         memberPwd,
         email: fullEmail,
       });
+
       await refreshUser();
+
       success("수정 성공!");
       navi("/");
     } catch (err) {
@@ -91,31 +108,29 @@ function ProfileEdit() {
     }
   };
 
-  // =========================
-  // DELETE
-  // =========================
   const handleDelete = async () => {
     try {
       await api.delete("/members/delete", {
-        data: { memberNo: user.memberNo },
+        data: {
+          memberNo: user.memberNo,
+        },
       });
 
       success("탈퇴 성공!");
+
       setOpen(false);
+
       logout();
+
       navi("/login");
     } catch (err) {
       console.log(err);
+
       error("탈퇴 실패");
+
       setOpen(false);
     }
   };
-
-  // =========================
-  // ImageUpload
-  // =========================
-
-  const fileInputRef = useRef(null);
 
   const handleProfileClick = () => {
     fileInputRef.current.click();
@@ -129,24 +144,22 @@ function ProfileEdit() {
     setSelectedFile(file);
 
     const formData = new FormData();
+
     formData.append("imageFile", file);
 
     try {
-      const res = await api.post("/members/profile/image", formData);
-
-      success("이미지 업로드 성공");
+      await api.post("/members/profile/image", formData);
 
       await refreshUser();
 
-      console.log(res.data);
+      success("이미지 업로드 성공");
     } catch (err) {
       console.error(err);
+
       error("업로드 실패");
     }
   };
-  // =========================
-  // ImageRemove
-  // =========================
+
   const handleRemoveProfile = async () => {
     try {
       await api.delete("/members/profile/image");
@@ -156,146 +169,132 @@ function ProfileEdit() {
       success("기본 프로필로 변경되었습니다.");
     } catch (err) {
       console.error(err);
+
       error("프로필 삭제에 실패했습니다.");
     }
   };
-  // =========================
-  // RENDER
-  // =========================
-  return (
-    <div style={styles.page}>
-      <header style={styles.header}>
-        <img
-          src={homeLogo}
-          alt="home"
-          style={styles.homeIcon}
-          onClick={() => navi("/")}
-        />
-      </header>
 
-      <div style={styles.container}>
-        <div style={styles.logoArea}>
-          <h1 style={styles.logo}>
+  return (
+    <Page>
+      <Header>
+        <HomeIcon src={homeLogo} alt="home" onClick={() => navi("/")} />
+      </Header>
+
+      <Container>
+        <LogoArea>
+          <Logo>
             Plant
             <br />
             Plants
-          </h1>
-        </div>
+          </Logo>
+        </LogoArea>
 
-        <div style={styles.content}>
-          <div style={styles.path}>마이페이지 &gt; 내 정보 수정</div>
+        <Content>
+          <Path>마이페이지 &gt; 내 정보 수정</Path>
 
-          {/* PROFILE */}
-          <div style={styles.profileArea}>
-            <img
+          <ProfileArea>
+            <ProfileImage
               src={
                 user?.delYn === "N" && user?.imgPath && user?.saveName
                   ? `http://localhost${user.imgPath}${user.saveName}`
                   : profileImg
               }
               alt="profile"
-              style={styles.profileImage}
               onClick={handleProfileClick}
             />
 
-            <input
+            <HiddenInput
               ref={fileInputRef}
               type="file"
               accept="image/*"
-              style={{ display: "none" }}
               onChange={handleFileChange}
             />
 
             <div>
-              <div style={styles.id}>
-                {user?.memberId ? (
-                  <span>{user.memberId} 님 반갑습니다!</span>
-                ) : (
-                  <span>아이디 세션이 만료되었습니다.</span>
-                )}
-              </div>
+              <Id>
+                {user?.memberId
+                  ? `${user.memberId} 님 반갑습니다!`
+                  : "아이디 세션이 만료되었습니다."}
+              </Id>
 
-              <div style={styles.nameRow}>
+              <NameRow>
                 {isEditingName ? (
-                  <input
-                    style={styles.nameInput}
+                  <NameInput
                     value={memberName}
                     onChange={(e) => setMemberName(e.target.value)}
                     autoFocus
                   />
                 ) : (
-                  <h2 style={styles.name}>{memberName}</h2>
+                  <Name>{memberName}</Name>
                 )}
 
-                <button
-                  style={styles.editButton}
-                  onClick={() => setIsEditingName(!isEditingName)}
-                >
+                <EditButton onClick={() => setIsEditingName(!isEditingName)}>
                   {isEditingName ? "✔" : "✎"}
-                </button>
-              </div>
+                </EditButton>
+              </NameRow>
 
-              <button style={styles.removeBtn} onClick={handleRemoveProfile}>
+              <RemoveButton onClick={handleRemoveProfile}>
                 🗑 Remove
-              </button>
+              </RemoveButton>
             </div>
-          </div>
+          </ProfileArea>
 
-          {/* FORM */}
-          <div style={styles.form}>
+          <Form>
             <label>비밀번호</label>
-            {pwdError && <span style={styles.notice}>{pwdError}</span>}
-            <input
+
+            {pwdError && <Notice>{pwdError}</Notice>}
+
+            <Input
               type="password"
-              style={styles.input}
               value={memberPwd}
               onChange={(e) => setMemberPwd(e.target.value)}
               placeholder="비밀번호 (영문, 숫자 6~15자)"
             />
 
             <label>비밀번호 확인</label>
-            {pwdConfirmError && (
-              <span style={styles.notice}>{pwdConfirmError}</span>
-            )}
-            <input
+
+            {pwdConfirmError && <Notice>{pwdConfirmError}</Notice>}
+
+            <Input
               type="password"
-              style={styles.input}
               value={memberPwdConfirm}
               onChange={(e) => setMemberPwdConfirm(e.target.value)}
               placeholder="비밀번호 확인"
             />
 
             <label>이메일</label>
-            <div style={styles.emailRow}>
-              <input
-                style={styles.emailInput}
+
+            <EmailRow>
+              <EmailInput
                 value={emailId}
                 onChange={(e) => setEmailId(e.target.value)}
               />
 
               <span>@</span>
 
-              <select
-                style={styles.select}
+              <Select
                 value={emailDomain}
                 onChange={(e) => setEmailDomain(e.target.value)}
               >
                 <option value="naver.com">naver.com</option>
-                <option value="gmail.com">gmail.com</option>
-                <option value="daum.net">daum.net</option>
-              </select>
-            </div>
-          </div>
 
-          {/* BUTTONS */}
-          <div style={styles.buttonArea}>
-            <button style={styles.edit} onClick={handleEditSubmit}>
+                <option value="gmail.com">gmail.com</option>
+
+                <option value="daum.net">daum.net</option>
+              </Select>
+            </EmailRow>
+          </Form>
+
+          <ButtonArea>
+            <EditButtonSubmit onClick={handleEditSubmit}>
               수정하기
-            </button>
-            <button style={styles.withdraw} onClick={openDeletePopup}>
+            </EditButtonSubmit>
+
+            <WithdrawButton onClick={() => setOpen(true)}>
               탈퇴하기
-            </button>
-          </div>
+            </WithdrawButton>
+          </ButtonArea>
+
           <Popup
             open={isOpen}
             type="confirm"
@@ -307,9 +306,9 @@ function ProfileEdit() {
             onCancel={() => setOpen(false)}
             onClose={() => setOpen(false)}
           />
-        </div>
-      </div>
-    </div>
+        </Content>
+      </Container>
+    </Page>
   );
 }
 
