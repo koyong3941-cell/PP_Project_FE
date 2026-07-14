@@ -222,17 +222,23 @@ const BoardDetail = () => {
     <div style={s.container}>
       {/* 상단 */}
       <div style={s.topRow}>
-        <h2 style={s.pageTitle}>자유게시판</h2>
         <div style={s.topBtns}>
           <button style={s.btnEdit} onClick={() => navi(`/board/`)}>
             목록
           </button>
-          <button style={s.btnEdit} onClick={handleEditBoard}>
-            수정
-          </button>
-          <button style={s.btnDel} onClick={handleDeleteBoard}>
-            삭제
-          </button>
+          {Number(user?.memberNo) === Number(boardDetail.memberNo) && (
+            <>
+              <button
+                style={s.btnEdit}
+                onClick={() => navi(`/board/${boardNo}/edit`)}
+              >
+                수정
+              </button>
+              <button style={s.btnDel} onClick={handleDeleteBoard}>
+                삭제
+              </button>
+            </>
+          )}
         </div>
       </div>
 
