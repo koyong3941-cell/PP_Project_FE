@@ -93,7 +93,7 @@ export const AdminRoutes = [
   />,
   <Route
     key="admin-plant-edit"
-    path="/admin/plant/edit"
+    path="/admin/plant/edit/:plantNo"
     element={<AdminPlantsEdit />}
   />,
 

@@ -178,9 +178,7 @@ const AdminNotices = () => {
       alert.warning("수정은 한 번에 하나만 선택할 수 있습니다.");
       return;
     }
-    // 선택된 1개의 noticeNo를 쿼리 또는 state로 넘김
     navi(`/admin/notice/edit/${selectedNos[0]}`);
-    // 또는 navi("/admin/notice/edit", { state: { noticeNo: selectedNos[0] } });
   };
 
   return (
