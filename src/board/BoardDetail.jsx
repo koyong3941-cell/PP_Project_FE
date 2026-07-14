@@ -110,6 +110,21 @@ const BoardDetail = () => {
     }
   };
 
+  const handleEditBoard = () => {
+    if (!user) {
+      error("로그인이 필요합니다.");
+      navi("/login");
+      return;
+    }
+
+    if (user?.memberName !== boardDetail.memberName) {
+      error("작성자만 수정이 가능합니다.");
+      return;
+    }
+
+    navi(`/board/${boardNo}/edit`);
+  };
+
   const handleDeleteComment = async (commentNo) => {
     try {
       const result = await api.delete(
@@ -212,19 +227,12 @@ const BoardDetail = () => {
           <button style={s.btnEdit} onClick={() => navi(`/board/`)}>
             목록
           </button>
-          {Number(user?.memberNo) === Number(boardDetail.memberNo) && (
-            <>
-              <button
-                style={s.btnEdit}
-                onClick={() => navi(`/board/${boardNo}/edit`)}
-              >
-                수정
-              </button>
-              <button style={s.btnDel} onClick={handleDeleteBoard}>
-                삭제
-              </button>
-            </>
-          )}
+          <button style={s.btnEdit} onClick={handleEditBoard}>
+            수정
+          </button>
+          <button style={s.btnDel} onClick={handleDeleteBoard}>
+            삭제
+          </button>
         </div>
       </div>
 
