@@ -110,8 +110,8 @@ const BoardDetail = () => {
     }
   };
 
-  const handleEditBoard = () => {
-    if (!user) {
+  const handleEditBoard = (e) => {
+    if (!user?.memberNo) {
       error("로그인이 필요합니다.");
       navi("/login");
       return;
@@ -227,12 +227,19 @@ const BoardDetail = () => {
           <button style={s.btnEdit} onClick={() => navi(`/board/`)}>
             목록
           </button>
-          <button style={s.btnEdit} onClick={handleEditBoard}>
-            수정
-          </button>
-          <button style={s.btnDel} onClick={handleDeleteBoard}>
-            삭제
-          </button>
+          {Number(user?.memberNo) === Number(boardDetail.memberNo) && (
+            <>
+              <button
+                style={s.btnEdit}
+                onClick={() => navi(`/board/${boardNo}/edit`)}
+              >
+                수정
+              </button>
+              <button style={s.btnDel} onClick={handleDeleteBoard}>
+                삭제
+              </button>
+            </>
+          )}
         </div>
       </div>
 
