@@ -157,7 +157,20 @@ const Board = () => {
         </div>
 
         <Link to="/board/write">
-          <button style={styles.button}>게시글 작성</button>
+          <button
+            style={styles.button}
+            onClick={(e) => {
+              if (!user) {
+                e.preventDefault();
+                error("로그인 후 이용 가능합니다.");
+                navi("/login");
+                return;
+              }
+              navi("/board/write");
+            }}
+          >
+            게시글 작성
+          </button>
         </Link>
       </div>
 

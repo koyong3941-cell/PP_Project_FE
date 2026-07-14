@@ -67,9 +67,14 @@ const PlantSearch = () => {
     if (page >= 1) setPage(page - 1);
   };
   const handleNext = () => {
-    if (page < totalPages) setPage(page + 1);
+    if (page < totalPages - 1) {
+      setPage(page + 1);
+    }
   };
-  const handleLast = () => setPage(totalPages);
+
+  const handleLast = () => {
+    setPage(totalPages - 1);
+  };
   // --------------------------------------------------------------------------------
   const filters = [
     { label: "전체", value: "all" },
