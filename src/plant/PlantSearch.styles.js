@@ -98,7 +98,7 @@ export const styles = {
 
   pageButton: {
     border: "1px solid #ddd",
-    background: "#fff",
+    backgroundColor: "#fff",
     padding: "6px 10px",
     cursor: "pointer",
     borderRadius: "4px",
