@@ -18,17 +18,17 @@
 ---
 
 ## 기술 스택
-<img src="https://img.shields.io/badge/Java-21-007396?style=for-the-badge&logo=openjdk&logoColor=white">
-<img src="https://img.shields.io/badge/Spring%20Boot-3.5.16-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
-<img src="https://img.shields.io/badge/Spring%20Security-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white">
-<img src="https://img.shields.io/badge/MyBatis-3.0.5-000000?style=for-the-badge&logo=mybatis&logoColor=white">
-<img src="https://img.shields.io/badge/JWT-JJWT%200.12.3-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white">
-<img src="https://img.shields.io/badge/Springdoc%20OpenAPI-2.8.16-85EA2D?style=for-the-badge&logo=swagger&logoColor=black">
-<img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black">
-<img src="https://img.shields.io/badge/React%20Router-7CA0F0?style=for-the-badge&logo=reactrouter&logoColor=white">
-<img src="https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white">
-<img src="https://img.shields.io/badge/Styled%20Components-DB7093?style=for-the-badge&logo=styledcomponents&logoColor=white">
-<img src="https://img.shields.io/badge/Oracle-F80000?style=for-the-badge&logo=oracle&logoColor=white">
+<img src="https://img.shields.io/badge/Java-21-007396?style=for-the-badge&logo=openjdk&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Spring%20Boot-3.5.16-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Spring%20Security-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/MyBatis-3.0.5-000000?style=for-the-badge&logo=mybatis&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/JWT-JJWT%200.12.3-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Springdoc%20OpenAPI-2.8.16-85EA2D?style=for-the-badge&logo=swagger&logoColor=black">&nbsp;
+<img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black">&nbsp;
+<img src="https://img.shields.io/badge/React%20Router-7CA0F0?style=for-the-badge&logo=reactrouter&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Styled%20Components-DB7093?style=for-the-badge&logo=styledcomponents&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Oracle-F80000?style=for-the-badge&logo=oracle&logoColor=white">&nbsp;
 <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white">
 
 ---
@@ -116,3 +116,10 @@
   - 검색 시 키워드와 검색 대상에 따라 서버에서 동적으로 결과를 조회하도록 구현
   - 선택한 식물을 삭제하거나 복구하는 기능 추가 (실제 삭제가 아닌 상태 변경 방식)
   - React 관리자 화면과 Spring Boot API를 연동하여 검색·선택·삭제까지 동작하게 구현
+
+**페이지 시나리오**
+1. 관리자가 로그인 후 식물 정보 관리 페이지에 접속한다.
+2. 전체 식물 목록이 페이지 단위로 조회된다.
+3. 검색 조건을 선택하고 키워드를 입력하여 원하는 식물을 찾는다.
+4. 목록에서 여러 식물을 선택한 뒤 삭제 또는 복구를 실행한다.
+5. 필요 시 특정 식물을 선택하여 정보를 수정하거나 새로 등록한다.
