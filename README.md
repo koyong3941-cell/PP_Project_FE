@@ -69,6 +69,8 @@
 ---
 
 ## 5. 아키텍처 구조
+**아키텍처 다이어그램**  
+![아키텍처](./architecture.png)
 
 **ERD**  
 [![ERD](https://img.shields.io/badge/ERD-바로가기-4B8BBE?style=for-the-badge&logo=diagrams.net&logoColor=white)](https://www.erdcloud.com/d/7gtfTPgReKwTqd7Eg)
@@ -81,11 +83,12 @@
 
 <!-- 각자 1개씩 작성 -->
 
-#### 기능 1 (담당: 윤성현)
-- 회원 인증 및 회원 관리 기능 개발 및 전체 개발 관여 (BE/FE)
-  - 회원가입, 로그인, JWT 기반 인증 구현
-  - 회원 정보 조회 및 수정 API 개발
-  - React - Spring Boot API 연동
+#### 회원 인증 및 MVP(탄소집계) (담당: 윤성현)
+- 회원 및 탄소집계 MVP 기능 개발(BE/FE)
+  - Spring Security와 JWT 기반 인증 시스템 구현
+  - 사용자 활동 데이터를 기반으로 탄소 포집량 계산 로직 구현
+  - 식물별 탄소포집 계수를 적용한 탄소 저감량 산출 기능 개발
+  - 마이페이지 내 탄소집계 정보 조회 화면 구현
 
 #### 기능 2 (담당: 강민범)
 - 식물 원예 커뮤니티 중 프론트 엔드 작업에서는 관리자 페이지 작업을 수행했으며 백엔드 작업에서는 공지사항 페이지를 수행하였습니다. 
