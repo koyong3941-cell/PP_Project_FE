@@ -1,18 +1,40 @@
-# React + Vite
+프로젝트 제목
+버전
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+ <!-- 길어진다면 목차 추가  -->
 
-Currently, two official plugins are available:
+1. 누가 : <!-- 당담 파트 -->
+   팀명
+   일섭 : 깃허브 주소 + 메일 주소 + 프로필(?) + 자기소개 + 포부
+   민범 :
+   세웅 :
+   성현 :
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+기술스택
+/\*이미지(PPT 발표자료 기술스택을 가져와서 다듬어도 됨)
 
-## React Compiler
+2. 기간 및 개발 분기
+   6/4 ~ 7/15
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+3. 왜 만들었는지?
+   서비스 개요
+   문제점: 인터넷에 존재하는 식물 원예 커뮤니티의 식물 커뮤니티는 식물의 재배 난이도 및 탄소포집에 얼마나 도움이 되는지 보여주지 못함
 
-Note: This will impact Vite dev & build performances.
+4. 이 프로젝트가 무엇을 하는건지? <!-- 중요!! -->
 
-## Expanding the ESLint configuration
+특징: 개발자 친환경 원예 블로그 운영, 소규모 ~ 대규모 모임 기능 지원 > 탄소포집 식물 리뷰
+주사용자: 친환경 식물 재배 난이도 및 탄소포집 성능 지표가 필요한 사용자
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+5. 아키텍처 구조(클라우드크래프트)
+   ERD 레퍼런스 주소 : URL
+
+6. 주요기능 <!-- 각자 1개씩 -->
+
+   MVP 및 주요 페이지별 시나리오 소개
+
+<!-- 미구현 -->
+
+7. 시작가이드
+   설치 및 실행과정
+
+8. 버전 관리 v1.0
