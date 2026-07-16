@@ -78,7 +78,7 @@
 <!-- 클라우드크래프트 이미지 삽입 -->
 
 **ERD**  
-[ERD 바로가기](https://github.com/koyong3941-cell)
+[ERD 바로가기]([URL](https://www.erdcloud.com/d/7gtfTPgReKwTqd7Eg))
 
 ---
 
