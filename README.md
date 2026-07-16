@@ -65,7 +65,9 @@
 ---
 
 ## 5. 아키텍처 구조
-<!-- **아키텍처 다이어그램** --> 
+<p align="center">
+  <img src="./assets/architecture.png" width="800">
+</p>
 
 ### **ERD**  
 [![ERD](https://img.shields.io/badge/ERD-바로가기-4B8BBE?style=for-the-badge&logo=diagrams.net&logoColor=white)](https://www.erdcloud.com/d/7gtfTPgReKwTqd7Eg)
