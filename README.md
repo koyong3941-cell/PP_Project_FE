@@ -2,15 +2,13 @@
 
 > 식물 재배 난이도와 탄소포집 성능을 공유하는 친환경 원예 커뮤니티
 
-[아키텍처](#5-아키텍처-구조)
-
 ## 1. 팀원
 
-**팀명** : (팀명 입력)
+**팀명** : Team Agile
 
 | 이름 | GitHub | Email | 담당 | 소개 |
 |------|--------|-------|------|------|
-| 성현 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/koyong3941-cell) | 이메일 | 팀장 | 조직의 목표와 서비스의 책임을 우선적으로 고려하며, 프로젝트의 방향성에 맞는 개발을 지향합니다. |
+| 성현 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/koyong3941-cell) | `koyong3941@gmail.com` | 팀장 | 조직의 목표와 서비스의 책임을 우선적으로 고려하며, 프로젝트의 방향성에 맞는 개발을 지향합니다. |
 | 민범 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/lovely0503) | `minbeom0503@naver.com` | 팀원 및 유지보수 | 창조적인 아이디어와 긍정적사고 그리고 인간성 포기하지 않는 마인드로 프로젝트에서 서브적인 역할을 맡고 있습니다!! 어떤 곳을 가도 자신감이 넘칩니다! |
 | 세웅 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/CU0-0) | `bill97720@naver.com` | 팀원 | 꾸준한 학습과 기술 습득을 통해 성장하고 있습니다. 협업을 중요하게 생각하며, 팀과 함께 성장하는 개발자가 되고 싶습니다. |
 | 일섭 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/lno001) | `lno001@hotmail.com` | 팀원 | 팀 내에서 의견 조율을 맡고 있습니다. 이번 프로젝트로 팀원간 협동의 중요성에 대해 배워갔습니다. |
