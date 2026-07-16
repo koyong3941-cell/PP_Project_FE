@@ -12,7 +12,7 @@
 |------|--------|-------|------|------|
 | 성현 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/koyong3941-cell) | 이메일 | 팀장 | 조직의 목표와 서비스의 책임을 우선적으로 고려하며, 프로젝트의 방향성에 맞는 개발을 지향합니다. |
 | 민범 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/lovely0503) | `minbeom0503@naver.com` | 팀원 및 유지보수 | 창조적인 아이디어와 긍정적사고 그리고 인간성 포기하지 않는 마인드로 프로젝트에서 서브적인 역할을 맡고 있습니다!! 어떤 곳을 가도 자신감이 넘칩니다! |
-| 세웅 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/CU0-0) | 이메일 | 담당 파트 | 자기소개 + 포부 |
+| 세웅 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/CU0-0) | `bill97720@naver.com` | 팀원 | 꾸준한 학습과 기술 습득을 통해 성장하고 있습니다. 협업을 중요하게 생각하며, 팀과 함께 성장하는 개발자가 되고 싶습니다. |
 | 일섭 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/lno001) | `lno001@hotmail.com` | 팀원 | 팀 내에서 의견 조율을 맡고 있습니다. 이번 프로젝트로 팀원간 협동의 중요성에 대해 배워갔습니다. |
 
 ---
@@ -103,7 +103,11 @@
   - 아이디어 회의나 중간회의 에서는 탄소포집 측정 부분이나 식물을 키우는 유저들에게 커뮤니티를 활용하여 자연적으로 얻게되는 지식 리뷰 시스템을 통한 식물에 대한 피드백등으로 식물 원예커뮤니티를 활용하면서 얻게 되는 장점들을 토론 했던것 같습니다.
 
 #### 기능 3 (담당: 지세웅)
-- 
+- 프론트 엔드
+    -식물리스트 페이지, 식물 상세정보 페이지를 구현했습니다
+    -게시글 리스트 페이지, 게시글 상세 페이지, 게시글 작성 페이지, 게시글 수정 페이지를 구현했습니다
+    -메인 페이지, 에러 페이지를 구현했습니다
+- 백엔드에서는 식물 관련, 회원 보유 식물 관련 기능을 구현했습니다
 
 #### 식물 정보 관리 및 MVP(CRUD) (담당: 이일섭)
 - 관리자용 식물 정보 관리 및 검색 기능 개발 (BE/FE)
