@@ -68,6 +68,10 @@
 <p align="center">
   <img src="./architecture.png" width="900">
 </p>
+<p align="center">
+  <img src="./ERD.png" width="900">
+</p>
+
 
 ### **ERD**  
 [![ERD](https://img.shields.io/badge/ERD-바로가기-4B8BBE?style=for-the-badge&logo=diagrams.net&logoColor=white)](https://www.erdcloud.com/d/7gtfTPgReKwTqd7Eg)
