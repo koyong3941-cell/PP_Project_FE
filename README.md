@@ -11,7 +11,7 @@
 | 이름 | GitHub | Email | 담당 | 소개 |
 |------|--------|-------|------|------|
 | 성현 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/koyong3941-cell) | 이메일 | 담당 파트 | 자기소개 + 포부 |
-| 민범 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/lovely0503) | 이메일 | 담당 파트 | 자기소개 + 포부 |
+| 민범 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/lovely0503) | minbeom0503@naver.com | 팀원 및 유지보수 | 창조적인 아이디어와 긍정적사고 그리고 인간성 포기하지 않는 마인드로 프로젝트에서 서브적인 역할을 맡고 있습니다!! 어떤 곳을 가도 자신감이 넘칩니다! |
 | 세웅 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/CU0-0) | 이메일 | 담당 파트 | 자기소개 + 포부 |
 | 일섭 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/lno001) | `lno001@hotmail.com` | 담당 파트 | 자기소개 + 포부 |
 
@@ -80,7 +80,7 @@
 - 
 
 #### 기능 2 (담당: 민범)
-- 
+- 식물 원예 커뮤니티 중 프론트 엔드 작업에서는 관리자 페이지 작업을 수행했으며 백엔드 작업에서는 공지사항 페이지를 수행하였습니다 그와 연동되는 db에서는 다양한 식물의 정보들을 수집 그리고 게시글을 늘리는 작업을 하였습니다 아이디어 회의나 중간회의 에서는 탄소포집 측정 부분이나 식물을 키우는 유저들에게 커뮤니티를 활용하여 자연적으로 얻게되는 지식 리뷰 시스템을 통한 식물에 대한 피드백등으로 식물 원예커뮤니티를 활용하면서 얻게 되는 장점들을 토론 했던것 같습니다.
 
 #### 기능 3 (담당: 세웅)
 - 
