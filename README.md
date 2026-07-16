@@ -68,10 +68,24 @@
 <p align="center">
   <img src="./architecture.png" width="900">
 </p>
+**시스템 흐름 설명**
+Frontend Layer: React 기반의 SPA(Single Page Application)로 구현되었으며, Axios를 통해 REST API 요청을 수행합니다.
+
+Backend Application: Spring Boot와 Java 21을 기반으로 구축되었으며, Spring Security를 통해 JWT 기반 인증/인가를 처리합니다.
+
+Database: MyBatis를 ORM Mapper로 활용하여 Oracle DB에 데이터를 안정적으로 영속화(Persistence)합니다.
+
+Infra & DevOps: 정적 리소스는 CDN/S3에 저장하며, Git과 Google Sheets를 통해 협업 및 프로젝트 문서화를 관리합니다.
+<hr>
 <p align="center">
   <img src="./ERD.png" width="900">
 </p>
+**Database Schema Design**<br>
+본 프로젝트는 유연한 데이터 관리와 높은 확장성을 위해 관계형 데이터베이스(RDBMS)를 기반으로 설계되었습니다. 주요 설계 특징은 다음과 같습니다.
 
+통합 회원 관리: MEMBER 테이블을 중심으로 토큰, 프로필, 활동 내역을 통합 관리하여 일관성 있는 사용자 경험을 제공합니다.
+
+모듈화된 게시판 시스템: 일반 커뮤니티와 식물 특화 게시판을 분리 운영하며, 이미지, 댓글, 좋아요/싫어요 기능을 독립적인 테이블로 설계하여 유지보수 효율성을 극대화했습니다.
 
 ### **ERD**  
 [![ERD](https://img.shields.io/badge/ERD-바로가기-4B8BBE?style=for-the-badge&logo=diagrams.net&logoColor=white)](https://www.erdcloud.com/d/7gtfTPgReKwTqd7Eg)
@@ -100,7 +114,7 @@
   - 식물리스트 페이지, 식물 상세정보 페이지를 구현했습니다
   - 게시글 리스트 페이지, 게시글 상세 페이지, 게시글 작성 페이지, 게시글 수정 페이지를 구현했습니다
   - 메인 페이지, 에러 페이지를 구현했습니다
-- 백엔드에서는 식물 관련, 회원 보유 식물 관련 기능을 구현했습니다
+  - 백엔드에서는 식물 관련, 회원 보유 식물 관련 기능을 구현했습니다
 
 #### 식물 정보 관리 및 MVP(CRUD) (담당: 이일섭)
 - 관리자용 식물 정보 관리 및 검색 기능 개발 (BE/FE)
