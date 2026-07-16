@@ -10,7 +10,7 @@
 
 | 이름 | GitHub | Email | 담당 | 소개 |
 |------|--------|-------|------|------|
-| 성현 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/koyong3941-cell) | 이메일 | 담당 파트 | 자기소개 + 포부 |
+| 성현 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/koyong3941-cell) | 이메일 | 팀장 | 조직의 목표와 서비스의 책임을 우선적으로 고려하며, 프로젝트의 방향성에 맞는 개발을 지향합니다.  |
 | 민범 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/lovely0503) | 이메일 | 담당 파트 | 자기소개 + 포부 |
 | 세웅 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/CU0-0) | 이메일 | 담당 파트 | 자기소개 + 포부 |
 | 일섭 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/lno001) | `lno001@hotmail.com` | 담당 파트 | 자기소개 + 포부 |
@@ -18,14 +18,14 @@
 ---
 
 ## 기술 스택
-
-<!-- 예시 (실제 사용한 기술로 교체) -->
 <img src="https://img.shields.io/badge/Java-21-007396?style=for-the-badge&logo=openjdk&logoColor=white">
-<img src="https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
-<img src="https://img.shields.io/badge/Spring_Security-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white">
-<img src="https://img.shields.io/badge/Oracle-F80000?style=for-the-badge&logo=oracle&logoColor=white">
+<img src="https://img.shields.io/badge/Spring%20Boot-3.5.16-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
+<img src="https://img.shields.io/badge/Spring%20Security-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white">
+<img src="https://img.shields.io/badge/MyBatis-000000?style=for-the-badge&logo=mybatis&logoColor=white">
+<img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white">
 <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black">
-<img src="https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white">
+<img src="https://img.shields.io/badge/Oracle-F80000?style=for-the-badge&logo=oracle&logoColor=white">
+<img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white">
 
 ---
 
@@ -76,14 +76,17 @@
 
 <!-- 각자 1개씩 작성 -->
 
-#### 기능 1 (담당: 성현)
+#### 기능 1 (담당: 윤성현)
+- 회원 인증 및 회원 관리 기능 개발 및 전체 개발 관여 (BE/FE)
+  - 회원가입, 로그인, JWT 기반 인증 구현
+  - 회원 정보 조회 및 수정 API 개발
+  - React - Spring Boot API 연동
+
+#### 기능 2 (담당: 강민범)
 - 
 
-#### 기능 2 (담당: 민범)
+#### 기능 3 (담당: 지세웅)
 - 
 
-#### 기능 3 (담당: 세웅)
-- 
-
-#### 기능 4 (담당: 일섭)
+#### 기능 4 (담당: 이일섭)
 - 
