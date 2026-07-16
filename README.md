@@ -12,7 +12,7 @@
 |------|--------|-------|------|------|
 | 성현 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/koyong3941-cell) | 이메일 | 담당 파트 | 자기소개 + 포부 |
 | 민범 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/lovely0503) | 이메일 | 담당 파트 | 자기소개 + 포부 |
-| 세웅 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/CU0-0) | 이메일 | 담당 파트 | 자기소개 + 포부 |
+| 세웅 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/CU0-0) | `bill97720@naver.com` | 팀원 | 꾸준한 학습과 기술 습득을 통해 성장하고 있습니다. 협업을 중요하게 생각하며, 팀과 함께 성장하는 개발자가 되고 싶습니다. |
 | 일섭 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/lno001) | `lno001@hotmail.com` | 담당 파트 | 자기소개 + 포부 |
 
 ---
@@ -83,7 +83,11 @@
 - 
 
 #### 기능 3 (담당: 세웅)
-- 
+- 프론트 엔드
+    -식물리스트 페이지, 식물 상세정보 페이지를 구현했습니다
+    -게시글 리스트 페이지, 게시글 상세 페이지, 게시글 작성 페이지, 게시글 수정 페이지를 구현했습니다
+    -메인 페이지, 에러 페이지를 구현했습니다
+- 백엔드에서는 식물 관련, 회원 보유 식물 관련 기능을 구현했습니다
 
 #### 기능 4 (담당: 일섭)
 - 
