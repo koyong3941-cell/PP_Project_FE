@@ -66,7 +66,7 @@
 
 ## 5. 아키텍처 구조
 <p align="center">
-  <img src="./assets/architecture.png" width="800">
+  <img src="./architecture.png" width="900">
 </p>
 
 ### **ERD**  
