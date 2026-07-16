@@ -4,13 +4,11 @@
 
 ## 1. 왜 만들었는지?
 
-탄소 중립의 대한 주제로서 가장 좋은것 중 하나가 바로 식물관련 커뮤니티가 좋은 주제 라고 생각되었습니다 식물은 이산화탄소를 흡수하고 산소를 공급하는 기본상식에 근거하여 환경에 많은 이로움을 줍니다.<br>
-요즘 식물을 키우는 사람이 많아지고 시대가 발전 하다보니 식물을 키우다 못해 식물하우스를 차리는 일이 빈번합니다 요즘은 대부분이 전문가가 되어 버린 시대입니다<br>
-또한 인터넷이 발전한 시대이기에 각종 전문가와 식물을 좋아하는 사람 초보자 들도 모두 이 공간안에서 식물에 관해 공유하는 사이트를 만들어 보았습니다<br>
-평소 영화 리뷰 사이트를 자주 이용하던 팀원도 자기가 보유한 식물을 리뷰하고 재배 난이도 및 생존력 등 정보를 공유해서 타인에게 추천도를 공유하면 좋겠다는 아이디어를 가지고 만들었습니다. <br>
-식물 원예커뮤니티에서는 식물에 대한 상세정보 일반게시글이나 평소에 식물에대한 생각이나 활용등을 자유롭게 적어 평소 생각했던 식물의 폭을 넓힐수 있는 좋은 시스템입니다<br>
-그리고 최대장점은 바로 마이페이지에 있는 탄소 측정 기능 입니다 이 기능을 활용하여 자신이 키우는 식물에 대한 구체적인 정보를 이기능을 활용하여 사용할수 있습니다<br>
-식물데이터를 분석하여 온도 와 습도 및 에너지적 측면에서의 관한 부분들을 다룰수 있습니다 
+기후 변화와 탄소중립에 대한 관심이 높아지는 가운데, 사용자가 보유한 식물을 기반으로 탄소 포집량을 확인하고 환경 기여도를 직관적으로 확인할 수 있는 서비스를 기획했습니다. 식물별 탄소 흡수량 데이터를 활용하여 예상 탄소 포집량을 계산하고, 이를 마이페이지에서 확인할 수 있도록 구현했습니다.
+
+또한 평소 영화 리뷰 사이트를 자주 이용하면서 "식물도 직접 키워본 경험을 바탕으로 다른 사람에게 추천하고 평가를 공유할 수 있으면 좋겠다"​는 아이디어를 제안했고, 이를 서비스에 반영했습니다. 사용자는 식물의 재배 난이도, 생존력, 관리 경험 등을 리뷰하고 다른 사용자의 평가를 참고하여 자신에게 적합한 식물을 선택할 수 있습니다.
+
+이를 통해 탄소 포집량 확인을 핵심 기능으로 제공하면서, 사용자 경험과 정보 공유를 위한 식물 커뮤니티 기능을 함께 갖춘 서비스​를 구현했습니다.
 
 ---
 
@@ -30,15 +28,15 @@
 ## 기술 스택
 <img src="https://img.shields.io/badge/Java-21-007396?style=for-the-badge&logo=openjdk&logoColor=white">&nbsp;
 <img src="https://img.shields.io/badge/Spring%20Boot-3.5.16-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">&nbsp;
-<img src="https://img.shields.io/badge/Spring%20Security-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Spring%20Security-6.5-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white">&nbsp;
 <img src="https://img.shields.io/badge/MyBatis-3.0.5-000000?style=for-the-badge&logo=mybatis&logoColor=white">&nbsp;
 <img src="https://img.shields.io/badge/JWT-JJWT%200.12.3-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white">&nbsp;
 <img src="https://img.shields.io/badge/Springdoc%20OpenAPI-2.8.16-85EA2D?style=for-the-badge&logo=swagger&logoColor=black">&nbsp;
-<img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black">&nbsp;
-<img src="https://img.shields.io/badge/React%20Router-7CA0F0?style=for-the-badge&logo=reactrouter&logoColor=white">&nbsp;
-<img src="https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white">&nbsp;
-<img src="https://img.shields.io/badge/Styled%20Components-DB7093?style=for-the-badge&logo=styledcomponents&logoColor=white">&nbsp;
-<img src="https://img.shields.io/badge/Oracle-F80000?style=for-the-badge&logo=oracle&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/React-19.2.7-61DAFB?style=for-the-badge&logo=react&logoColor=black">&nbsp;
+<img src="https://img.shields.io/badge/React%20Router-7.18.1-7CA0F0?style=for-the-badge&logo=reactrouter&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Axios-1.18.1-5A29E4?style=for-the-badge&logo=axios&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Styled%20Components-6.4.3-DB7093?style=for-the-badge&logo=styledcomponents&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Oracle-21c-F80000?style=for-the-badge&logo=oracle&logoColor=white">&nbsp;
 <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white">
 
 ---
@@ -60,12 +58,14 @@
 ## 4. 이 프로젝트가 무엇을 하는건지?
 
 **주사용자**  
-친환경 식물 재배 난이도 및 탄소포집 성능 지표가 필요한 사용자
+- 친환경 식물 재배에 관심이 있으며, 식물 정보와 탄소 포집 효과를 함께 관리하고 싶은 사용자
 
-**특징**
-- 개발자 친환경 원예 블로그 운영
-- 소규모 ~ 대규모 모임 기능 지원
-- 탄소포집 식물 리뷰
+**주요 특징**
+- 🌱 식물 등록 및 관리
+- 🌍 보유 식물 기반 탄소 포집량 집계
+- 📊 식물별 탄소 포집 성능 지표 제공
+- 💬 식물 리뷰 및 사용자 평가 기반 정보 공유 커뮤니티
+- 🛠️ 관리자 페이지를 통한 식물 및 게시글 관리
 
 ---
 
@@ -73,10 +73,26 @@
 <p align="center">
   <img src="./architecture.png" width="900">
 </p>
+
+**시스템 흐름 설명**<br>
+Frontend Layer: React 기반의 SPA(Single Page Application)로 구현되었으며, Axios를 통해 REST API 요청을 수행합니다.
+
+Backend Application: Spring Boot와 Java 21을 기반으로 구축되었으며, Spring Security를 통해 JWT 기반 인증/인가를 처리합니다.
+
+Database: MyBatis를 ORM Mapper로 활용하여 Oracle DB에 데이터를 안정적으로 영속화(Persistence)합니다.
+
+Infra & DevOps: 정적 리소스는 CDN/S3에 저장하며, Git과 Google Sheets를 통해 협업 및 프로젝트 문서화를 관리합니다.
+<hr>
 <p align="center">
   <img src="./ERD.png" width="900">
 </p>
 
+**Database Schema Design**<br>
+본 프로젝트는 유연한 데이터 관리와 높은 확장성을 위해 관계형 데이터베이스(RDBMS)를 기반으로 설계되었습니다. 주요 설계 특징은 다음과 같습니다.
+
+통합 회원 관리: MEMBER 테이블을 중심으로 토큰, 프로필, 활동 내역을 통합 관리하여 일관성 있는 사용자 경험을 제공합니다.
+
+모듈화된 게시판 시스템: 일반 커뮤니티와 식물 특화 게시판을 분리 운영하며, 이미지, 댓글, 좋아요/싫어요 기능을 독립적인 테이블로 설계하여 유지보수 효율성을 극대화했습니다.
 
 ### **ERD**  
 [![ERD](https://img.shields.io/badge/ERD-바로가기-4B8BBE?style=for-the-badge&logo=diagrams.net&logoColor=white)](https://www.erdcloud.com/d/7gtfTPgReKwTqd7Eg)
@@ -105,7 +121,7 @@
   - 식물리스트 페이지, 식물 상세정보 페이지를 구현했습니다
   - 게시글 리스트 페이지, 게시글 상세 페이지, 게시글 작성 페이지, 게시글 수정 페이지를 구현했습니다
   - 메인 페이지, 에러 페이지를 구현했습니다
-- 백엔드에서는 식물 관련, 회원 보유 식물 관련 기능을 구현했습니다
+  - 백엔드에서는 식물 관련, 회원 보유 식물 관련 기능을 구현했습니다
 
 #### 식물 정보 관리 및 MVP(CRUD) (담당: 이일섭)
 - 관리자용 식물 정보 관리 및 검색 기능 개발 (BE/FE)
