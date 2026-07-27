@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import * as S from "../components/auth/Auth.styles";
 import logo from "../assets/logo.png";
+import * as S from "../components/auth/Auth.styles";
 import { useAlertify } from "../hooks/useAlertify";
+import api from "../api/axios";
 
 const Signup = () => {
   const [memberId, setMemberId] = useState("");
@@ -46,7 +46,7 @@ const Signup = () => {
     isLoading(true);
 
     try {
-      await axios.post("http://localhost/api/members", {
+      await api.post("/members", {
         memberId,
         memberPwd,
         memberName,
