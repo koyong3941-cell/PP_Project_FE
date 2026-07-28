@@ -16,16 +16,17 @@
 
 **팀명** : Team Agile
 
-| 이름 | GitHub | Email | 담당 | 소개 |
-|------|--------|-------|------|------|
-| 성현 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/koyong3941-cell) | `koyong3941@gmail.com` | 팀장 | 조직의 목표와 서비스의 책임을 우선적으로 고려하며, 프로젝트의 방향성에 맞는 개발을 지향합니다. |
-| 민범 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/lovely0503) | `minbeom0503@naver.com` | 팀원 및 유지보수 | 창조적인 아이디어와 긍정적사고 그리고 인간성 포기하지 않는 마인드로 프로젝트에서 서브적인 역할을 맡고 있습니다!! 어떤 곳을 가도 자신감이 넘칩니다! |
-| 세웅 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/CU0-0) | `bill97720@naver.com` | 팀원 | 꾸준한 학습과 기술 습득을 통해 성장하고 있습니다. 협업을 중요하게 생각하며, 팀과 함께 성장하는 개발자가 되고 싶습니다. |
-| 일섭 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/lno001) | `lno001@hotmail.com` | 팀원 | 팀 내에서 의견 조율을 맡고 있습니다. 이번 프로젝트로 팀원간 협동의 중요성에 대해 배워갔습니다. |
+| 이름 | GitHub                                                                                                                                          | Email                   | 담당             | 소개                                                                                                                                               |
+| ---- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 성현 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/koyong3941-cell) | `koyong3941@gmail.com`  | 팀장             | 조직의 목표와 서비스의 책임을 우선적으로 고려하며, 프로젝트의 방향성에 맞는 개발을 지향합니다.                                                     |
+| 민범 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/lovely0503)      | `minbeom0503@naver.com` | 팀원 및 유지보수 | 창조적인 아이디어와 긍정적사고 그리고 인간성 포기하지 않는 마인드로 프로젝트에서 서브적인 역할을 맡고 있습니다!! 어떤 곳을 가도 자신감이 넘칩니다! |
+| 세웅 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/CU0-0)           | `bill97720@naver.com`   | 팀원             | 꾸준한 학습과 기술 습득을 통해 성장하고 있습니다. 협업을 중요하게 생각하며, 팀과 함께 성장하는 개발자가 되고 싶습니다.                             |
+| 일섭 | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="20">](https://github.com/lno001)          | `lno001@hotmail.com`    | 팀원             | 팀 내에서 의견 조율을 맡고 있습니다. 이번 프로젝트로 팀원간 협동의 중요성에 대해 배워갔습니다.                                                     |
 
 ---
 
 ## 기술 스택
+
 <img src="https://img.shields.io/badge/Java-21-007396?style=for-the-badge&logo=openjdk&logoColor=white">&nbsp;
 <img src="https://img.shields.io/badge/Spring%20Boot-3.5.16-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">&nbsp;
 <img src="https://img.shields.io/badge/Spring%20Security-6.5-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white">&nbsp;
@@ -46,20 +47,23 @@
 **개발 기간** : 2026.06.15 ~ 2026.07.15
 
 ### 개발 분기
+
 - **1주차** : 유스케이스 및 화면 설계, 기본 페이지 구성
 - **2주차** : 개발 명세서 작성, ERD 설계, DB 구축
 - **3주차** : 주요 서비스 기능 구현 (회원 인증, 게시판, 식물 정보)
 - **4주차** : 확장 기능 및 관리자 기능 구현 (리뷰, 댓글, 센서, 관리자 페이지)
 - **5주차** : QA 테스트 및 발표 준비
-  
+
 ---
 
 ## 4. 이 프로젝트가 무엇을 하는건지?
 
-**주사용자**  
+**주사용자**
+
 - 친환경 식물 재배에 관심이 있으며, 식물 정보와 탄소 포집 효과를 함께 관리하고 싶은 사용자
 
 **주요 특징**
+
 - 식물 등록 및 관리
 - 보유 식물 기반 탄소 포집량 집계
 - 식물별 탄소 포집 성능 지표 제공
@@ -69,6 +73,7 @@
 ---
 
 ## 5. 아키텍처 구조
+
 <p align="center">
   <img src="./architecture.png" width="900">
 </p>
@@ -86,7 +91,8 @@ Infra: Git과 Google Sheets를 통해 협업 및 프로젝트 문서화를 관�
 
 **Database Schema Design**<br>
 
-### **ERD** / 테이블 설계 
+### **ERD** / 테이블 설계
+
 [![ERD](https://img.shields.io/badge/ERD-바로가기-4B8BBE?style=for-the-badge&logo=diagrams.net&logoColor=white)](https://www.erdcloud.com/d/7gtfTPgReKwTqd7Eg)
 
 **주요 테이블 설계 특징**<br>
@@ -102,6 +108,7 @@ Infra: Git과 Google Sheets를 통해 협업 및 프로젝트 문서화를 관�
 ### MVP 및 주요 개발 설명
 
 #### 회원 인증 및 MVP(탄소집계) (담당: 윤성현)
+
 - 회원 및 탄소집계 MVP 기능 개발(BE/FE)
   - Spring Security와 JWT 기반 인증 시스템 구현
   - 공기 감지 임베디드 센서 코드 개발 및 연동 구현
@@ -110,6 +117,7 @@ Infra: Git과 Google Sheets를 통해 협업 및 프로젝트 문서화를 관�
   - 마이페이지 내 탄소집계 및 센서측정 정보 조회 화면 구현
 
 #### Admin 관리자 페이지 및 MVP(공지사항) (담당: 강민범)
+
 - 관리자 페이지 기능 개발 (FE)
   - 관리자 페이지 UI 구현
   - 공지사항 관리 화면 구현
@@ -117,6 +125,7 @@ Infra: Git과 Google Sheets를 통해 협업 및 프로젝트 문서화를 관�
   - React와 Spring Boot API를 연동하여 데이터 조회 및 관리 기능 구현
 
 #### 메인페이지 및 MVP(식물·게시글) (담당: 지세웅)
+
 - 메인 및 커뮤니티 기능 개발 (BE/FE)
   - 메인 페이지 및 에러 페이지 구현
   - 식물 목록 및 식물 상세 페이지 구현
@@ -124,6 +133,7 @@ Infra: Git과 Google Sheets를 통해 협업 및 프로젝트 문서화를 관�
   - 식물 및 회원 보유 식물 관련 API 개발 구현
 
 #### 식물 정보 관리 및 MVP(CRUD) (담당: 이일섭)
+
 - 관리자용 식물 정보 관리 및 검색 기능 개발 (BE/FE)
   - 식물 목록을 조회하고 페이지 단위로 나누어 보여주는 기능 구현
   - 식물명, 종류, 작성자 등 여러 조건으로 검색할 수 있는 기능 개발
