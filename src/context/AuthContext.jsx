@@ -80,8 +80,8 @@ export function AuthProvider({ children }) {
   // =========================
   const logout = async () => {
     try {
-      await axios.post(
-        "http://localhost/api/auth/logout",
+      await api.post(
+        "/auth/logout",
         {},
         {
           headers: {

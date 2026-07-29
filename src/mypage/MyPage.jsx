@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import profileDefaultImg from "../assets/unknown.png";
 import plantDefaultImg from "../assets/plant.jpg";
 import api from "../api/axios";
