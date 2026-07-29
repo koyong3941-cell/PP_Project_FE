@@ -1,38 +1,38 @@
 import {
-  Page,
-  Header,
-  HomeIcon,
+  ButtonArea,
   Container,
-  LogoArea,
-  Logo,
   Content,
+  EditButton,
+  EditButtonSubmit,
+  EmailInput,
+  EmailRow,
+  Form,
+  Header,
+  HiddenInput,
+  HomeIcon,
+  Id,
+  Input,
+  Logo,
+  LogoArea,
+  Name,
+  NameInput,
+  NameRow,
+  Notice,
+  Page,
   Path,
   ProfileArea,
   ProfileImage,
-  HiddenInput,
-  Id,
-  NameRow,
-  Name,
-  NameInput,
-  EditButton,
   RemoveButton,
-  Form,
-  Notice,
-  Input,
-  EmailRow,
-  EmailInput,
   Select,
-  ButtonArea,
-  EditButtonSubmit,
   WithdrawButton,
 } from "./ProfileEdit.styles";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import api from "../api/axios";
 import homeLogo from "../assets/home.png";
 import profileImg from "../assets/unknown.png";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
-import api from "../api/axios";
 import { useAlertify } from "../hooks/useAlertify";
 import Popup from "../popup/PopUp";
 
@@ -196,7 +196,7 @@ function ProfileEdit() {
             <ProfileImage
               src={
                 user?.delYn === "N" && user?.imgPath && user?.saveName
-                  ? `http://localhost${user.imgPath}${user.saveName}`
+                  ? `${user.imgPath}${user.saveName}`
                   : profileImg
               }
               alt="profile"

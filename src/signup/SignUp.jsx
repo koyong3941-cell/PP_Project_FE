@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import * as S from "../components/auth/Auth.styles";
 import { useAlertify } from "../hooks/useAlertify";
+import api from "../api/axios";
 
 const Signup = () => {
   const [memberId, setMemberId] = useState("");

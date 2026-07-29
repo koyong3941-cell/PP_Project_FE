@@ -1,5 +1,4 @@
-import { useState, createContext, useContext } from "react";
-import axios from "axios";
+import { createContext, useContext, useState } from "react";
 import api from "../api/axios";
 
 const AuthContext = createContext(null);
@@ -80,15 +79,7 @@ export function AuthProvider({ children }) {
   // =========================
   const logout = async () => {
     try {
-      await api.post(
-        "/auth/logout",
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        },
-      );
+      await api.post("/auth/logout");
 
       console.log("서버 로그아웃 처리 완료");
     } catch (error) {

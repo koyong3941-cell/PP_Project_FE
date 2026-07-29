@@ -1,116 +1,89 @@
-import { useEffect, useState, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
+import { useAlertify } from "../hooks/useAlertify";
 import {
-  Wrapper,
-  StateBox,
-  TopSection,
-  ImageBox,
-  InfoCol,
-  Eyebrow,
-  PlantName,
-  StatRow,
-  StatChip,
-  InfoList,
-  InfoListItem,
-  Section,
-  SectionTitle,
-  CareBox,
-  EmptyReviewBox,
-  EmptyReviewTitle,
-  EmptyReviewHint,
-  RatingSummary,
-  SummaryCol,
-  SummaryLabel,
+  AddImageButton,
+  AddPlantActions,
+  AddPlantButton,
+  AddPlantHeader,
+  AddPlantHint,
+  AddPlantSection,
   AverageBlock,
-  StarRow,
+  BarFill,
   BarList,
   BarRow,
   BarTrack,
-  BarFill,
-  WriteReviewButton,
-  WriteReviewWideButton,
-  ReviewFormBox,
-  ReviewFormHeader,
   CancelButton,
-  SubmitReviewButton,
-  RatingFieldLabel,
-  StarPicker,
-  FormTitleInput,
+  CareBox,
+  ChangeButton,
+  DeleteButton,
+  EditButton,
+  EmptyReviewBox,
+  EmptyReviewHint,
+  EmptyReviewTitle,
+  Eyebrow,
   FormContentTextarea,
   FormImageRow,
   FormImageThumb,
-  RemoveImageButton,
-  AddImageButton,
-  ReviewCountTitle,
-  ReviewList,
-  ReviewCard,
-  ReviewHead,
-  ReviewerInfo,
-  Nickname,
-  ReviewDate,
+  FormTitleInput,
+  ImageBox,
+  InfoCol,
+  InfoList,
+  InfoListItem,
+  LikeBadge,
   MyReviewTag,
-  ReviewTitle,
+  Nickname,
+  PageButton,
+  Pagination,
+  PlantName,
+  RatingFieldLabel,
+  RatingSummary,
+  RemoveImageButton,
+  ReviewCard,
   ReviewContent,
-  ReviewImageRow,
-  ReviewImage,
+  ReviewCountTitle,
+  ReviewDate,
+  ReviewDeleteButton,
   ReviewFooter,
   ReviewFooterLeft,
-  LikeBadge,
-  EditButton,
-  ReviewDeleteButton,
-  Pagination,
-  PageButton,
-  AddPlantSection,
-  AddPlantHeader,
-  AddPlantHint,
-  SizeGrid,
+  ReviewFormBox,
+  ReviewFormHeader,
+  ReviewHead,
+  ReviewImage,
+  ReviewImageRow,
+  ReviewList,
+  ReviewTitle,
+  ReviewerInfo,
+  Section,
+  SectionTitle,
   SizeCol,
+  SizeGrid,
+  SizeInput,
+  SizeInputRow,
   SizeLabel,
   SizeMeta,
-  SizeInputRow,
-  SizeInput,
   SizeUnit,
-  AddPlantActions,
-  AddPlantButton,
-  ChangeButton,
-  DeleteButton,
+  StarPicker,
+  StarRow,
+  StatChip,
+  StatRow,
+  StateBox,
+  SubmitReviewButton,
+  SummaryCol,
+  SummaryLabel,
+  TopSection,
+  Wrapper,
+  WriteReviewButton,
+  WriteReviewWideButton,
 } from "./PlantDetail.styles";
-import { useAlertify } from "../hooks/useAlertify";
-
-/**
- * 실제 DTO 기준
- *
- * PlantDto
- *  - plantNo, memberNo, plantName, classification, count,
- *    carbonCapture, createDate, plantInfo, growthInfo, plantApi, delYn
- *  - plantImages: [{ imgPath, saveName, ... }]  (이미지 상세 응답에 포함된다고 가정)
- *
- * PlantRatingDto
- *  - totalRating: number        // 전체 리뷰 개수
- *  - averageRating: number      // 평균 별점 (5점 만점으로 가정)
- *  - one, two, three, four, five: number   // 별점 구간별 개수
- *  - hasMyReview: boolean       // 로그인한 회원이 이미 리뷰를 작성했는지
- *
- * PlantReviewDto (rating: 1~10, 반점 단위 → 화면 표시는 rating / 2)
- *  - reviewNo, memberNo, plantNo, rating, reviewTitle, reviewContent,
- *    createDate, delYn, memberName, likeCount, isLiked,
- *    plantReviewImages: PlantReviewImgDto[]
- *
- * PlantReviewImgDto
- *  - imgNo, reviewNo, originalName, saveName, imgPath, imgOrder, createDate, delYn
- *
- * PageResponse<T>
- *  - content, page, size, totalPages, totalElements
- */
 
 const SIZE_META = [
   { key: "small", label: "소", range: "0~10cm" },
   { key: "middle", label: "중", range: "10~20cm" },
   { key: "big", label: "대", range: "20~30cm" },
 ];
-const IMG_HOST = "http://localhost";
 const STAR_KEYS = ["five", "four", "three", "two", "one"];
 const STAR_LABEL = { five: 5, four: 4, three: 3, two: 2, one: 1 };
 
@@ -123,7 +96,6 @@ function formatDate(dateStr) {
   ).padStart(2, "0")}`;
 }
 
-// rating 필드는 1~10 (0.5점 단위) 이므로 5점 만점으로 환산
 function toFiveScale(rating) {
   return (rating ?? 0) / 2;
 }
@@ -148,16 +120,16 @@ function toLines(text) {
 }
 
 function reviewImageSrc(img) {
-  const path = img?.imgPath || "/uploads/plant/";
-  const name = img?.saveName || "plant.png";
-  return `${IMG_HOST}${path}${name}`;
+  if (!img?.imgPath || !img?.saveName) {
+    return null;
+  }
+  return `${img.imgPath}${img.saveName}`;
 }
 
 export default function PlantDetail() {
   const { user } = useAuth();
   const { success, error } = useAlertify();
-  // 로그인한 사용자의 memberNo는 useAuth()의 user.memberNo로 판단합니다.
-  const [ownedSizes, setOwnedSizes] = useState(null); // null = 아직 미보유
+  const [ownedSizes, setOwnedSizes] = useState(null);
   const [sizeInputs, setSizeInputs] = useState({
     small: "",
     middle: "",
@@ -217,13 +189,12 @@ export default function PlantDetail() {
   const [totalReviewCount, setTotalReviewCount] = useState(0);
   const [reviewLoading, setReviewLoading] = useState(true);
 
-  // 리뷰 작성 / 수정 폼
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [editingReviewNo, setEditingReviewNo] = useState(null);
   const [formRating, setFormRating] = useState(0);
   const [formTitle, setFormTitle] = useState("");
   const [formContent, setFormContent] = useState("");
-  const [formImages, setFormImages] = useState([]); // { file?, preview, existing?, imgNo? }
+  const [formImages, setFormImages] = useState([]);
   const [submittingReview, setSubmittingReview] = useState(false);
 
   const resetReviewForm = () => {
@@ -294,14 +265,11 @@ export default function PlantDetail() {
         .forEach((img) => payload.append("imageFiles", img.file));
 
       if (editingReviewNo) {
-        // 삭제 버튼을 누르지 않아 "그대로 남아있는" 기존 이미지 번호들
         const keepImgNos = formImages
           .filter((img) => img.existing)
           .map((img) => img.imgNo);
 
         keepImgNos.forEach((no) => payload.append("keepImgNos", no));
-        // 남은 기존 이미지가 하나도 없을 때도 서버가 "전체 삭제" 요청임을
-        // 구분할 수 있도록 플래그를 하나 같이 보내는 걸 추천합니다.
         payload.append("hasKeepImgNos", "true");
 
         await api.patch(
@@ -327,7 +295,6 @@ export default function PlantDetail() {
     }
   };
 
-  // 삭제 중인 리뷰 번호 (버튼 disabled 처리용)
   const [deletingReviewNo, setDeletingReviewNo] = useState(null);
 
   const handleDeleteReview = async (reviewNo) => {
@@ -349,7 +316,6 @@ export default function PlantDetail() {
     }
   };
 
-  // 좋아요 토글 (타인 리뷰에서만 사용) - 이미 눌렀으면 DELETE, 아니면 POST
   const handleToggleLike = async (review) => {
     const { reviewNo, isLiked } = review;
     try {
@@ -390,11 +356,10 @@ export default function PlantDetail() {
       setSavingOwned(false);
     }
   };
-  // 보유 식물 정보
   useEffect(() => {
     let ignore = false;
     async function fetchOwned() {
-      if (!user?.memberNo) return; // 로그인 안 했으면 조회 스킵
+      if (!user?.memberNo) return;
       try {
         const res = await api.get(
           `/members/${user.memberNo}/plants/${plantNo}`,
@@ -420,7 +385,6 @@ export default function PlantDetail() {
       ignore = true;
     };
   }, [plantNo, user?.memberNo]);
-  // 식물 상세 + 평점 요약
   useEffect(() => {
     let ignore = false;
 
@@ -448,7 +412,6 @@ export default function PlantDetail() {
     };
   }, [plantNo]);
 
-  // 리뷰 목록 (페이지네이션)
   const fetchReviews = useCallback(
     async (page) => {
       setReviewLoading(true);
@@ -498,14 +461,11 @@ export default function PlantDetail() {
   const hasReviews = (rating?.totalRating ?? 0) > 0;
 
   const coverImage = plant.plantImages?.[0]
-    ? `${IMG_HOST}${plant.plantImages[0].imgPath || "/uploads/plant/"}${
-        plant.plantImages[0].saveName || "plant.png"
-      }`
-    : `${IMG_HOST}/uploads/plant/plant.png`;
+    ? `${plant.plantImages[0].imgPath}${plant.plantImages[0].saveName}`
+    : null;
 
   return (
     <Wrapper>
-      {/* ---------------- 상단: 이미지 + 기본 정보 ---------------- */}
       <TopSection>
         <ImageBox>
           <img src={coverImage} alt={plant.plantName} />
@@ -544,7 +504,6 @@ export default function PlantDetail() {
         </InfoCol>
       </TopSection>
 
-      {/* ---------------- 재배 및 유지 관리 ---------------- */}
       {careLines.length > 0 && (
         <Section>
           <SectionTitle>재배 및 유지 관리</SectionTitle>
@@ -558,7 +517,6 @@ export default function PlantDetail() {
         </Section>
       )}
 
-      {/* ---------------- 식물 추가하기 / 추가됨 ---------------- */}
       <AddPlantSection>
         <AddPlantHeader>
           {ownedSizes ? "식물 추가됨" : "식물 추가하기"}
@@ -625,10 +583,8 @@ export default function PlantDetail() {
         </SizeGrid>
       </AddPlantSection>
 
-      {/* ---------------- 평점 & 리뷰 ---------------- */}
       <Section>
         {!hasReviews && !showReviewForm && (
-          /* 리뷰가 하나도 없을 때: 중앙 정렬 안내 박스 */
           <EmptyReviewBox>
             <EmptyReviewTitle>평점 & 리뷰</EmptyReviewTitle>
             <EmptyReviewHint>
@@ -679,7 +635,6 @@ export default function PlantDetail() {
             )}
 
             {showReviewForm ? (
-              /* ---------------- 리뷰 작성 / 수정 폼 ---------------- */
               <ReviewFormBox>
                 <ReviewFormHeader>
                   <CancelButton onClick={closeReviewForm}>
@@ -751,7 +706,6 @@ export default function PlantDetail() {
               )
             )}
 
-            {/* ---------------- 리뷰 목록 ---------------- */}
             {hasReviews && (
               <ReviewCountTitle>리뷰({totalReviewCount})</ReviewCountTitle>
             )}
@@ -818,10 +772,8 @@ export default function PlantDetail() {
                         </ReviewFooterLeft>
 
                         {isMine ? (
-                          // 내 리뷰: 좋아요 개수만 표시 (클릭 불가)
                           <LikeBadge>♥ {review.likeCount ?? 0}</LikeBadge>
                         ) : (
-                          // 타인 리뷰: 좋아요 버튼 + 개수 (클릭해서 토글)
                           <LikeBadge
                             as="button"
                             type="button"
@@ -843,7 +795,6 @@ export default function PlantDetail() {
               </ReviewList>
             ) : null}
 
-            {/* ---------------- 페이지네이션 ---------------- */}
             {hasReviews && totalPages > 1 && (
               <Pagination>
                 <PageButton

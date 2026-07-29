@@ -1,25 +1,26 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { success } from "alertifyjs";
 import {
-  Search,
-  Filter,
   ChevronLeft,
   ChevronRight,
-  List,
+  Filter,
   LayoutGrid,
+  List,
+  Search,
 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import { styles } from "./MemberPlant.styles";
-import { error, success } from "alertifyjs";
 
 const DEFAULT_PLANT_IMAGE = "/uploads/plant/plant.png";
 
 const buildImageSrc = (imgPath, saveName) => {
   if (!imgPath || !saveName) {
-    return `http://localhost${DEFAULT_PLANT_IMAGE}`;
+    return defaultPlantImg;
   }
+
   const normalizedPath = imgPath.endsWith("/") ? imgPath : `${imgPath}/`;
-  return `http://localhost${normalizedPath}${saveName}`;
+  return `${normalizedPath}${saveName}`;
 };
 
 const MemberPlant = () => {
@@ -27,14 +28,14 @@ const MemberPlant = () => {
 
   const [myPlantAll, setMyPlantAll] = useState([]);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [editTarget, setEditTarget] = useState(null); // { memberNo, plantNo }
+  const [editTarget, setEditTarget] = useState(null);
   const [editForm, setEditForm] = useState({
     smallPlant: 0,
     middlePlant: 0,
     bigPlant: 0,
   });
   const [viewMode, setViewMode] = useState("list");
-  const [page, setPage] = useState(0); // Spring 백엔드가 0번 페이지부터 시작함
+  const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(page + 3);
 
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -47,7 +48,6 @@ const MemberPlant = () => {
     if (page < totalPages - 1) setPage(page + 1);
   };
   const handleLast = () => setPage(totalPages - 1);
-  // --------------------------------------------------------------------------------
 
   const fetchMyPlantList = () => {
     api
@@ -63,7 +63,6 @@ const MemberPlant = () => {
   useEffect(() => {
     fetchMyPlantList();
   }, [page]);
-  // plantNo나 plantName이 없는 빈 데이터(placeholder row)는 제외
   const validPlantList = myPlantAll.filter(
     (plant) => plant && plant.plantNo != null && plant.plantName,
   );

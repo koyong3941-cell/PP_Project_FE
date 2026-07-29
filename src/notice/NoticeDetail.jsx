@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import { detailStyles as s } from "./NoticeDetail.styles";
+import { useNavigate, useParams } from "react-router-dom";
 import api from "../api/axios";
+import { useAuth } from "../context/AuthContext";
 import { useAlertify } from "../hooks/useAlertify";
+import { detailStyles as s } from "./NoticeDetail.styles";
 
 const NoticeDetail = () => {
   const { noticeNo } = useParams();
@@ -62,7 +62,6 @@ const NoticeDetail = () => {
 
   return (
     <div style={s.container}>
-      {/* 상단 */}
       <div style={s.topRow}>
         <h2 style={s.pageTitle}>공지사항</h2>
 
@@ -73,10 +72,8 @@ const NoticeDetail = () => {
         </div>
       </div>
 
-      {/* 제목 */}
       <p style={s.postTitle}>[공지사항]{noticeDetail.noticeTitle}</p>
 
-      {/* 작성 정보 */}
       <div style={s.meta}>
         <span style={s.metaWriter}>{noticeDetail.memberName}</span>
 
@@ -95,18 +92,16 @@ const NoticeDetail = () => {
         </span>
       </div>
 
-      {/* 이미지 */}
       {noticeDetail.noticeImages?.length > 0 &&
         noticeDetail.noticeImages.map((img) => (
           <img
             key={img.imgOrder}
-            src={`http://localhost${img.imgPath}${img.saveName}`}
+            src={`${img.imgPath}${img.saveName}`}
             alt={img.originalName}
             style={s.postImg}
           />
         ))}
 
-      {/* 본문 */}
       <div style={s.postBody}>
         <p>{noticeDetail.noticeContent}</p>
       </div>
