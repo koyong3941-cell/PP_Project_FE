@@ -1,48 +1,47 @@
-import React, { useRef, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { Star } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
-import heroPlant from "../assets/main_hero.png"; // 677 x 1014
-import bannerSoil from "../assets/second_banner.png"; // 1920 x 653
-import boardShelf from "../assets/main_board_1.png"; // 유저 게시판 - 1
-import boardFern from "../assets/main_board_2.png"; // 유저 게시판 - 2
+import boardShelf from "../assets/main_board_1.png";
+import boardFern from "../assets/main_board_2.png";
+import heroPlant from "../assets/main_hero.png";
+import bannerSoil from "../assets/second_banner.png";
 
 import {
-  Page,
-  Section,
-  IntroGrid,
-  IntroCopy,
-  Heading,
-  SubLines,
-  LeadLine,
+  ActionBadge,
   Badge,
-  BodyText,
-  IntroVisual,
-  BannerSection,
+  BannerFooter,
   BannerImageWrap,
   BannerQuote,
-  BannerFooter,
-  StepLabel,
-  FooterCaption,
-  NavArrows,
+  BannerSection,
+  BoardGrid,
+  BoardImageFrame,
+  BodyText,
   ContentSection,
-  SectionHeaderRow,
-  SectionTitle,
-  ActionBadge,
+  ContentSection2,
   EdgeNavButton,
-  ReviewList,
+  FooterCaption,
+  Heading,
+  IntroCopy,
+  IntroGrid,
+  IntroVisual,
+  LeadLine,
+  NavArrows,
+  Page,
   ReviewCard,
+  ReviewCount,
   ReviewImageFrame,
+  ReviewList,
   ReviewMeta,
   ReviewName,
   ReviewRating,
-  ReviewCount,
-  BoardGrid,
-  BoardImageFrame,
-  ContentSection2,
+  Section,
+  SectionHeaderRow,
+  SectionTitle,
+  StepLabel,
+  SubLines,
 } from "./main.styles";
 
-// PlantSearch.jsx의 StarRating과 동일한 로직 (avgRating: 1~10, 0.5점 단위 -> 5점 만점 환산)
 const StarRating = ({ value = 0 }) => {
   const five = value / 2;
   return (
@@ -73,7 +72,6 @@ const StarRating = ({ value = 0 }) => {
   );
 };
 
-// TODO: DB 연동 - 유저 게시판 카드 목록도 실제로는 DB에서 가져올 예정입니다.
 const BOARD_ITEMS = [
   { id: 1, image: boardShelf, alt: "식물로 채운 매장 인테리어" },
   { id: 2, image: boardFern, alt: "손으로 들고 있는 고사리 잎" },
@@ -94,7 +92,6 @@ export default function Main() {
     page.scrollTo({ top: clamped * page.clientHeight, behavior: "smooth" });
   };
 
-  // PlantSearch의 grid 조회(page=0, size=4)와 동일한 방식으로 상위 4개 식물을 가져옵니다.
   useEffect(() => {
     api
       .get(`/plants?page=0&size=4`)
@@ -106,7 +103,6 @@ export default function Main() {
 
   return (
     <Page ref={pageRef}>
-      {/* Section 1 — Intro */}
       <Section>
         <IntroGrid>
           <IntroCopy>
@@ -139,7 +135,6 @@ export default function Main() {
         </IntroGrid>
       </Section>
 
-      {/* Section 2 — Banner */}
       <BannerSection>
         <BannerImageWrap>
           <img src={bannerSoil} alt="흙에 모종을 심는 손" />
@@ -166,7 +161,6 @@ export default function Main() {
         </BannerFooter>
       </BannerSection>
 
-      {/* Section 3 — 리뷰하기 */}
       <ContentSection>
         <SectionHeaderRow>
           <SectionTitle>리뷰하기</SectionTitle>
@@ -183,13 +177,7 @@ export default function Main() {
               onClick={() => navigate(`/plants/${plant.plantNo}`)}
               style={{ cursor: "pointer" }}
             >
-              <ReviewImageFrame
-                $image={
-                  plant.mainPlantImage
-                    ? `http://localhost${plant.mainPlantImage}`
-                    : null
-                }
-              >
+              <ReviewImageFrame $image={plant.mainPlantImage || null}>
                 {!plant.mainPlantImage && "이미지 준비중"}
               </ReviewImageFrame>
               <ReviewMeta>
@@ -221,7 +209,6 @@ export default function Main() {
         </EdgeNavButton>
       </ContentSection>
 
-      {/* Section 4 — 유저 게시판 */}
       <ContentSection2>
         <SectionHeaderRow>
           <SectionTitle>유저 게시판</SectionTitle>

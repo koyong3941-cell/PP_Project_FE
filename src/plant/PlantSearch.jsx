@@ -1,20 +1,20 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import {
-  Search,
-  Filter,
   ChevronLeft,
   ChevronRight,
-  Star,
-  List,
+  Filter,
   LayoutGrid,
+  List,
+  Search,
+  Star,
 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import api from "../api/axios";
+import defaultPlantImg from "../assets/plant.png";
+import defaultImg from "../assets/unknown.png";
 import { styles } from "./PlantSearch.styles";
-import { useLocation } from "react-router-dom";
 
 const StarRating = ({ value = 0 }) => {
-  // value: 1~10 (0.5점 단위) -> 5점 만점 환산
   const five = value / 2;
   return (
     <div style={{ display: "flex", gap: "1px" }}>
@@ -54,9 +54,8 @@ const PlantSearch = () => {
   const [filterName, setFilterName] = useState("필터");
   const [keyword, setKeyword] = useState("");
 
-  const [page, setPage] = useState(0); // Spring 백엔드가 0번 페이지부터 시작함
+  const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(page + 3);
-  //const pagination = [1, 2, 3, 4, 5];
   const [hoveredButton, setHoveredButton] = useState(null);
 
   const GRID_PAGE_SIZE = 9;
@@ -75,7 +74,6 @@ const PlantSearch = () => {
   const handleLast = () => {
     setPage(totalPages - 1);
   };
-  // --------------------------------------------------------------------------------
   const filters = [
     { label: "전체", value: "all" },
     { label: "식물명", value: "plantName" },
@@ -262,7 +260,7 @@ const PlantSearch = () => {
                 <td style={styles.td}>{plant.count}</td>
                 <td style={styles.writer}>
                   <img
-                    src={`http://localhost${plant.profileImage || "/uploads/default/profile.png"}`}
+                    src={plant.profileImage || defaultImg}
                     alt={plant.memberName}
                     style={{
                       width: "30px",
@@ -287,8 +285,7 @@ const PlantSearch = () => {
             >
               <div style={styles.gridImageWrap}>
                 <img
-                  src={`http://localhost${plant.mainPlantImage || "/uploads/plant/plant.png"}`}
-                  alt={plant.plantName}
+                  src={plant.mainPlantImage || defaultPlantImg}
                   style={styles.gridImage}
                 />
               </div>
