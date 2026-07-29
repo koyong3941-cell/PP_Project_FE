@@ -16,31 +16,24 @@ import {
 } from "./admin.style";
 
 const AdminPlantsEdit = () => {
-  const { plantNo } = useParams(); // /admin/plant/edit/:plantNo
+  const { plantNo } = useParams();
   const [plantName, setPlantName] = useState("");
   const [classification, setClassification] = useState("");
   const [carbonCapture, setCarbonCapture] = useState("");
   const [plantInfo, setPlantInfo] = useState("");
   const [growthInfo, setGrowthInfo] = useState("");
   const [plantApi, setPlantApi] = useState("");
-  const [files, setFiles] = useState([]); // File 객체 배열 (기존 유지 + 새로 추가)
+  const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
   const navi = useNavigate();
   const alert = useAlertify();
   const fileInputRef = useRef(null);
 
-  // 기존 이미지 URL 생성 (프로젝트 환경에 맞게 수정)
   const getImageUrl = (img) => {
-    const base = (api.defaults.baseURL || "http://localhost/api").replace(
-      /\/api\/?$/,
-      "",
-    );
-    // PlantImgDto: imgPath + saveName 가정 (notice와 동일 패턴)
-    return `${base}${img.imgPath || "/uploads/plant/"}${img.saveName}`;
+    return `${img.imgPath}${img.saveName}`;
   };
 
-  // ==================== 상세 조회 + 기존 이미지를 File로 변환 ====================
   useEffect(() => {
     if (!plantNo) {
       alert.error("잘못된 접근입니다.");
@@ -65,7 +58,6 @@ const AdminPlantsEdit = () => {
         setGrowthInfo(data.growthInfo || "");
         setPlantApi(data.plantApi || "");
 
-        // 기존 첨부 이미지 → File 객체로 변환 (삭제 안 하면 다시 보내야 함)
         const images = data.plantImages || data.images || [];
         if (images.length > 0) {
           const loadedFiles = await Promise.all(
@@ -110,7 +102,6 @@ const AdminPlantsEdit = () => {
     fetchDetail();
   }, [plantNo]);
 
-  // 파일 선택 핸들러 (여러 개 가능, 최대 5장)
   const handleFileChange = (e) => {
     const selected = Array.from(e.target.files || []);
     if (selected.length === 0) return;
@@ -137,22 +128,18 @@ const AdminPlantsEdit = () => {
     e.target.value = "";
   };
 
-  // 특정 파일 제거
   const removeFile = (index) => {
     setFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // 첨부사진 버튼
   const handleAttachClick = () => {
     fileInputRef.current?.click();
   };
 
-  // 취소 → 목록
   const handleCancel = () => {
     navi("/admin/plant");
   };
 
-  // 탄소포집량: 숫자만 허용
   const handleCarbonChange = (e) => {
     const value = e.target.value;
     if (value === "" || /^\d+$/.test(value)) {
@@ -160,7 +147,6 @@ const AdminPlantsEdit = () => {
     }
   };
 
-  // 수정 제출
   const handleSubmit = async () => {
     if (!plantName.trim()) {
       alert.warning("식물 이름(제목)을 입력해주세요.");
@@ -197,12 +183,10 @@ const AdminPlantsEdit = () => {
         formData.append("plantApi", plantApi.trim());
       }
 
-      // 현재 남아있는 모든 파일(기존 유지 + 새로 추가)을 다시 보냄
       files.forEach((file) => {
         formData.append("imageFiles", file);
       });
 
-      // PATCH /admins/plants/{plantNo}
       const res = await api.patch(`/admins/plants/${plantNo}`, formData, {
         headers: {
           "Content-Type": undefined,
@@ -254,7 +238,6 @@ const AdminPlantsEdit = () => {
 
         <Toolbar />
 
-        {/* 제목 = plantName */}
         <h4>제목</h4>
         <Toolbar>
           <SearchInput
@@ -267,7 +250,6 @@ const AdminPlantsEdit = () => {
 
         <Toolbar />
 
-        {/* 식물종 + 탄소포집량 */}
         <h4>식물종 / 탄소포집량</h4>
         <Toolbar style={{ gap: "12px", flexWrap: "wrap" }}>
           <SearchInput
@@ -289,7 +271,6 @@ const AdminPlantsEdit = () => {
 
         <Toolbar />
 
-        {/* 식물 정보 + 재배 환경 (좌우 배치) */}
         <Toolbar
           style={{
             display: "flex",
@@ -298,7 +279,6 @@ const AdminPlantsEdit = () => {
             flexWrap: "wrap",
           }}
         >
-          {/* 왼쪽: 식물 정보 */}
           <div style={{ flex: 1, minWidth: "280px" }}>
             <h4 style={{ margin: "0 0 8px 0" }}>식물 정보</h4>
             <BoardText
@@ -313,7 +293,6 @@ const AdminPlantsEdit = () => {
             />
           </div>
 
-          {/* 오른쪽: 재배 환경 */}
           <div style={{ flex: 1, minWidth: "280px" }}>
             <h4 style={{ margin: "0 0 8px 0" }}>재배 환경</h4>
             <BoardText
@@ -329,7 +308,6 @@ const AdminPlantsEdit = () => {
           </div>
         </Toolbar>
 
-        {/* 첨부사진 + API 링크 + 버튼 */}
         <Toolbar
           style={{
             marginTop: "20px",
@@ -338,7 +316,6 @@ const AdminPlantsEdit = () => {
             gap: "8px",
           }}
         >
-          {/* 왼쪽: 선택된 파일 칩들 */}
           <div
             style={{
               display: "flex",
@@ -404,7 +381,6 @@ const AdminPlantsEdit = () => {
             )}
           </div>
 
-          {/* 숨겨진 file input */}
           <input
             type="file"
             ref={fileInputRef}
@@ -418,7 +394,6 @@ const AdminPlantsEdit = () => {
             첨부 사진
           </AddButton>
 
-          {/* API 링크 */}
           <SearchInput
             value={plantApi}
             onChange={(e) => setPlantApi(e.target.value)}

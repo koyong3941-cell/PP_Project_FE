@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight, Filter, Search } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Search, Filter, ChevronLeft, ChevronRight } from "lucide-react";
 import api from "../api/axios";
+import defaultImg from "../assets/unknown.png";
 import { styles } from "./Notice.styles";
 
 const Notice = () => {
@@ -197,9 +198,7 @@ const Notice = () => {
 
               <td style={styles.writer}>
                 <img
-                  src={`http://localhost${
-                    notice.profileImage || "/uploads/default/profile.png"
-                  }`}
+                  src={notice.profileImage || defaultImg}
                   alt={notice.memberName}
                   style={{
                     width: "30px",

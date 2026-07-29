@@ -5,6 +5,7 @@ import { styles } from "./Board.styles";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 import { useAlertify } from "../hooks/useAlertify";
+import defaultImg from "../assets/unknown.png";
 
 const Board = () => {
   const [findBoardAll, setFindBoardAll] = useState([]);
@@ -202,7 +203,7 @@ const Board = () => {
               <td style={styles.td}>{board.count}</td>
               <td style={styles.writer}>
                 <img
-                  src={`http://localhost${board.profileImage || "/uploads/default/profile.png"}`}
+                  src={board.profileImage || defaultImg}
                   alt={board.memberName}
                   style={{
                     width: "30px",

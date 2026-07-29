@@ -1,41 +1,40 @@
-import { useState, useEffect, useRef } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import profileDefaultImg from "../assets/unknown.png";
-import plantDefaultImg from "../assets/plant.jpg";
-import api from "../api/axios";
-import React from "react";
 import {
-  Container,
-  LeftPanel,
-  RightPanel,
-  ScrollArea,
-  SectionTop,
-  SectionMiddle,
-  SectionBottom,
-  Card,
-  FlowerGrid,
-  GraphBox,
-  BigGraphBox,
-  Title,
-  SubText,
-  FlowerContainer,
-  ScrollButton,
-  NoData,
-  ProfileAvatar,
-} from "./MyPage.styles";
-import {
-  ResponsiveContainer,
-  LineChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
   Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  BarChart,
-  Bar,
 } from "recharts";
+import api from "../api/axios";
+import plantDefaultImg from "../assets/plant.jpg";
+import profileDefaultImg from "../assets/unknown.png";
+import { useAuth } from "../context/AuthContext";
+import {
+  BigGraphBox,
+  Card,
+  Container,
+  FlowerContainer,
+  FlowerGrid,
+  GraphBox,
+  LeftPanel,
+  NoData,
+  ProfileAvatar,
+  RightPanel,
+  ScrollArea,
+  ScrollButton,
+  SectionBottom,
+  SectionMiddle,
+  SectionTop,
+  SubText,
+  Title,
+} from "./MyPage.styles";
 
 const MyPage = () => {
   const { user, logout } = useAuth();
@@ -65,7 +64,7 @@ const MyPage = () => {
 
   const profileImg =
     user?.delYn === "N" && user?.imgPath && user?.saveName
-      ? `http://localhost${user.imgPath}${user.saveName}`
+      ? `${user.imgPath}${user.saveName}`
       : profileDefaultImg;
 
   const carbonData = plantCap
@@ -172,7 +171,7 @@ const MyPage = () => {
                       style={{
                         backgroundImage: `url(${
                           item.imgPath && item.saveName
-                            ? `http://localhost${item.imgPath}${item.saveName}`
+                            ? `${item.imgPath}${item.saveName}`
                             : plantDefaultImg
                         })`,
                       }}

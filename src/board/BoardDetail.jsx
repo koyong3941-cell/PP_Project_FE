@@ -262,7 +262,7 @@ const BoardDetail = () => {
         boardDetail.boardImages.map((img) => (
           <img
             key={img.imgOrder}
-            src={`http://localhost${img.imgPath}${img.saveName}`}
+            src={`${img.imgPath}${img.saveName}`}
             alt={img.originalName}
             style={s.postImg}
           />
@@ -295,7 +295,7 @@ const BoardDetail = () => {
             <img
               src={
                 c.imgPath && c.saveName
-                  ? `http://localhost${c.imgPath}${c.saveName}`
+                  ? `${c.imgPath}${c.saveName}`
                   : defaultImg
               }
               alt="profile"
@@ -344,7 +344,7 @@ const BoardDetail = () => {
             <img
               src={
                 user?.delYn === "N" && user?.imgPath && user?.saveName
-                  ? `http://localhost${user.imgPath}${user.saveName}`
+                  ? `${user.imgPath}${user.saveName}`
                   : defaultImg
               }
               alt="profile"
@@ -385,7 +385,7 @@ const BoardDetail = () => {
           <img
             src={
               user?.delYn === "N" && user?.imgPath && user?.saveName
-                ? `http://localhost${user.imgPath}${user.saveName}`
+                ? `${user.imgPath}${user.saveName}`
                 : defaultImg
             }
             alt="profile"

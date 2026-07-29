@@ -1,14 +1,14 @@
-import { useState, useEffect } from "react";
-import Select from "react-select";
+import { useState } from "react";
 import { FiChevronDown } from "react-icons/fi";
-import logo from "../../../assets/logo.png";
-import defaultImg from "../../../assets/unknown.png";
-import search from "../../../assets/search.png";
-import { styles, customSelectStyles } from "./Header.styles";
 import { useNavigate } from "react-router-dom";
+import Select from "react-select";
+import api from "../../../api/axios";
+import logo from "../../../assets/logo.png";
+import search from "../../../assets/search.png";
+import defaultImg from "../../../assets/unknown.png";
 import { useAuth } from "../../../context/AuthContext";
 import { useAlertify } from "../../../hooks/useAlertify";
-import api from "../../../api/axios";
+import { customSelectStyles, styles } from "./Header.styles";
 
 const options = [
   { value: "all", label: "전체" },
@@ -27,7 +27,6 @@ const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // 2. user가 있으면 로그인 상태 (자동으로 리렌더링 트리거됨)
   const isLoggedIn = !!user;
   const memberId = user?.memberId || "Guest";
 
@@ -98,14 +97,12 @@ const Header = () => {
             <div
               style={styles.loginBanner}
               onClick={() => {
-                // 로그인 상태가 아닐 때만 /login으로 이동
                 if (!user?.memberId) {
                   handleNavigation("/login");
                 }
               }}
             >
               {user?.memberId ? (
-                // 로그인 후 화면
                 <span
                   onClick={() => {
                     handleNavigation("/mypage");
@@ -114,23 +111,15 @@ const Header = () => {
                   {user.memberId} 님 반갑습니다!
                 </span>
               ) : (
-                // 로그인 전 화면
                 <span>로그인 후 이용해 주시기 바랍니다. </span>
               )}
             </div>
 
-            {/* 기존 게시판 항목들 */}
             <div
               style={styles.dropdownItem}
               onClick={() => handleNavigation("/board")}
             >
               유저 커뮤니티
-            </div>
-            <div
-              style={styles.dropdownItem}
-              onClick={() => handleNavigation("/mypage")}
-            >
-              마이 페이지
             </div>
             <div
               style={styles.dropdownItem}
@@ -202,7 +191,7 @@ const Header = () => {
         <img
           src={
             user?.delYn === "N" && user?.imgPath && user?.saveName
-              ? `http://localhost${user.imgPath}${user.saveName}`
+              ? `${user.imgPath}${user.saveName}`
               : defaultImg
           }
           alt="User"
